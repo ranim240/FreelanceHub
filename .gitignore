@@ -1,6 +1,7 @@
 # Python
-venv/
-.venv/
+# Bloque tous les dossiers nommés venv, peu importe où ils sont
+**/venv/
+**/.venv/
 __pycache__/
 *.pyc
 
