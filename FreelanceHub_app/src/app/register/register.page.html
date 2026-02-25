@@ -1,30 +1,26 @@
 <ion-content class="register-content" [fullscreen]="true">
 
-  <!-- Background décoratif (même charte que login) -->
+  <!-- Background decorative (same as login) -->
   <div class="bg-shape bg-shape--circle"></div>
   <div class="bg-shape bg-shape--blob"></div>
   <div class="bg-dots"></div>
 
   <div class="register-wrapper">
 
-    <!-- Header avec retour -->
+    <!-- Header with back -->
     <div class="page-header">
       <button class="back-btn" (click)="goBack()" type="button">
         <ion-icon name="arrow-back-outline"></ion-icon>
       </button>
-      <div class="brand-mark">
-        <ion-icon name="layers-outline"></ion-icon>
-      </div>
-      <!-- <div class="header-spacer"></div> -->
     </div>
 
-    <!-- Titre -->
+    <!-- Title -->
     <div class="welcome-block">
-      <h2 class="welcome-title">Créer un compte<span class="title-dot">.</span></h2>
-      <p class="welcome-sub">Rejoignez des milliers de freelances et de clients</p>
+      <h2 class="welcome-title">Create an account<span class="title-dot">.</span></h2>
+      <p class="welcome-sub">Join thousands of freelancers and clients</p>
     </div>
 
-    <!-- Sélecteur de rôle -->
+    <!-- Role selector -->
     <div class="role-selector">
       <button
         type="button"
@@ -32,7 +28,7 @@
         [class.role-btn--active]="selectedRole === 'freelance'"
         (click)="setRole('freelance')">
         <ion-icon name="briefcase-outline"></ion-icon>
-        <span>Freelance</span>
+        <span>Freelancer</span>
       </button>
       <button
        type="button"
@@ -48,23 +44,21 @@
     <div class="steps-indicator">
       <div class="step" [class.step--active]="currentStep >= 1" [class.step--done]="currentStep > 1">
         <span class="step-num">1</span>
-        <span class="step-label">Identité</span>
+        <span class="step-label">Identity</span>
       </div>
       <div class="step-line" [class.step-line--active]="currentStep > 1"></div>
       <div class="step" [class.step--active]="currentStep >= 2" [class.step--done]="currentStep > 2">
         <span class="step-num">2</span>
-        <span class="step-label">Compte</span>
+        <span class="step-label">Account</span>
       </div>
       <div class="step-line" [class.step-line--active]="currentStep > 2"></div>
       <div class="step" [class.step--active]="currentStep >= 3">
         <span class="step-num">3</span>
-        <span class="step-label">Profil</span>
+        <span class="step-label">Profile</span>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════ -->
-    <!-- ÉTAPE 1 : Identité             -->
-    <!-- ═══════════════════════════════ -->
+    <!-- STEP 1: Identity -->
     <div class="form-card" *ngIf="currentStep === 1">
 
       <div class="step-header">
@@ -72,8 +66,8 @@
           <ion-icon name="person-outline"></ion-icon>
         </div>
         <div>
-          <h3 class="step-title">Votre identité</h3>
-          <p class="step-desc">Comment souhaitez-vous être connu ?</p>
+          <h3 class="step-title">Your identity</h3>
+          <p class="step-desc">What would you like to be known as?</p>
         </div>
       </div>
 
@@ -81,65 +75,36 @@
 
         <div class="field-row">
           <div class="field-group">
-            <label class="field-label">Prénom</label>
+            <label class="field-label">First name</label>
             <div class="input-shell">
-              <ion-input type="text" name="firstName" [(ngModel)]="firstName" placeholder="Jean" class="shell-input" fill="outline"></ion-input>
+              <ion-input type="text" name="firstName" [(ngModel)]="firstName" placeholder="John" class="shell-input" fill="outline"></ion-input>
             </div>
           </div>
           <div class="field-group">
-            <label class="field-label">Nom</label>
+            <label class="field-label">Last name</label>
             <div class="input-shell">
-              <ion-input type="text" name="lastName" [(ngModel)]="lastName" placeholder="Dupont" class="shell-input" fill="outline"></ion-input>
+              <ion-input type="text" name="lastName" [(ngModel)]="lastName" placeholder="Doe" class="shell-input" fill="outline"></ion-input>
             </div>
           </div>
         </div>
 
         <div class="field-group">
-          <label class="field-label">Nom d'utilisateur</label>
+          <label class="field-label">Email address</label>
           <div class="input-shell">
-            <ion-icon name="at-outline" class="shell-icon"></ion-icon>
-            <ion-input type="text" name="username" [(ngModel)]="username" placeholder="jean.dupont" class="shell-input shell-input--icon" fill="outline"></ion-input>
-            <div class="input-tag">freeflow.com/</div>
-          </div>
-          <p class="field-hint">Votre profil public sera visible à cette adresse</p>
-        </div>
-
-        <!-- Spécifique Freelance -->
-        <div class="field-group" *ngIf="selectedRole === 'freelance'">
-          <label class="field-label">Domaine d'expertise</label>
-          <div class="chips-grid">
-            <button
-              class="chip"
-              *ngFor="let domain of domains"
-              [class.chip--active]="selectedDomain === domain.key"
-              (click)="setDomain(domain.key)"
-              type="button">
-              <ion-icon [name]="domain.icon"></ion-icon>
-              {{ domain.label }}
-            </button>
-          </div>
-        </div>
-
-        <!-- Spécifique Client -->
-        <div class="field-group" *ngIf="selectedRole === 'client'">
-          <label class="field-label">Nom de votre entreprise</label>
-          <div class="input-shell">
-            <ion-icon name="business-outline" class="shell-icon"></ion-icon>
-            <ion-input type="text" placeholder="Ma Société SAS" class="shell-input shell-input--icon" fill="outline"></ion-input>
+            <ion-icon name="mail-outline" class="shell-icon"></ion-icon>
+            <ion-input type="email" name="email" [(ngModel)]="email" placeholder="you@example.com" class="shell-input shell-input--icon" fill="outline"></ion-input>
           </div>
         </div>
 
         <ion-button expand="block" class="next-btn" (click)="nextStep()" type="button">
-          Continuer
+          Continue
           <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
         </ion-button>
 
       </form>
     </div>
 
-    <!-- ═══════════════════════════════ -->
-    <!-- ÉTAPE 2 : Compte               -->
-    <!-- ═══════════════════════════════ -->
+    <!-- STEP 2: Account -->
     <div class="form-card" *ngIf="currentStep === 2">
 
       <div class="step-header">
@@ -147,26 +112,18 @@
           <ion-icon name="shield-checkmark-outline"></ion-icon>
         </div>
         <div>
-          <h3 class="step-title">Vos identifiants</h3>
-          <p class="step-desc">Sécurisez votre compte</p>
+          <h3 class="step-title">Your credentials</h3>
+          <p class="step-desc">Secure your account</p>
         </div>
       </div>
 
       <form class="register-form">
 
         <div class="field-group">
-          <label class="field-label">Adresse email</label>
-          <div class="input-shell">
-            <ion-icon name="mail-outline" class="shell-icon"></ion-icon>
-            <ion-input type="email" name="email" [(ngModel)]="email" placeholder="vous@exemple.com" class="shell-input shell-input--icon" fill="outline"></ion-input>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Mot de passe</label>
+          <label class="field-label">Password</label>
           <div class="input-shell">
             <ion-icon name="lock-closed-outline" class="shell-icon"></ion-icon>
-            <ion-input type="password" name="password" [(ngModel)]="password" placeholder="Min. 8 caractères" class="shell-input shell-input--icon" fill="outline"></ion-input>
+            <ion-input type="password" name="password" [(ngModel)]="password" placeholder="Min. 8 characters" class="shell-input shell-input--icon" fill="outline"></ion-input>
             <ion-icon name="eye-outline" class="shell-icon shell-icon--right"></ion-icon>
           </div>
           <!-- Password strength -->
@@ -176,23 +133,22 @@
               <span class="bar"></span>
               <span class="bar"></span>
             </div>
-            <span class="strength-label">Faible</span>
           </div>
         </div>
 
         <div class="field-group">
-          <label class="field-label">Confirmer le mot de passe</label>
+          <label class="field-label">Confirm password</label>
           <div class="input-shell">
             <ion-icon name="lock-closed-outline" class="shell-icon"></ion-icon>
-            <ion-input type="password" placeholder="Répétez votre mot de passe" class="shell-input shell-input--icon" fill="outline"></ion-input>
+            <ion-input type="password" placeholder="Repeat your password" class="shell-input shell-input--icon" fill="outline"></ion-input>
           </div>
         </div>
 
         <div class="cgu-row">
           <ion-checkbox class="custom-checkbox" label-placement="end">
             <span class="checkbox-label">
-              J'accepte les <a href="#" class="inline-link">Conditions d'utilisation</a>
-              et la <a href="#" class="inline-link">Politique de confidentialité</a>
+              I accept the <a href="#" class="inline-link">Terms of Service</a>
+              and <a href="#" class="inline-link">Privacy Policy</a>
             </span>
           </ion-checkbox>
         </div>
@@ -200,10 +156,10 @@
         <div class="nav-buttons">
           <ion-button fill="outline" class="back-step-btn" (click)="prevStep()"type="button">
             <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
-            Retour
+            Back
           </ion-button>
           <ion-button class="next-btn next-btn--flex" (click)="nextStep()" type="button">
-            Continuer
+            Continue
             <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
           </ion-button>
         </div>
@@ -211,9 +167,7 @@
       </form>
     </div>
 
-    <!-- ═══════════════════════════════ -->
-    <!-- ÉTAPE 3 : Profil               -->
-    <!-- ═══════════════════════════════ -->
+    <!-- STEP 3: Profile -->
     <div class="form-card" *ngIf="currentStep === 3">
 
       <div class="step-header">
@@ -221,8 +175,8 @@
           <ion-icon name="star-outline"></ion-icon>
         </div>
         <div>
-          <h3 class="step-title">Votre profil</h3>
-          <p class="step-desc">Dernière étape — dites-nous en plus</p>
+          <h3 class="step-title">Your profile</h3>
+          <p class="step-desc">Last step — tell us more about yourself</p>
         </div>
       </div>
 
@@ -235,64 +189,28 @@
           </div>
           <button class="avatar-btn" type="button">
             <ion-icon name="camera-outline"></ion-icon>
-            Ajouter une photo
+            Add a photo
           </button>
         </div>
-
-        <div class="field-group">
-          <label class="field-label">Bio courte</label>
-          <div class="textarea-shell">
-            <ion-textarea
-              name="bio" 
-              [(ngModel)]="bio"
-              placeholder="Décrivez-vous en quelques mots..."
-              class="shell-textarea"
-              fill="outline"
-              [autoGrow]="true"
-              rows="3">
-            </ion-textarea>
-          </div>
-          <p class="field-hint char-count">0 / 160 caractères</p>
-        </div>
-
-        <div class="field-group" *ngIf="selectedRole === 'freelance'">
-          <label class="field-label">Tarif journalier (TJM)</label>
-          <div class="input-shell">
-            <ion-input 
-            type="number"  name="tjm" [(ngModel)]="tjm" placeholder="450" class="shell-input" fill="outline"></ion-input>
-            <div class="input-suffix">€ / jour</div>
-          </div>
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Localisation</label>
-          <div class="input-shell">
-            <ion-icon name="location-outline" class="shell-icon"></ion-icon>
-            <ion-input type="text" name="location" [(ngModel)]="location" placeholder="Paris, France" class="shell-input shell-input--icon" fill="outline"></ion-input>
-          </div>
-        </div>
-
         <div class="nav-buttons">
           <ion-button fill="outline" class="back-step-btn" (click)="prevStep()" type="button">
             <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
-            Retour
+            Back
           </ion-button>
           <ion-button class="submit-btn" (click)="register()" type="button">
             <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
-            Créer mon compte
+            Create my account
           </ion-button>
         </div>
-
-      </form>
-    </div>
-
-    <!-- Lien connexion -->
+   <!-- Login link -->
     <div class="login-row">
-      <p>Déjà un compte ?</p>
+      <p>Already have an account?</p>
       <a class="login-link" (click)="goBack()">
-        Se connecter
+        Sign in
         <ion-icon name="log-in-outline"></ion-icon>
       </a>
+    </div>
+      </form>
     </div>
 
   </div>

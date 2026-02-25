@@ -1,10 +1,9 @@
-
 // =============================================
 // REGISTER PAGE — Freeflow · Studio Clair
-// Multi-step registration (3 étapes)
+// Multi-step registration
 // =============================================
 
-// ── Variables (mêmes que login) ────────────
+// ── Variables (same as login) ────────────
 :root {
   --bg-page:        #f7f5f2;
   --bg-card:        #ffffff;
@@ -17,11 +16,9 @@
 
   --coral:          #ff6b52;
   --coral-light:    #fff1ee;
-  --coral-glow:     rgba(255, 107, 82, 0.18);
 
   --amber:          #f5a623;
   --amber-light:    #fef3dc;
-  --amber-glow:     rgba(245, 166, 35, 0.18);
 
   --text-title:     #1a1825;
   --text-body:      #44405c;
@@ -43,7 +40,7 @@
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
-// ── Background (même que login) ────────────
+// ── Background (same as login) ────────────
 .bg-shape {
   position: fixed;
   pointer-events: none;
@@ -102,7 +99,7 @@
   gap: 20px;
 }
 
-// ── Animations staggerées ──────────────────
+// ── Animations staggered ──────────────────
 .page-header    { animation: slideUp 0.5s 0.05s cubic-bezier(0.16,1,0.3,1) both; }
 .welcome-block  { animation: slideUp 0.5s 0.1s  cubic-bezier(0.16,1,0.3,1) both; }
 .role-selector  { animation: slideUp 0.5s 0.15s cubic-bezier(0.16,1,0.3,1) both; }
@@ -145,24 +142,6 @@
     background: var(--indigo-light);
   }
 }
-
-.brand-mark {
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, var(--indigo) 0%, #836ef9 100%);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 6px 18px var(--indigo-glow);
-
-  // .brand-icon {
-  //   color: #fff;
-  //   font-size: 20px;
-  // }
-}
-
-.header-spacer { width: 40px; }
 
 // ── Welcome ────────────────────────────────
 .welcome-block {
@@ -284,7 +263,6 @@
         font-size: 13px;
       }
     }
-    // hide number when done
     .step-num { font-size: 0; }
   }
 }
@@ -390,14 +368,6 @@
   text-transform: uppercase;
 }
 
-.field-hint {
-  font-size: 11px;
-  color: var(--text-muted);
-  margin: 0;
-}
-
-.char-count { text-align: right; }
-
 // ── Input Shell ────────────────────────────
 .input-shell {
   position: relative;
@@ -442,28 +412,6 @@
     }
   }
 
-  .input-tag {
-    position: absolute;
-    right: 12px;
-    font-size: 11px;
-    color: var(--text-muted);
-    background: var(--bg-page);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 2px 7px;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-
-  .input-suffix {
-    position: absolute;
-    right: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-muted);
-    pointer-events: none;
-  }
-
   &:focus-within {
     .shell-icon:not(.shell-icon--right) { color: var(--indigo); }
     .shell-input {
@@ -471,67 +419,6 @@
       box-shadow: 0 0 0 3px var(--indigo-glow);
       border-radius: var(--r-input);
     }
-  }
-}
-
-// ── Textarea ───────────────────────────────
-.textarea-shell {
-  .shell-textarea {
-    --background: var(--bg-input);
-    --color: var(--text-title);
-    --placeholder-color: var(--text-muted);
-    --border-color: var(--border-input);
-    --border-width: 1.5px;
-    --border-radius: var(--r-input);
-    --padding-start: 14px;
-    --padding-end: 14px;
-    --padding-top: 12px;
-    --padding-bottom: 12px;
-    --highlight-color-focused: var(--indigo);
-    font-size: 14px;
-    width: 100%;
-  }
-
-  &:focus-within .shell-textarea {
-    --border-color: var(--indigo);
-    box-shadow: 0 0 0 3px var(--indigo-glow);
-    border-radius: var(--r-input);
-  }
-}
-
-// ── Chips Domaines ─────────────────────────
-.chips-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 7px 13px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--r-pill);
-  background: var(--bg-page);
-  color: var(--text-muted);
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  ion-icon { font-size: 14px; }
-
-  &--active {
-    border-color: var(--indigo);
-    background: var(--indigo-light);
-    color: var(--indigo);
-  }
-
-  &:hover:not(.chip--active) {
-    border-color: var(--indigo);
-    color: var(--indigo);
   }
 }
 
@@ -559,12 +446,6 @@
     &--medium { background: var(--amber); }
     &--strong { background: #22c55e; }
   }
-}
-
-.strength-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--coral);
 }
 
 // ── CGU ────────────────────────────────────
