@@ -1,20 +1,214 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button>
+        <ion-icon name="menu-outline" class="menu-icon"></ion-icon>
+      </ion-menu-button>
+    </ion-buttons>
+
+    <ion-title class="toolbar-title">FreelanceHub</ion-title>
+
+    <ion-buttons slot="end">
+      <button class="btn-login">Log in</button>
+      <button class="btn-signup">Sign up</button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="home-content">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <!-- ── Search Bar ──────────────────────────────────────────── -->
+  <div class="search-wrapper">
+    <ion-searchbar
+      placeholder="What are you looking for?"
+      class="custom-searchbar"
+      [animated]="true">
+    </ion-searchbar>
   </div>
+
+  <!-- ── ANNOUNCEMENTS ─────────────────────────────────────────── -->
+  <section class="section-block">
+    <div class="section-header">
+      <h2 class="section-title">Announcements</h2>
+      <span class="view-all-link">List all</span>
+    </div>
+
+    <div class="ann-scroll">
+      <div class="ann-cards">
+        <div
+          class="ann-card"
+          *ngFor="let ann of announcements"
+          (click)="openAnnouncement(ann)">
+
+          <div class="ann-card-header">
+            <div class="ann-avatar">
+              <span>{{ ann.clientInitials }}</span>
+            </div>
+            <div class="ann-meta">
+              <p class="ann-client-name">{{ ann.clientName }}</p>
+              <p class="ann-date">{{ ann.postedAt }}</p>
+            </div>
+            <span class="ann-status-badge" [class.urgent]="ann.status === 'Urgent'">
+              {{ ann.status }}
+            </span>
+          </div>
+
+          <h3 class="ann-title">{{ ann.title }}</h3>
+          <p class="ann-desc">{{ ann.description }}</p>
+
+          <div class="ann-tags">
+            <span class="ann-tag" *ngFor="let tag of ann.tags">{{ tag }}</span>
+          </div>
+
+          <div class="ann-card-footer">
+            <div class="ann-budget-info">
+              <div class="ann-info-item">
+                <ion-icon name="cash-outline"></ion-icon>
+                <span>{{ ann.budget }}</span>
+              </div>
+              <div class="ann-info-item">
+                <ion-icon name="time-outline"></ion-icon>
+                <span>{{ ann.deadline }}</span>
+              </div>
+            </div>
+            <button class="btn-message" (click)="messageClient($event, ann)">
+              <ion-icon name="chatbubble-outline"></ion-icon>
+              Message
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRODUCT CATEGORIES ─────────────────────────────────────── -->
+  <section class="section-block">
+    <div class="section-header">
+      <h2 class="section-title">Product Categories</h2>
+      <span class="view-all-link">View all</span>
+    </div>
+
+    <div class="categories-scroll">
+      <div class="category-chips">
+        <button
+          class="cat-chip"
+          *ngFor="let cat of categories"
+          [class.cat-active]="cat.active"
+          (click)="selectCategory(cat)">
+          <ion-icon [name]="cat.icon"></ion-icon>
+          <span>{{ cat.name }}</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TRENDING GIGS ──────────────────────────────────────────── -->
+  <section class="section-block">
+    <div class="section-header">
+      <h2 class="section-title">Trending</h2>
+      <span class="view-all-link">View all</span>
+    </div>
+
+    <div class="trending-scroll">
+      <div class="trending-cards">
+        <div
+          class="trending-card"
+          *ngFor="let gig of trendingGigs"
+          (click)="openGig(gig)">
+
+          <div class="card-image-wrapper">
+            <img [src]="gig.image" [alt]="gig.title" class="card-image" />
+            <button class="heart-btn" (click)="toggleFavorite($event, gig)">
+              <ion-icon
+                [name]="gig.isFavorite ? 'heart' : 'heart-outline'"
+                [class.favorited]="gig.isFavorite">
+              </ion-icon>
+            </button>
+          </div>
+
+          <div class="card-info">
+            <p class="card-title">{{ gig.title }}</p>
+            <div class="card-rating">
+              <span class="rating-score">{{ gig.rating }}</span>
+              <ion-icon name="star" class="star-icon"></ion-icon>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ────────────────────────────────────────────────────── -->
+  <section class="section-block faq-section">
+    <div class="section-header">
+      <h2 class="section-title">FAQ</h2>
+    </div>
+
+    <div class="faq-list">
+      <div
+        class="faq-item"
+        *ngFor="let faq of faqs; let i = index"
+        (click)="toggleFaq(i)"
+        [class.faq-open]="faq.open">
+
+        <div class="faq-question">
+          <span>{{ faq.question }}</span>
+          <ion-icon
+            [name]="faq.open ? 'chevron-up-outline' : 'chevron-down-outline'"
+            class="faq-chevron">
+          </ion-icon>
+        </div>
+
+        <div class="faq-answer" *ngIf="faq.open">
+          <p>{{ faq.answer }}</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <footer class="app-footer">
+    <div class="footer-logo">
+      <ion-icon name="briefcase-outline" class="footer-logo-icon"></ion-icon>
+      <span>FreelanceHub</span>
+    </div>
+
+    <p class="footer-tagline">Connecting talent with opportunity.</p>
+
+    <div class="footer-links">
+      <span class="footer-link">About</span>
+      <span class="footer-divider">·</span>
+      <span class="footer-link">Contact</span>
+      <span class="footer-divider">·</span>
+      <span class="footer-link">Privacy</span>
+      <span class="footer-divider">·</span>
+      <span class="footer-link">Terms</span>
+    </div>
+
+    <div class="footer-socials">
+      <div class="social-icon"><ion-icon name="logo-linkedin"></ion-icon></div>
+      <div class="social-icon"><ion-icon name="logo-twitter"></ion-icon></div>
+      <div class="social-icon"><ion-icon name="logo-instagram"></ion-icon></div>
+      <div class="social-icon"><ion-icon name="logo-github"></ion-icon></div>
+    </div>
+
+    <p class="footer-copy">© 2026 FreelanceHub · ENSIT</p>
+  </footer>
+
 </ion-content>
+
+<!-- ── BOTTOM TAB BAR ─────────────────────────────────────────── -->
+<ion-tab-bar slot="bottom" class="custom-tab-bar">
+  <ion-tab-button class="tab-btn active-tab">
+    <ion-icon name="home"></ion-icon>
+  </ion-tab-button>
+  <ion-tab-button class="tab-btn">
+    <ion-icon name="bag-handle-outline"></ion-icon>
+  </ion-tab-button>
+  <ion-tab-button class="tab-btn">
+    <ion-icon name="person-outline"></ion-icon>
+  </ion-tab-button>
+</ion-tab-bar>
