@@ -1,54 +1,78 @@
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  SIDEBAR                                                  -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button>
-        <ion-icon name="menu-outline" class="menu-icon"></ion-icon>
-      </ion-menu-button>
+      <ion-menu-toggle menu="main-menu">
+        <button class="hdr-menu-btn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </ion-menu-toggle>
+      <span class="hdr-brand">FreelanceHub</span>
     </ion-buttons>
 
-    <ion-title class="toolbar-title">FreelanceHub</ion-title>
+    <ion-buttons slot="end" *ngIf="!isLoggedIn">
+      <button class="hdr-btn-ghost" (click)="goToLogin()">Log in</button>
+      <button class="hdr-btn-solid" (click)="goToSignup()">Sign up</button>
+    </ion-buttons>
 
-    <ion-buttons slot="end">
-      <button class="btn-login">Log in</button>
-      <button class="btn-signup">Sign up</button>
+    <ion-buttons slot="end" *ngIf="isLoggedIn">
+      <button class="hdr-avatar-btn" (click)="goToProfile()">
+        <img *ngIf="currentUser.avatar" [src]="currentUser.avatar" class="hdr-avatar-img" />
+        <div *ngIf="!currentUser.avatar" class="hdr-avatar-initials">{{ currentUser.initials }}</div>
+      </button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  MAIN CONTENT                                             -->
+<!-- ══════════════════════════════════════════════════════════ -->
 <ion-content [fullscreen]="true" class="home-content">
 
-  <!-- ── Search Bar ──────────────────────────────────────────── -->
-  <div class="search-wrapper">
-    <ion-searchbar
-      placeholder="What are you looking for?"
-      class="custom-searchbar"
-      [animated]="true">
-    </ion-searchbar>
+  <!-- ── Hero Search Banner ──────────────────────────────────── -->
+  <div class="hero-banner">
+    <div class="hero-text">
+      <h1 class="hero-title">Find the right<br><span>talent or project</span></h1>
+      <p class="hero-sub">Freelancers, products & opportunities — all in one place.</p>
+    </div>
+    <div class="hero-search">
+      <ion-icon name="search-outline" class="hero-search-icon"></ion-icon>
+      <input
+        class="hero-search-input"
+        placeholder="Search store products…"
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearchSubmit()"
+      />
+      <button class="hero-search-btn" (click)="onSearchSubmit()">
+        Search
+      </button>
+    </div>
   </div>
 
-  <!-- ── ANNOUNCEMENTS ─────────────────────────────────────────── -->
+  <!-- ── ANNOUNCEMENTS ───────────────────────────────────────── -->
   <section class="section-block">
     <div class="section-header">
       <h2 class="section-title">Announcements</h2>
-      <span class="view-all-link">List all</span>
+      <span class="view-all-link" (click)="goToAnnouncements()">
+        List all <ion-icon name="arrow-forward-outline"></ion-icon>
+      </span>
     </div>
 
-    <div class="ann-scroll">
-      <div class="ann-cards">
+    <div class="h-scroll">
+      <div class="h-scroll-track">
         <div
           class="ann-card"
           *ngFor="let ann of announcements"
           (click)="openAnnouncement(ann)">
 
-          <div class="ann-card-header">
-            <div class="ann-avatar">
-              <span>{{ ann.clientInitials }}</span>
-            </div>
+          <div class="ann-top">
+            <div class="ann-avatar">{{ ann.clientInitials }}</div>
             <div class="ann-meta">
-              <p class="ann-client-name">{{ ann.clientName }}</p>
+              <p class="ann-client">{{ ann.clientName }}</p>
               <p class="ann-date">{{ ann.postedAt }}</p>
             </div>
-            <span class="ann-status-badge" [class.urgent]="ann.status === 'Urgent'">
+            <span class="ann-badge" [class.ann-badge--urgent]="ann.status === 'Urgent'">
               {{ ann.status }}
             </span>
           </div>
@@ -60,41 +84,35 @@
             <span class="ann-tag" *ngFor="let tag of ann.tags">{{ tag }}</span>
           </div>
 
-          <div class="ann-card-footer">
-            <div class="ann-budget-info">
-              <div class="ann-info-item">
-                <ion-icon name="cash-outline"></ion-icon>
-                <span>{{ ann.budget }}</span>
-              </div>
-              <div class="ann-info-item">
-                <ion-icon name="time-outline"></ion-icon>
-                <span>{{ ann.deadline }}</span>
-              </div>
+          <div class="ann-footer">
+            <div class="ann-meta-info">
+              <span class="ann-info-item">
+                <ion-icon name="cash-outline"></ion-icon> {{ ann.budget }}
+              </span>
+              <span class="ann-info-item">
+                <ion-icon name="time-outline"></ion-icon> {{ ann.deadline }}
+              </span>
             </div>
-            <button class="btn-message" (click)="messageClient($event, ann)">
-              <ion-icon name="chatbubble-outline"></ion-icon>
-              Message
+            <button class="ann-msg-btn" (click)="messageClient($event, ann)">
+              <ion-icon name="chatbubble-outline"></ion-icon> Message
             </button>
           </div>
-
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── PRODUCT CATEGORIES ─────────────────────────────────────── -->
+  <!-- ── PRODUCT CATEGORIES ──────────────────────────────────── -->
   <section class="section-block">
     <div class="section-header">
       <h2 class="section-title">Product Categories</h2>
-      <span class="view-all-link">View all</span>
     </div>
-
-    <div class="categories-scroll">
-      <div class="category-chips">
+    <div class="h-scroll">
+      <div class="h-scroll-track cats-track">
         <button
           class="cat-chip"
           *ngFor="let cat of categories"
-          [class.cat-active]="cat.active"
+          [class.cat-chip--active]="cat.active"
           (click)="selectCategory(cat)">
           <ion-icon [name]="cat.icon"></ion-icon>
           <span>{{ cat.name }}</span>
@@ -103,23 +121,21 @@
     </div>
   </section>
 
-  <!-- ── TRENDING GIGS ──────────────────────────────────────────── -->
+  <!-- ── TRENDING ─────────────────────────────────────────────── -->
   <section class="section-block">
     <div class="section-header">
       <h2 class="section-title">Trending</h2>
-      <span class="view-all-link">View all</span>
     </div>
-
-    <div class="trending-scroll">
-      <div class="trending-cards">
+    <div class="h-scroll">
+      <div class="h-scroll-track">
         <div
-          class="trending-card"
+          class="gig-card"
           *ngFor="let gig of trendingGigs"
           (click)="openGig(gig)">
 
-          <div class="card-image-wrapper">
-            <img [src]="gig.image" [alt]="gig.title" class="card-image" />
-            <button class="heart-btn" (click)="toggleFavorite($event, gig)">
+          <div class="gig-img-wrap">
+            <img [src]="gig.image" [alt]="gig.title" class="gig-img" />
+            <button class="gig-heart" (click)="toggleFavorite($event, gig)">
               <ion-icon
                 [name]="gig.isFavorite ? 'heart' : 'heart-outline'"
                 [class.favorited]="gig.isFavorite">
@@ -127,88 +143,82 @@
             </button>
           </div>
 
-          <div class="card-info">
-            <p class="card-title">{{ gig.title }}</p>
-            <div class="card-rating">
-              <span class="rating-score">{{ gig.rating }}</span>
-              <ion-icon name="star" class="star-icon"></ion-icon>
+          <div class="gig-info">
+            <p class="gig-title">{{ gig.title }}</p>
+            <div class="gig-rating">
+              <ion-icon name="star" class="gig-star"></ion-icon>
+              <span>{{ gig.rating }}</span>
             </div>
           </div>
-
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── FAQ ────────────────────────────────────────────────────── -->
-  <section class="section-block faq-section">
+  <!-- ── FAQ ─────────────────────────────────────────────────── -->
+  <section class="section-block">
     <div class="section-header">
       <h2 class="section-title">FAQ</h2>
     </div>
-
     <div class="faq-list">
       <div
         class="faq-item"
         *ngFor="let faq of faqs; let i = index"
-        (click)="toggleFaq(i)"
-        [class.faq-open]="faq.open">
-
-        <div class="faq-question">
+        [class.faq-item--open]="faq.open"
+        (click)="toggleFaq(i)">
+        <div class="faq-q">
           <span>{{ faq.question }}</span>
-          <ion-icon
-            [name]="faq.open ? 'chevron-up-outline' : 'chevron-down-outline'"
-            class="faq-chevron">
-          </ion-icon>
+          <ion-icon [name]="faq.open ? 'remove-outline' : 'add-outline'"></ion-icon>
         </div>
-
-        <div class="faq-answer" *ngIf="faq.open">
+        <div class="faq-a" *ngIf="faq.open">
           <p>{{ faq.answer }}</p>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ── FOOTER ─────────────────────────────────────────────────── -->
+  <!-- ── FOOTER ──────────────────────────────────────────────── -->
   <footer class="app-footer">
-    <div class="footer-logo">
-      <ion-icon name="briefcase-outline" class="footer-logo-icon"></ion-icon>
+    <div class="footer-brand">
+      <ion-icon name="briefcase-outline"></ion-icon>
       <span>FreelanceHub</span>
     </div>
-
-    <p class="footer-tagline">Connecting talent with opportunity.</p>
-
+    <p class="footer-tag">Connecting talent with opportunity.</p>
     <div class="footer-links">
-      <span class="footer-link">About</span>
-      <span class="footer-divider">·</span>
-      <span class="footer-link">Contact</span>
-      <span class="footer-divider">·</span>
-      <span class="footer-link">Privacy</span>
-      <span class="footer-divider">·</span>
-      <span class="footer-link">Terms</span>
+      <span>About</span><span class="dot">·</span>
+      <span>Contact</span><span class="dot">·</span>
+      <span>Privacy</span><span class="dot">·</span>
+      <span>Terms</span>
     </div>
-
     <div class="footer-socials">
-      <div class="social-icon"><ion-icon name="logo-linkedin"></ion-icon></div>
-      <div class="social-icon"><ion-icon name="logo-twitter"></ion-icon></div>
-      <div class="social-icon"><ion-icon name="logo-instagram"></ion-icon></div>
-      <div class="social-icon"><ion-icon name="logo-github"></ion-icon></div>
+      <div class="social-btn"><ion-icon name="logo-linkedin"></ion-icon></div>
+      <div class="social-btn"><ion-icon name="logo-twitter"></ion-icon></div>
+      <div class="social-btn"><ion-icon name="logo-instagram"></ion-icon></div>
+      <div class="social-btn"><ion-icon name="logo-github"></ion-icon></div>
     </div>
-
     <p class="footer-copy">© 2026 FreelanceHub · ENSIT</p>
   </footer>
 
+  <div style="height:80px"></div>
 </ion-content>
 
-<!-- ── BOTTOM TAB BAR ─────────────────────────────────────────── -->
-<ion-tab-bar slot="bottom" class="custom-tab-bar">
-  <ion-tab-button class="tab-btn active-tab">
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  BOTTOM TAB BAR                                           -->
+<!-- ══════════════════════════════════════════════════════════ -->
+<div class="tab-bar">
+  <button class="tab-btn tab-btn--active">
     <ion-icon name="home"></ion-icon>
-  </ion-tab-button>
-  <ion-tab-button class="tab-btn">
-    <ion-icon name="bag-handle-outline"></ion-icon>
-  </ion-tab-button>
-  <ion-tab-button class="tab-btn">
+  </button>
+  <button class="tab-btn" (click)="goToStore()">
+    <ion-icon name="briefcase-outline"></ion-icon>
+  </button>
+  <button class="tab-fab" (click)="goToSearch()">
+    <ion-icon name="search"></ion-icon>
+  </button>
+  <button class="tab-btn" (click)="goToProfile()">
     <ion-icon name="person-outline"></ion-icon>
-  </ion-tab-button>
-</ion-tab-bar>
+  </button>
+  <button class="tab-btn" (click)="goToMessages()">
+    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+  </button>
+</div>
