@@ -9,17 +9,23 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class LoginPage implements OnInit {
-   email = '';
+  selectedRole: 'freelancer' | 'client' = 'freelancer';
+  email = '';
   password = '';
 
   constructor(private http: HttpClient,private router:Router) { }
     ngOnInit() {
     console.log('Page de login prête');
   }
-    onLogin() {
+  selectRole(role: 'freelancer' | 'client') {
+    this.selectedRole = role;
+  }
+
+  onLogin() {
+    console.log("Role sélectionné :", this.selectedRole);
     console.log("Email saisi :", this.email);
     console.log("Password saisi :", this.password);
-    const body = { email: this.email, password: this.password };
+    const body = { email: this.email, password: this.password, role: this.selectedRole };
 
     this.http.post('http://localhost:5000/login', body).subscribe({
       next: (res: any) => alert('Succès : ' + res.message),

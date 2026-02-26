@@ -1,18 +1,14 @@
 <ion-content class="login-content" [fullscreen]="true">
 
-  <!-- Decorative background shapes -->
-  <div class="bg-shape bg-shape--circle"></div>
-  <div class="bg-shape bg-shape--blob"></div>
-  <div class="bg-dots"></div>
-
   <div class="login-wrapper">
 
     <!-- Brand -->
     <div class="brand-section">
-      <div class="brand-text">
-        <h1 class="brand-name">FreelanceHub</h1>
-        <span class="brand-tag">Connect. Create. Collaborate.</span>
+      <div class="brand-logo">
+        <ion-icon name="briefcase" class="logo-icon"></ion-icon>
       </div>
+      <h1 class="brand-name">FreelanceHub</h1>
+      <span class="brand-tag">Connect. Create. Collaborate.</span>
     </div>
 
     <!-- Welcome message -->
@@ -23,11 +19,15 @@
 
     <!-- Role selector -->
     <div class="role-selector">
-      <button class="role-btn role-btn--active">
+      <button type="button" class="role-btn"
+              [class.role-btn--active]="selectedRole==='freelancer'"
+              (click)="selectRole('freelancer')">
         <ion-icon name="briefcase-outline"></ion-icon>
         <span>Freelancer</span>
       </button>
-      <button class="role-btn">
+      <button type="button" class="role-btn"
+              [class.role-btn--active]="selectedRole==='client'"
+              (click)="selectRole('client')">
         <ion-icon name="business-outline"></ion-icon>
         <span>Client</span>
       </button>
@@ -45,7 +45,6 @@
             <ion-input
               name="email"
               [(ngModel)]="email"
-              type="password"
               type="email"
               placeholder="you@example.com"
               class="shell-input"
@@ -58,7 +57,7 @@
         <div class="field-group">
           <div class="label-row">
             <label class="field-label">Password</label>
-            <a href="#" class="forgot-link">Forgot?</a>
+            <a routerLink="/forgot-password" class="forgot-link">Forgot?</a>
           </div>
           <div class="input-shell">
             <ion-icon name="lock-closed-outline" class="shell-icon"></ion-icon>
@@ -82,7 +81,7 @@
         </div>
 
         <!-- CTA -->
-        <ion-button expand="block" class="login-btn" type="submit" (click)="onLogin()">
+        <ion-button  expand="block" class="login-btn" type="submit" (click)="onLogin()">
           <ion-icon name="flash-outline" slot="start"></ion-icon>
           Sign in
         </ion-button>
