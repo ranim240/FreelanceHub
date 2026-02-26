@@ -1,0 +1,350 @@
+<ion-content class="profile-content">
+
+  <div class="profile-wrapper">
+        <!-- Header with back -->
+    <div class="page-header">
+      <button class="back-btn" (click)="goBack()" type="button">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Header -->
+    <div class="profile-header">
+      <h1 class="header-title">My Profile</h1>
+      <div class="header-actions">
+        <button class="header-btn" (click)="openSection('personal')">
+          <ion-icon name="create-outline"></ion-icon>
+        </button>
+        <button class="header-btn">
+          <ion-icon name="settings-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="avatar-container">
+        <div class="avatar-circle">
+          <ion-icon name="person" class="avatar-icon"></ion-icon>
+        </div>
+        <button class="avatar-edit">
+          <ion-icon name="camera-outline"></ion-icon>
+        </button>
+      </div>
+      
+      <h2 class="profile-name">{{ personal.firstName || 'Your' }} {{ personal.lastName || 'Name' }}</h2>
+      <p class="profile-email">{{ personal.email || 'email@example.com' }}</p>
+      
+      <div class="profile-role">
+        <ion-icon name="briefcase-outline"></ion-icon>
+        <span>{{ personal.gender || 'Freelancer' }}</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-item">
+        <h3 class="stat-value">{{ completionPercent }}%</h3>
+        <p class="stat-label">Complete</p>
+      </div>
+      <div class="stat-item">
+        <h3 class="stat-value">0</h3>
+        <p class="stat-label">Jobs Done</p>
+      </div>
+      <div class="stat-item">
+        <h3 class="stat-value">0</h3>
+        <p class="stat-label">Reviews</p>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <h3 class="sections-title">Profile Sections</h3>
+    <div class="sections-list">
+
+      <!-- Personal Details -->
+      <div class="section-card" [class.section-card--completed]="personalDone" (click)="openSection('personal')">
+        <div class="section-info">
+          <div class="section-icon-wrap">
+            <ion-icon name="person-outline" class="section-icon"></ion-icon>
+          </div>
+          <div class="section-text">
+            <span class="section-label">Personal Details</span>
+            <span class="section-desc">{{ personalDone ? 'Completed' : 'Add your info' }}</span>
+          </div>
+        </div>
+        <div class="section-arrow">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </div>
+
+      <!-- Education -->
+      <div class="section-card" [class.section-card--completed]="educationDone" (click)="openSection('education')">
+        <div class="section-info">
+          <div class="section-icon-wrap">
+            <ion-icon name="school-outline" class="section-icon"></ion-icon>
+          </div>
+          <div class="section-text">
+            <span class="section-label">Education</span>
+            <span class="section-desc">{{ educationDone ? 'Completed' : 'Add your education' }}</span>
+          </div>
+        </div>
+        <div class="section-arrow">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </div>
+
+      <!-- Work Experience -->
+      <div class="section-card" [class.section-card--completed]="workDone" (click)="openSection('work')">
+        <div class="section-info">
+          <div class="section-icon-wrap">
+            <ion-icon name="briefcase-outline" class="section-icon"></ion-icon>
+          </div>
+          <div class="section-text">
+            <span class="section-label">Work Experience</span>
+            <span class="section-desc">{{ workDone ? 'Completed' : 'Add your experience' }}</span>
+          </div>
+        </div>
+        <div class="section-arrow">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Settings -->
+    <div class="settings-section">
+      <h3 class="sections-title">Settings</h3>
+      <div class="settings-list">
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-icon-wrap">
+              <ion-icon name="notifications-outline" class="setting-icon"></ion-icon>
+            </div>
+            <span class="setting-label">Notifications</span>
+          </div>
+          <div class="setting-arrow">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-icon-wrap">
+              <ion-icon name="shield-checkmark-outline" class="setting-icon"></ion-icon>
+            </div>
+            <span class="setting-label">Privacy & Security</span>
+          </div>
+          <div class="setting-arrow">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-icon-wrap">
+              <ion-icon name="help-circle-outline" class="setting-icon"></ion-icon>
+            </div>
+            <span class="setting-label">Help & Support</span>
+          </div>
+          <div class="setting-arrow">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </div>
+        </div>
+
+        <div class="setting-item setting-item--danger" (click)="logout()">
+          <div class="setting-info">
+            <div class="setting-icon-wrap">
+              <ion-icon name="log-out-outline" class="setting-icon"></ion-icon>
+            </div>
+            <span class="setting-label">Log Out</span>
+          </div>
+          <div class="setting-arrow">
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- MODAL — Personal Details               -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="form-overlay" *ngIf="activeSection === 'personal'" (click)="closeSection()"></div>
+  <div class="form-sheet" [class.form-sheet--open]="activeSection === 'personal'">
+    <div class="sheet-header">
+      <h3 class="sheet-title">Personal Details</h3>
+      <button class="sheet-close" (click)="closeSection()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <!-- Avatar -->
+    <div class="avatar-area">
+      <div class="avatar-circle">
+        <ion-icon name="person-outline" class="avatar-placeholder"></ion-icon>
+        <button class="avatar-cam">
+          <ion-icon name="camera-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <form class="sheet-form">
+      <div class="sf-group">
+        <label class="sf-label">First Name <span class="req">*</span></label>
+        <ion-input [(ngModel)]="personal.firstName" name="firstName" type="text"
+          placeholder="Enter Your First Name" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Last Name <span class="req">*</span></label>
+        <ion-input [(ngModel)]="personal.lastName" name="lastName" type="text"
+          placeholder="Enter Your Last Name" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Email Address <span class="req">*</span></label>
+        <ion-input [(ngModel)]="personal.email" name="email" type="email"
+          placeholder="Enter Your Email Address" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Phone Number</label>
+        <ion-input [(ngModel)]="personal.phone" name="phone" type="tel"
+          placeholder="Enter Your Phone Number" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Gender <span class="req">*</span></label>
+        <div class="sf-select-wrap">
+          <ion-select [(ngModel)]="personal.gender" name="gender"
+            placeholder="Select Your Gender" class="sf-select" fill="outline">
+            <ion-select-option value="male">Male</ion-select-option>
+            <ion-select-option value="female">Female</ion-select-option>
+            <ion-select-option value="other">Other</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Location</label>
+        <ion-input [(ngModel)]="personal.location" name="location" type="text"
+          placeholder="City, Country" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Bio</label>
+        <ion-textarea [(ngModel)]="personal.bio" name="bio"
+          placeholder="Tell clients about yourself..."
+          class="sf-textarea" fill="outline" [autoGrow]="true" rows="3">
+        </ion-textarea>
+      </div>
+      <button class="save-btn" type="button" (click)="savePersonal()">
+        Save Changes
+      </button>
+    </form>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- MODAL — Education Details              -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="form-overlay" *ngIf="activeSection === 'education'" (click)="closeSection()"></div>
+  <div class="form-sheet" [class.form-sheet--open]="activeSection === 'education'">
+    <div class="sheet-header">
+      <h3 class="sheet-title">Education Details</h3>
+      <button class="sheet-close" (click)="closeSection()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <form class="sheet-form">
+      <div class="sf-group">
+        <label class="sf-label">Degree <span class="req">*</span></label>
+        <div class="sf-select-wrap">
+          <ion-select [(ngModel)]="education.degree" name="degree"
+            placeholder="Select Your Degree" class="sf-select" fill="outline">
+            <ion-select-option value="bac">Baccalauréat</ion-select-option>
+            <ion-select-option value="licence">Licence</ion-select-option>
+            <ion-select-option value="master">Master</ion-select-option>
+            <ion-select-option value="doctorat">Doctorat</ion-select-option>
+            <ion-select-option value="other">Other</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Year Of Graduation <span class="req">*</span></label>
+        <ion-input [(ngModel)]="education.year" name="gradYear" type="number"
+          placeholder="Enter Your Graduation Year" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">College/School/University Name <span class="req">*</span></label>
+        <ion-input [(ngModel)]="education.school" name="school" type="text"
+          placeholder="Enter Your College/School/University" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Department <span class="req">*</span></label>
+        <ion-input [(ngModel)]="education.department" name="department" type="text"
+          placeholder="Enter Your Department" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Description</label>
+        <ion-textarea [(ngModel)]="education.description" name="eduDesc"
+          placeholder="Description" class="sf-textarea" fill="outline"
+          [autoGrow]="true" rows="3">
+        </ion-textarea>
+      </div>
+      <button class="save-btn" type="button" (click)="saveEducation()">
+        Save Changes
+      </button>
+    </form>
+  </div>
+
+  <!-- ════════════════════════════════════════ -->
+  <!-- MODAL — Work Experience                -->
+  <!-- ════════════════════════════════════════ -->
+  <div class="form-overlay" *ngIf="activeSection === 'work'" (click)="closeSection()"></div>
+  <div class="form-sheet" [class.form-sheet--open]="activeSection === 'work'">
+    <div class="sheet-header">
+      <h3 class="sheet-title">Work Experience</h3>
+      <button class="sheet-close" (click)="closeSection()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <form class="sheet-form">
+      <div class="sf-group">
+        <label class="sf-label">Job Title <span class="req">*</span></label>
+        <ion-input [(ngModel)]="work.jobTitle" name="jobTitle" type="text"
+          placeholder="Enter Your Job Title" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Company Name <span class="req">*</span></label>
+        <ion-input [(ngModel)]="work.company" name="company" type="text"
+          placeholder="Enter Your Company Name" class="sf-input" fill="outline"></ion-input>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">From Date <span class="req">*</span></label>
+        <div class="date-input-wrap">
+          <ion-input [(ngModel)]="work.fromDate" name="fromDate" type="date"
+            class="sf-input" fill="outline"></ion-input>
+          <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
+        </div>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">To Date <span class="req">*</span></label>
+        <div class="date-input-wrap">
+          <ion-input [(ngModel)]="work.toDate" name="toDate" type="date"
+            class="sf-input" fill="outline"></ion-input>
+          <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
+        </div>
+      </div>
+      <div class="sf-group">
+        <label class="sf-label">Description</label>
+        <ion-textarea [(ngModel)]="work.description" name="workDesc"
+          placeholder="Description" class="sf-textarea" fill="outline"
+          [autoGrow]="true" rows="3">
+        </ion-textarea>
+      </div>
+      <button class="save-btn" type="button" (click)="saveWork()">
+        Save Changes
+      </button>
+    </form>
+  </div>
+
+</ion-content>

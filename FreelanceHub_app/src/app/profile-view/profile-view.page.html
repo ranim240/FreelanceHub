@@ -1,0 +1,139 @@
+<ion-content class="pv-content">
+
+  <div class="pv-wrapper">
+     <!-- Header with back -->
+    <div class="page-header">
+      <button class="back-btn" (click)="goBack()" type="button">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+    </div>
+    <!-- Header -->
+    <div class="pv-header">
+      <h1 class="header-title">Profile</h1>
+      <div class="header-actions">
+        <button class="header-btn">
+          <ion-icon name="share-social-outline"></ion-icon>
+        </button>
+        <button class="header-btn">
+          <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <div class="avatar-wrap">
+        <div class="avatar-ring">
+          <img
+            [src]="profile.avatarUrl || 'assets/avatar-placeholder.png'"
+            class="avatar-img"
+            alt="Profile photo"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+          <div class="avatar-fallback">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+
+      <h1 class="profile-name">{{ profile.firstName || 'Your' }} {{ profile.lastName || 'Name' }}</h1>
+
+      <div class="profile-location" *ngIf="profile.location">
+        <ion-icon name="location-outline" class="loc-icon"></ion-icon>
+        <span>{{ profile.location }}</span>
+      </div>
+
+      <div class="role-badge" *ngIf="profile.gender">
+        <ion-icon name="briefcase-outline"></ion-icon>
+        <span>{{ profile.gender }}</span>
+      </div>
+
+      <button class="edit-btn" (click)="goToEdit()">
+        <ion-icon name="create-outline"></ion-icon>
+        Edit Profile
+      </button>
+    </div>
+
+    <!-- Bio Section -->
+    <div class="section-block" *ngIf="profile.bio">
+      <h3 class="section-heading">About</h3>
+      <div class="bio-card">
+        <p class="bio-text">{{ profile.bio }}</p>
+      </div>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="section-block">
+      <h3 class="section-heading">Contact Information</h3>
+      <div class="info-card">
+        <div class="card-item">
+          <div class="card-icon">
+            <ion-icon name="mail-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <span class="card-label">Email</span>
+            <span class="card-value">{{ profile.email || 'Not provided' }}</span>
+          </div>
+        </div>
+        <div class="card-item" *ngIf="profile.phone">
+          <div class="card-icon">
+            <ion-icon name="call-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <span class="card-label">Phone</span>
+            <span class="card-value">{{ profile.phone }}</span>
+          </div>
+        </div>
+        <div class="card-item" *ngIf="profile.location">
+          <div class="card-icon">
+            <ion-icon name="location-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <span class="card-label">Location</span>
+            <span class="card-value">{{ profile.location }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="section-block" *ngIf="education.school">
+      <h3 class="section-heading">Education</h3>
+      <div class="info-card">
+        <div class="card-item">
+          <div class="card-icon">
+            <ion-icon name="school-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <span class="card-value">{{ education.degree }} in {{ education.department }}</span>
+            <span class="card-label">{{ education.school }}, {{ education.year }}</span>
+          </div>
+        </div>
+        <p class="card-desc" *ngIf="education.description">{{ education.description }}</p>
+      </div>
+    </div>
+
+    <!-- Work Experience -->
+    <div class="section-block" *ngIf="work.jobTitle">
+      <h3 class="section-heading">Work Experience</h3>
+      <div class="info-card">
+        <div class="card-item">
+          <div class="card-icon">
+            <ion-icon name="briefcase-outline"></ion-icon>
+          </div>
+          <div class="card-content">
+            <span class="card-value">{{ work.jobTitle }}</span>
+            <span class="card-label">{{ work.company }}</span>
+          </div>
+        </div>
+        <div class="date-range" *ngIf="work.fromDate || work.toDate">
+          <span>{{ formatDate(work.fromDate) }}</span>
+          <span class="date-separator">→</span>
+          <span>{{ formatDate(work.toDate) }}</span>
+        </div>
+        <p class="card-desc" *ngIf="work.description">{{ work.description }}</p>
+      </div>
+    </div>
+
+  </div>
+
+</ion-content>

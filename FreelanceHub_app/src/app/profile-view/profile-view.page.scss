@@ -1,0 +1,339 @@
+// ══════════════════════════════════════════════════════════════
+//  FreelanceHub — Profile View Page Styles (Matching Login/Register)
+// ══════════════════════════════════════════════════════════════
+
+:host {
+  --fh-primary:     #1A1A2E;
+  --fh-accent:      #4F46E5;
+  --fh-accent-soft: #EEF2FF;
+  --fh-surface:     #F8F9FC;
+  --fh-card:        #FFFFFF;
+  --fh-muted:       #6B7280;
+  --fh-border:      #E5E7EB;
+  --fh-success:     #10B981;
+  --fh-danger:      #EF4444;
+  --fh-radius:      14px;
+}
+
+// ── Content Base ─────────────────────────────────────────────
+.pv-content {
+  --background: var(--fh-surface);
+  --color: var(--fh-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+// ── Wrapper ──────────────────────────────────────────────────
+.pv-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 20px 20px 100px;
+  gap: 20px;
+}
+
+// ── Header ───────────────────────────────────────────────────
+.pv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  margin-bottom: 8px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--fh-primary);
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.header-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: var(--fh-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s;
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--fh-primary);
+  }
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// ── Hero Section ─────────────────────────────────────────────
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px;
+  background: var(--fh-card);
+  border: 1px solid var(--fh-border);
+  border-radius: var(--fh-radius);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+// ── Avatar ─────────────────────────────────────────────────
+.avatar-wrap {
+  margin-bottom: 16px;
+}
+
+.avatar-ring {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--fh-primary), #3a3a7c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(26, 26, 46, 0.25);
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-fallback {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+
+  ion-icon {
+    font-size: 48px;
+    color: #fff;
+  }
+}
+
+// ── Name & Location ─────────────────────────────────────────
+.profile-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--fh-primary);
+  margin: 0 0 8px;
+  text-align: center;
+}
+
+.profile-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+
+  .loc-icon {
+    font-size: 16px;
+    color: var(--fh-accent);
+  }
+
+  span {
+    font-size: 14px;
+    color: var(--fh-muted);
+    font-weight: 500;
+  }
+}
+
+// ── Role Badge ──────────────────────────────────────────────
+.role-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: var(--fh-accent-soft);
+  border-radius: 20px;
+  color: var(--fh-accent);
+  font-size: 13px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 16px;
+  }
+}
+
+// ── Edit Button ─────────────────────────────────────────────
+.edit-btn {
+  margin-top: 16px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: 1.5px solid var(--fh-accent);
+  background: transparent;
+  color: var(--fh-accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  ion-icon {
+    font-size: 16px;
+  }
+
+  &:hover {
+    background: var(--fh-accent);
+    color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// ── Section Blocks ───────────────────────────────────────────
+.section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.section-heading {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--fh-primary);
+  margin: 8px 0 4px;
+}
+
+// ── Bio ────────────────────────────────────────────────────
+.bio-card {
+  background: var(--fh-card);
+  border: 1px solid var(--fh-border);
+  border-radius: var(--fh-radius);
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.bio-text {
+  font-size: 14px;
+  color: var(--fh-muted);
+  line-height: 1.7;
+  margin: 0;
+}
+
+// ── Info Card ──────────────────────────────────────────────
+.info-card {
+  background: var(--fh-card);
+  border: 1px solid var(--fh-border);
+  border-radius: var(--fh-radius);
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--fh-accent-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  ion-icon {
+    font-size: 16px;
+    color: var(--fh-accent);
+  }
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.card-label {
+  font-size: 12px;
+  color: var(--fh-muted);
+  font-weight: 500;
+}
+
+.card-value {
+  font-size: 14px;
+  color: var(--fh-primary);
+  font-weight: 600;
+}
+
+.card-desc {
+  font-size: 13px;
+  color: var(--fh-muted);
+  line-height: 1.5;
+  margin-top: 4px;
+}
+
+// ── Date Range ──────────────────────────────────────────────
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--fh-muted);
+
+  .date-separator {
+    color: var(--fh-accent);
+    font-weight: 600;
+  }
+}
+
+// ── Skills (if needed) ──────────────────────────────────────
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.skill-tag {
+  padding: 6px 12px;
+  background: var(--fh-accent-soft);
+  border-radius: 16px;
+  color: var(--fh-accent);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+// ── Responsive ──────────────────────────────────────────────
+@media (min-width: 480px) {
+  .pv-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+}
+
+@media (min-height: 750px) {
+  .pv-wrapper {
+    padding: 24px 24px 120px;
+    gap: 24px;
+  }
+}
