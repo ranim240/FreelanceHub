@@ -1,0 +1,208 @@
+<!-- Floating glass header -->
+<ion-header class="ion-no-border pd-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="glass-btn" (click)="goBack()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <button class="glass-btn" (click)="toggleWishlist()">
+        <ion-icon [name]="isWishlisted ? 'heart' : 'heart-outline'"
+                  [class.heart-lit]="isWishlisted"></ion-icon>
+      </button>
+      <button class="glass-btn">
+        <ion-icon name="share-social-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="pd-root" *ngIf="product" scrollEvents="true">
+
+  <!-- ▓▓▓ ACT 1 — CINEMATIC HERO ▓▓▓ -->
+  <div class="act-hero">
+    <div class="hero-img-wrap">
+      <img [src]="product.image" [alt]="product.title" class="hero-img" />
+      <div class="hero-veil"></div>
+    </div>
+
+    <!-- Category pill — vertical, pinned right -->
+    <div class="hero-category">{{ product.badge }}</div>
+
+    <!-- Rating strip — on the image, lifted from bottom -->
+    <div class="hero-rating-strip">
+      <span class="rating-num">{{ product.rating }}</span>
+      <div class="rating-stars">
+        <ion-icon name="star" *ngFor="let s of getStars(product.rating)"></ion-icon>
+        <ion-icon name="star-outline" *ngFor="let s of getEmptyStars(product.rating)"></ion-icon>
+      </div>
+      <span class="rating-count">{{ product.reviews }} reviews</span>
+    </div>
+  </div>
+
+  <!-- ▓▓▓ ACT 2 — TITLE ERUPTS FROM THE IMAGE ▓▓▓ -->
+  <div class="act-title">
+    <div class="title-inner">
+      <h1 class="pd-title">{{ product.title }}</h1>
+      <div class="title-underline"></div>
+    </div>
+  </div>
+
+  <!-- ▓▓▓ ACT 3 — PRICE AS A GIANT TYPOGRAPHIC OBJECT ▓▓▓ -->
+  <div class="act-price">
+    <div class="price-context">
+      <div class="author-micro">
+        <div class="micro-ava">{{ product.authorInitials }}</div>
+        <div>
+          <p class="micro-by">by</p>
+          <p class="micro-name">{{ product.author }}</p>
+        </div>
+      </div>
+      <div class="meta-micro-row">
+        <span class="meta-chip">
+          <ion-icon name="shield-checkmark-outline"></ion-icon>{{ product.license }}
+        </span>
+        <span class="meta-chip">
+          <ion-icon name="calendar-outline"></ion-icon>{{ product.lastUpdate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- The giant price — right side, bleeds off -->
+    <div class="giant-price-wrap">
+      <span class="giant-price-num">{{ product.price }}</span>
+      <span class="giant-price-cur">DT</span>
+    </div>
+  </div>
+
+  <!-- ▓▓▓ ACT 4 — DESCRIPTION WITH ANIMATED LABEL ▓▓▓ -->
+  <div class="act-section">
+    <div class="act-label-row">
+      <span class="act-label">About</span>
+      <span class="act-label-line"></span>
+    </div>
+    <div class="about-body">
+      <p class="about-p" *ngFor="let p of getParagraphs(product.description)">{{ p }}</p>
+    </div>
+  </div>
+
+  <!-- ▓▓▓ ACT 5 — TECH STACK CAROUSEL ▓▓▓ -->
+  <div class="act-section act-tech">
+    <div class="act-label-row">
+      <span class="act-label">Tech Stack</span>
+      <span class="act-label-line"></span>
+    </div>
+    <div class="tech-carousel-wrapper"
+         #carouselWrapper
+         (mouseenter)="onCarouselEnter()"
+         (mouseleave)="onCarouselLeave()"
+         (mousedown)="onDragStart($event)"
+         (touchstart)="onTouchStart($event)">
+      <div class="tech-carousel-track" #carouselTrack>
+        <span
+          class="tc-chip"
+          *ngFor="let t of techStackDoubled; let ti = index"
+          [class.tc-dark]="(ti % (product.techStack.length)) % 4 === 0"
+          [class.tc-accent]="(ti % (product.techStack.length)) % 4 === 1"
+          [class.tc-outline]="(ti % (product.techStack.length)) % 4 === 2"
+          [class.tc-soft]="(ti % (product.techStack.length)) % 4 === 3">
+          {{ t }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ▓▓▓ ACT 6 — FEATURES AS ANIMATED TIMELINE ▓▓▓ -->
+  <div class="act-section">
+    <div class="act-label-row">
+      <span class="act-label">What's Inside</span>
+      <span class="act-label-line"></span>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-track"></div>
+      <div class="tl-item" *ngFor="let feat of product.features; let fi = index"
+           [style.--fi]="fi">
+        <div class="tl-node">
+          <ion-icon name="checkmark-sharp"></ion-icon>
+        </div>
+        <p class="tl-text">{{ feat }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ▓▓▓ ACT 7 — REVIEWS: STACKED OFFSET CARDS ▓▓▓ -->
+  <div class="act-section act-reviews">
+    <div class="act-label-row">
+      <span class="act-label">From the Community</span>
+      <span class="act-label-line"></span>
+    </div>
+
+    <!-- Global score row -->
+    <div class="global-score-row">
+      <div class="gs-left">
+        <span class="gs-big">{{ product.rating }}</span>
+        <span class="gs-max">/5</span>
+      </div>
+      <div class="gs-right">
+        <div class="gs-stars">
+          <ion-icon name="star" *ngFor="let s of getStars(product.rating)"></ion-icon>
+          <ion-icon name="star-outline" *ngFor="let s of getEmptyStars(product.rating)"></ion-icon>
+        </div>
+        <span class="gs-based">Based on {{ product.reviews }} ratings</span>
+      </div>
+    </div>
+
+    <!-- Horizontal scroll cards — no tilt -->
+    <div class="rev-deck-scroll">
+      <div
+        class="rev-deck-card"
+        *ngFor="let rev of product.customerReviews; let ri = index"
+        [style.--ri]="ri">
+
+        <p class="rdc-comment">"{{ rev.comment }}"</p>
+
+        <div class="rdc-footer">
+          <div class="rdc-ava">{{ rev.initials }}</div>
+          <div class="rdc-info">
+            <p class="rdc-name">{{ rev.author }}</p>
+            <div class="rdc-stars">
+              <ion-icon name="star" *ngFor="let s of getStars(rev.rating)"></ion-icon>
+            </div>
+          </div>
+          <span class="rdc-date">{{ rev.date }}</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div style="height:110px"></div>
+
+</ion-content>
+
+<!-- Not found -->
+<ion-content *ngIf="!product" class="pd-root">
+  <div class="nf-wrap">
+    <ion-icon name="cube-outline"></ion-icon>
+    <p>Product not found</p>
+    <button (click)="goBack()">← Back to Store</button>
+  </div>
+</ion-content>
+
+<!-- ▓▓▓ FIXED CTA ▓▓▓ -->
+<div class="pd-cta" *ngIf="product">
+  <button
+    class="cta-pill"
+    [class.cta-done]="isAddedToCart"
+    (click)="isAddedToCart ? downloadProduct() : addToCart()">
+
+    <span class="cta-glow"></span>
+
+    <span class="cta-content">
+      <ion-icon [name]="isAddedToCart ? 'cloud-download-outline' : 'bag-add-outline'"></ion-icon>
+      <span>{{ isAddedToCart ? 'Download Now' : 'Add to Cart · ' + product.price + ' DT' }}</span>
+    </span>
+  </button>
+</div>

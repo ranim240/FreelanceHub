@@ -1,3 +1,77 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+
+  <ion-menu contentId="main-content" menuId="main-menu" side="start" type="overlay">
+    <ion-content class="sidebar-content">
+      <div class="sidebar-wrapper">
+        <div>
+          <div class="sb-header">
+            <div class="sb-brand">
+              <div class="sb-brand-icon">
+                <ion-icon name="briefcase-outline"></ion-icon>
+              </div>
+              <div class="sb-brand-text">
+                <p class="sb-brand-name">FreelanceHub</p>
+                <p class="sb-brand-tagline">Connecting talent with opportunity</p>
+              </div>
+            </div>
+            <ion-menu-toggle>
+              <button class="sb-close">
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+            </ion-menu-toggle>
+          </div>
+
+          <p class="sb-section-label">Navigate</p>
+          <nav class="sb-nav">
+            <ion-menu-toggle auto-hide="false">
+              <button class="sb-nav-item" (click)="goTo('/home')">
+                <span class="sb-nav-icon"><ion-icon name="home-outline"></ion-icon></span>
+                <span class="sb-nav-label">Home</span>
+              </button>
+            </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false">
+              <button class="sb-nav-item" (click)="goTo('/store')">
+                <span class="sb-nav-icon"><ion-icon name="storefront-outline"></ion-icon></span>
+                <span class="sb-nav-label">Store</span>
+              </button>
+            </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false">
+              <button class="sb-nav-item" (click)="goTo('/profile')">
+                <span class="sb-nav-icon"><ion-icon name="person-outline"></ion-icon></span>
+                <span class="sb-nav-label">Profile</span>
+              </button>
+            </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false">
+              <button class="sb-nav-item">
+                <span class="sb-nav-icon"><ion-icon name="chatbubble-ellipses-outline"></ion-icon></span>
+                <span class="sb-nav-label">Messages</span>
+              </button>
+            </ion-menu-toggle>
+          </nav>
+
+          <p class="sb-section-label">Support</p>
+          <nav class="sb-nav">
+            <ion-menu-toggle auto-hide="false">
+              <button class="sb-nav-item">
+                <span class="sb-nav-icon"><ion-icon name="help-circle-outline"></ion-icon></span>
+                <span class="sb-nav-label">Help & FAQ</span>
+              </button>
+            </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false">
+              <button class="sb-nav-item">
+                <span class="sb-nav-icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+                <span class="sb-nav-label">Privacy Policy</span>
+              </button>
+            </ion-menu-toggle>
+          </nav>
+        </div>
+
+        <p class="sb-copy">© 2026 FreelanceHub · ENSIT</p>
+      </div>
+    </ion-content>
+  </ion-menu>
+
+  <!--  id="main-content" -->
+  <ion-router-outlet id="main-content"></ion-router-outlet>
+
 </ion-app>
