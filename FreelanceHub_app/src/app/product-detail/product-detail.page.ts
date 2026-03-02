@@ -48,7 +48,7 @@ export class ProductDetailPage implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.pipe(
       switchMap(params => {
-        const id = Number(params.get('id'));
+        const id = params.get('id')!;
         return this.productService.getProductById(id);
       })
     ).subscribe(product => {

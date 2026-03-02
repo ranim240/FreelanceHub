@@ -155,7 +155,7 @@ export class HomePage implements OnInit {
 
   // ── Gigs — uses storeProductId to open the correct product ───
   openGig(gig: Product): void {
-    this.router.navigate(['/product-detail', gig.id]);
+    this.router.navigate(['/product-detail', gig._id]);
   }
 
   toggleFavorite(event: Event, gig: TrendingGig): void {

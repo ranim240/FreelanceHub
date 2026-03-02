@@ -7,7 +7,7 @@ export interface Review {
 }
 
 export interface Product {
-  id: number;
+  _id: string;
   badge: string;
   category: string;
   title: string;
