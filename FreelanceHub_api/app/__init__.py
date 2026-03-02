@@ -23,6 +23,8 @@ def create_app():
 
     #enrgistre les blueprints (routes)
     from app.routes.products import products_bp
+    from app.routes.home import home_bp
     app.register_blueprint(products_bp, url_prefix="/api")
+    app.register_blueprint(home_bp, url_prefix="/api")
 
     return app
