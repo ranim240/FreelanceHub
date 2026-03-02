@@ -1,0 +1,11 @@
+#variable d'environnement
+.env    
+#virtual environment
+venv    
+#cache python
+__pycache__
+*.pyc
+
+#IDE
+.idea/
+.vscode/

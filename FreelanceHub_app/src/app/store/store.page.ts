@@ -86,7 +86,7 @@ export class StorePage implements OnInit {
 
   // ── Navigate to product detail ────────────────────────────────
   openProduct(product: Product): void {
-    this.router.navigate(['/product-detail', product.id]);
+    this.router.navigate(['/product-detail', product._id]);
   }
 
   goBack(): void {
