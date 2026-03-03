@@ -244,8 +244,85 @@ PRODUCTS = [
     }
 ]
 
+ANNOUNCEMENTS = [
+    {
+      "clientName": "Ahmed Ben Ali", "clientInitials": "AB",
+      "postedAt": "2 hours ago", "status": "Open",
+      "title": "E-commerce Mobile App Development",
+      "description": "Looking for an Ionic/Angular developer to build a full mobile app with cart, payment and push notifications.",
+      "tags": ["Ionic", "Angular", "Firebase"], "budget": "800 – 1200 DT", "deadline": "30 days"
+    },
+    {
+      "clientName": "Sara Mansour", "clientInitials": "SM",
+      "postedAt": "5 hours ago", "status": "Open",
+      "title": "Logo Design & Brand Identity",
+      "description": "Need a designer to create a professional logo and complete brand guidelines for a FinTech startup.",
+      "tags": ["Logo", "Figma", "Branding"], "budget": "300 – 500 DT", "deadline": "10 days"
+    },
+    {
+      "clientName": "Karim Trabelsi", "clientInitials": "KT",
+      "postedAt": "1 day ago", "status": "Urgent",
+      "title": "SEO Articles for Tech Blog",
+      "description": "Looking for an experienced writer to produce 10 SEO-optimized articles on AI, cybersecurity and cloud topics.",
+      "tags": ["SEO", "Writing", "AI"], "budget": "150 – 250 DT", "deadline": "7 days"
+    }
+]
+
+CATEGORIES = [
+    { "name": "All",       "icon": "grid-outline",          "active": True  },
+    { "name": "AI",        "icon": "hardware-chip-outline", "active": False },
+    { "name": "Design",    "icon": "color-palette-outline", "active": False },
+    { "name": "Dev",       "icon": "code-slash-outline",    "active": False },
+    { "name": "Writing",   "icon": "pencil-outline",        "active": False },
+    { "name": "Marketing", "icon": "megaphone-outline",     "active": False }
+]
+
+FAQS = [
+    {
+      "question": "How do I become a freelancer on FreelanceHub?",
+      "answer": "Create an account, choose the 'Freelancer' role, complete your profile and submit it for review. An admin will approve it within 24–48 hours.",
+      "open": True
+    },
+    {
+      "question": "How do I post a project as a client?",
+      "answer": "After signing up with the 'Client' role, go to Announcements and click 'New Offer'. Fill in the title, description, budget and deadline.",
+      "open": False
+    },
+    {
+      "question": "How does the digital products Store work?",
+      "answer": "The Store offers starter kits, source code, AI models and designs. After a simulated purchase, you can download the file directly to your device.",
+      "open": False
+    },
+    {
+      "question": "Are my payments secure?",
+      "answer": "Yes, all transactions go through a secure payment system. Payment is only released once the delivery has been validated.",
+      "open": False
+    },
+    {
+      "question": "How do I contact a freelancer?",
+      "answer": "From a Gig page or an announcement, click 'Message' to open a direct conversation with the freelancer.",
+      "open": False
+    }
+]
+
 # Exécution du seeding
 with app.app_context():
+    # Produits
     db.products.delete_many({})  # Vide la collection d'abord
-    result = db.products.insert_many(PRODUCTS)
-    print(f"✅ {len(result.inserted_ids)} produits insérés dans MongoDB !")
+    res_prod = db.products.insert_many(PRODUCTS)
+    print(f"✅ {len(res_prod.inserted_ids)} produits insérés dans MongoDB !")
+
+    # Annonces
+    db.announcements.delete_many({})
+    res_ann = db.announcements.insert_many(ANNOUNCEMENTS)
+    print(f"✅ {len(res_ann.inserted_ids)} annonces insérées !")
+
+    # Catégories
+    db.categories.delete_many({})
+    res_cat = db.categories.insert_many(CATEGORIES)
+    print(f"✅ {len(res_cat.inserted_ids)} catégories insérées !")
+
+    # FAQs
+    db.faqs.delete_many({})
+    res_faq = db.faqs.insert_many(FAQS)
+    print(f"✅ {len(res_faq.inserted_ids)} FAQs insérées !")
