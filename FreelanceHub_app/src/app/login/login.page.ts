@@ -27,9 +27,16 @@ export class LoginPage implements OnInit {
     console.log("Password saisi :", this.password);
     const body = { email: this.email, password: this.password, role: this.selectedRole };
 
-    this.http.post('http://localhost:5000/login', body).subscribe({
-      next: (res: any) => alert('Succès : ' + res.message),
-      error: (err: any) => alert('Erreur : ' + (err.error?.error || 'Serveur injoignable'))
+    this.http.post('http://localhost:5000/api/auth/login', body).subscribe({
+      next: (res: any) => {
+        console.log('Connexion réussie:', res);
+        alert('Succès : ' + res.message);
+        this.router.navigate(['/home']);
+      },
+      error: (err: any) => {
+        console.error('Erreur de connexion:', err);
+        alert('Erreur : ' + (err.error?.error || 'Serveur injoignable'));
+      }
     });
   }
     goToRegister() {

@@ -132,7 +132,7 @@ export class HomePage implements OnInit {
   // ── Navigation ────────────────────────────────────────────────
   goToLogin():         void { console.log('Navigate to Login'); /* this.router.navigate(['/login']); */ }
   goToSignup():        void { console.log('Navigate to Signup'); /* this.router.navigate(['/register']); */ }
-  goToProfile():       void { console.log('Navigate to Profile'); /* this.router.navigate(['/profile']); */ }
+  goToProfile():       void { this.router.navigate(['/profile-view']);} 
   goToStore():         void { this.router.navigate(['/store']); }
   goToAnnouncements(): void { console.log('Navigate to Announcements'); /* this.router.navigate(['/announcements']); */ }
   goToMessages():      void { console.log('Messages'); }

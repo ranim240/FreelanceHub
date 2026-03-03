@@ -28,6 +28,10 @@ const routes: Routes = [
     loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
   {
+    path: 'verify-code',
+    loadChildren: () => import('./verify-code/verify-code.module').then( m => m.VerifyCodePageModule)
+  },
+  {
     path: 'profil',
     loadChildren: () => import('./profil/profil.module').then( m => m.ProfilPageModule)
   },

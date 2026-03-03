@@ -20,9 +20,6 @@ export class RegisterPage implements OnInit {
   username = '';
   email = '';
   password = '';
-  bio = '';
-  tjm: number | null = null;
-  location = '';
   
   domains = [
     { key: 'dev',       label: 'Développement', icon: 'code-slash-outline'    },
@@ -67,18 +64,19 @@ export class RegisterPage implements OnInit {
       lastName: this.lastName,
       username: this.username,
       email: this.email,
-      password: this.password,
-      bio: this.bio,
-      tjm: this.tjm,
-      location: this.location
+      password: this.password
     };
 
-    this.http.post('http://localhost:5000/register', finalData).subscribe({
+    this.http.post('http://localhost:5000/api/auth/register', finalData).subscribe({
       next: (res: any) => {
+        console.log('Inscription réussie:', res);
         alert("Félicitations " + this.firstName + " ! " + res.message);
         this.router.navigate(['/login']);
       },
-      error: (err) => alert("Erreur : " + err.error.error)
+      error: (err) => {
+        console.error('Erreur inscription:', err);
+        alert("Erreur : " + (err.error?.error || 'Erreur serveur'));
+      }
     });
   }
 

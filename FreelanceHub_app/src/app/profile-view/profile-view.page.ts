@@ -51,4 +51,18 @@ export class ProfileViewPage implements OnInit {
   goBack() {
     this.router.navigate(['/home']);
   }
+
+  // ── Bottom tab helpers (mirror home.page navigators) ─────────
+  goToSearch(): void {
+    this.router.navigate(['/store']);
+  }
+
+  goToStore(): void {
+    this.router.navigate(['/store']);
+  }
+
+  goToMessages(): void {
+    // placeholder until messaging feature implemented
+    console.log('Navigate to messages');
+  }
 }

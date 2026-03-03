@@ -18,7 +18,7 @@ export class ForgotPasswordPage {
 
   onSubmit() {
     if (!this.email) {
-      this.message = 'Please enter your email address';
+      this.message = 'Veuillez entrer votre adresse email';
       this.isSuccess = false;
       return;
     }
@@ -27,16 +27,20 @@ export class ForgotPasswordPage {
     this.message = '';
 
     // Send password reset request to backend
-    this.http.post('http://localhost:5000/forgot-password', { email: this.email })
+    this.http.post('http://localhost:5000/api/auth/forgot-password', { email: this.email })
       .subscribe({
         next: (res: any) => {
           this.isSubmitting = false;
-          this.message = res.message || 'Password reset link sent to your email';
+          this.message = res.message || 'Un code de vérification a été envoyé à votre adresse email';
           this.isSuccess = true;
+          // Navigate to verify-code page after successful send
+          setTimeout(() => {
+            this.router.navigate(['/verify-code'], { queryParams: { email: this.email } });
+          }, 2000);
         },
         error: (err) => {
           this.isSubmitting = false;
-          this.message = err.error?.error || 'Failed to send reset link. Please try again.';
+          this.message = err.error?.error || 'Échec de l\'envoi du code. Veuillez réessayer.';
           this.isSuccess = false;
         }
       });
