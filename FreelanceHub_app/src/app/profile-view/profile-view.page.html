@@ -14,6 +14,9 @@
         <button class="header-btn">
           <ion-icon name="share-social-outline"></ion-icon>
         </button>
+        <button class="header-btn" (click)="logout()">
+          <ion-icon name="log-out-outline"></ion-icon>
+        </button>
         <button class="header-btn">
           <ion-icon name="ellipsis-vertical-outline"></ion-icon>
         </button>
@@ -35,7 +38,7 @@
         </div>
       </div>
 
-      <h1 class="profile-name">{{ profile.firstName || 'Your' }} {{ profile.lastName || 'Name' }}</h1>
+      <h1 class="profile-name">{{ profileName }}</h1>
 
       <div class="profile-location" *ngIf="profile.location">
         <ion-icon name="location-outline" class="loc-icon"></ion-icon>

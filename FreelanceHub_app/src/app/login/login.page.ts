@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { Router } from '@angular/router';
+import { AuthService, User } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,9 @@ export class LoginPage implements OnInit {
   email = '';
   password = '';
 
-  constructor(private http: HttpClient,private router:Router) { }
+  constructor(private http: HttpClient,
+              private router: Router,
+              private auth: AuthService) { }
     ngOnInit() {
     console.log('Page de login prête');
   }
@@ -31,6 +34,10 @@ export class LoginPage implements OnInit {
       next: (res: any) => {
         console.log('Connexion réussie:', res);
         alert('Succès : ' + res.message);
+        // store authenticated user and update state
+        if (res.user) {
+          this.auth.login(res.user as User);
+        }
         this.router.navigate(['/home']);
       },
       error: (err: any) => {

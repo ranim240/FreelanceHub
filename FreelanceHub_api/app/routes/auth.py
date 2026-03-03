@@ -95,11 +95,12 @@ def login():
     user = db.users.find_one({"email": email})
     
     if not user:
-        return jsonify({"error": "Email ou mot de passe incorrect"}), 401
+        # user does not exist
+        return jsonify({"error": "Aucun compte trouvé pour cet email."}), 401
     
     # Vérifier le mot de passe
     if not check_password_hash(user["password"], password):
-        return jsonify({"error": "Email ou mot de passe incorrect"}), 401
+        return jsonify({"error": "Mot de passe incorrect."}), 401
     
     # Connexion réussie
     user_data = serialize_user(user)

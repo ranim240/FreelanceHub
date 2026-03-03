@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProfileService } from '../profile.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-profil',
@@ -31,6 +32,7 @@ export class ProfilPage implements OnInit {
   constructor(
     private router: Router,
     private profileService: ProfileService
+    , private auth: AuthService
   ) {}
 
   ngOnInit() {
@@ -38,6 +40,18 @@ export class ProfilPage implements OnInit {
     this.personal = this.profileService.getPersonal();
     this.education = this.profileService.getEducation();
     this.work = this.profileService.getWork();
+
+    // Merge authenticated user data when available
+    this.auth.user$.subscribe(user => {
+      if (user) {
+        // Prefer existing personal fields but fill from auth user where missing
+        this.personal = { ...user, ...this.personal };
+        this.personal.firstName = this.personal.firstName || user.firstName || '';
+        this.personal.lastName = this.personal.lastName || user.lastName || '';
+        this.personal.email = this.personal.email || user.email || '';
+        this.personal.avatar = this.personal.avatar || user.avatarUrl || '';
+      }
+    });
 
     // Check completion status
     this.personalDone = this.profileService.isPersonalComplete();
@@ -98,11 +112,9 @@ export class ProfilPage implements OnInit {
 
   // ── Logout ────────────────────────────────
   logout() {
-    // Clear user data from service
+    // Clear profile data and logout via auth service
     this.profileService.clearAll();
-    // Clear localStorage
-    localStorage.clear();
-    // Navigate to login page
+    this.auth.logout();
     this.router.navigate(['/login']);
   }
   goBack() {
