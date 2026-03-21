@@ -1,0 +1,113 @@
+<ion-content class="verify-content" [fullscreen]="true">
+
+  <div class="verify-wrapper">
+
+    <!-- Back Button -->
+    <button class="back-btn" (click)="goBack()">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </button>
+
+    <!-- Header -->
+    <div class="header-section">
+      <div class="brand-logo">
+        <ion-icon name="shield-checkmark" class="logo-icon"></ion-icon>
+      </div>
+      <h1 class="page-title" *ngIf="step === 'verify'">Vérification</h1>
+      <h1 class="page-title" *ngIf="step === 'reset'">Nouveau mot de passe</h1>
+      <p class="page-subtitle" *ngIf="step === 'verify'">Entrez le code de vérification envoyé à votre email</p>
+      <p class="page-subtitle" *ngIf="step === 'reset'">Créez un nouveau mot de passe pour votre compte</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="verify-card">
+      
+      <!-- Email Display -->
+      <div class="email-display" *ngIf="step === 'verify'">
+        <ion-icon name="mail-outline"></ion-icon>
+        <span>{{ email }}</span>
+      </div>
+
+      <form class="verify-form" (ngSubmit)="step === 'verify' ? onVerifyCode() : onResetPassword()">
+        
+        <!-- Verification Code Input -->
+        <div class="field-group" *ngIf="step === 'verify'">
+          <label class="field-label">Code de vérification</label>
+          <div class="input-shell">
+            <ion-icon name="key-outline" class="shell-icon"></ion-icon>
+            <ion-input
+              name="code"
+              [(ngModel)]="code"
+              type="text"
+              placeholder="000000"
+              class="shell-input"
+              fill="outline"
+              maxlength="6">
+            </ion-input>
+          </div>
+        </div>
+
+        <!-- New Password Input -->
+        <div class="field-group" *ngIf="step === 'reset'">
+          <label class="field-label">Nouveau mot de passe</label>
+          <div class="input-shell">
+            <ion-icon name="lock-closed-outline" class="shell-icon"></ion-icon>
+            <ion-input
+              name="newPassword"
+              [(ngModel)]="newPassword"
+              type="password"
+              placeholder="••••••••"
+              class="shell-input"
+              fill="outline">
+            </ion-input>
+          </div>
+        </div>
+
+        <!-- Confirm Password Input -->
+        <div class="field-group" *ngIf="step === 'reset'">
+          <label class="field-label">Confirmer le mot de passe</label>
+          <div class="input-shell">
+            <ion-icon name="lock-closed-outline" class="shell-icon"></ion-icon>
+            <ion-input
+              name="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              type="password"
+              placeholder="••••••••"
+              class="shell-input"
+              fill="outline">
+            </ion-input>
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div class="message-box" *ngIf="message" [class.message-success]="isSuccess" [class.message-error]="!isSuccess">
+          <ion-icon [name]="isSuccess ? 'checkmark-circle' : 'alert-circle'"></ion-icon>
+          <span>{{ message }}</span>
+        </div>
+
+        <!-- CTA -->
+        <ion-button 
+          expand="block" 
+          class="submit-btn" 
+          type="submit"
+          [disabled]="isSubmitting">
+          <ion-spinner *ngIf="isSubmitting" name="crescent"></ion-spinner>
+          <span *ngIf="!isSubmitting && step === 'verify'">Vérifier le code</span>
+          <span *ngIf="!isSubmitting && step === 'reset'">Réinitialiser le mot de passe</span>
+        </ion-button>
+
+      </form>
+
+      <!-- Resend Code -->
+      <div class="resend-row" *ngIf="step === 'verify'">
+        <p>Vous n'avez pas reçu de code?</p>
+        <a (click)="onVerifyCode()" class="resend-link">
+          Renvoyer le code
+          <ion-icon name="refresh-outline"></ion-icon>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+
+</ion-content>

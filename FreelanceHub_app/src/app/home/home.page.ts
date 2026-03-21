@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
+import { AuthService, User } from '../services/auth.service';
 
 import { Announcement } from '../models/announcement.model';
 import { Category } from '../models/category.model';
@@ -19,7 +20,7 @@ type TrendingGig = Product & { isFavorite: boolean };
 export class HomePage implements OnInit {
 
   isLoggedIn = false;
-  currentUser = { name: 'Ahmed Ben Ali', initials: 'AB', avatar: '' };
+  currentUser: { name?: string; initials?: string; avatar?: string } = { name: '', initials: '', avatar: '' };
 
   // Search — navigates to store on submit
   searchQuery = '';
@@ -35,10 +36,28 @@ export class HomePage implements OnInit {
   constructor(
     private router: Router,
     private productService: ProductService,
-    private homeService: HomeService
+    private homeService: HomeService,
+    private auth: AuthService
   ) { }
 
+
   ngOnInit(): void {
+    // observe authentication state
+    this.auth.user$.subscribe(user => {
+      this.isLoggedIn = !!user;
+      if (user) {
+        this.currentUser.name = `${user.firstName || ''} ${user.lastName || ''}`.trim();
+        if (user.avatarUrl) {
+          this.currentUser.avatar = user.avatarUrl;
+        } else {
+          const initials = ((user.firstName?.[0]||'') + (user.lastName?.[0]||'')).toUpperCase();
+          this.currentUser.initials = initials;
+        }
+      } else {
+        this.currentUser = { name: '', initials: '', avatar: '' };
+      }
+    });
+
     // Load products
     this.productService.getFeaturedProducts().subscribe(products => {
       this.trendingGigs = products.map(p => ({ ...p, isFavorite: false }));
@@ -62,10 +81,11 @@ export class HomePage implements OnInit {
   }
 
   // ── Navigation ────────────────────────────────────────────────
-  goToLogin(): void { console.log('Navigate to Login'); /* this.router.navigate(['/login']); */ }
-  goToSignup(): void { console.log('Navigate to Signup'); /* this.router.navigate(['/register']); */ }
-  goToProfile(): void { console.log('Navigate to Profile'); /* this.router.navigate(['/profile']); */ }
-  goToStore(): void { this.router.navigate(['/store']); }
+  goToLogin():         void { this.router.navigate(['/login']); }
+  goToSignup():        void { this.router.navigate(['/register']); }
+  goToProfile():       void { this.router.navigate(['/profile-view']);} 
+  goToStore():         void { this.router.navigate(['/store']); }
+
   goToAnnouncements(): void { console.log('Navigate to Announcements'); /* this.router.navigate(['/announcements']); */ }
   goToMessages(): void { console.log('Messages'); }
   goToSearch(): void { this.router.navigate(['/store']); }

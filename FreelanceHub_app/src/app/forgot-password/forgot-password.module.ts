@@ -5,18 +5,17 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { IonicModule } from '@ionic/angular';
 
-import { LoginPageRoutingModule } from './login-routing.module';
-import { LoginPage } from './login.page';
-
-
+import { ForgotPasswordPageRoutingModule } from './forgot-password-routing.module';
+import { ForgotPasswordPage } from './forgot-password.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LoginPageRoutingModule,HttpClientModule
-    ],
-  declarations: [LoginPage]
+    HttpClientModule,
+    ForgotPasswordPageRoutingModule
+  ],
+  declarations: [ForgotPasswordPage]
 })
-export class LoginPageModule {}
+export class ForgotPasswordPageModule {}

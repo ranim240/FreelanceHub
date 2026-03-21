@@ -5,18 +5,17 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { IonicModule } from '@ionic/angular';
 
-import { LoginPageRoutingModule } from './login-routing.module';
-import { LoginPage } from './login.page';
-
-
+import { VerifyCodePageRoutingModule } from './verify-code-routing.module';
+import { VerifyCodePage } from './verify-code.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    LoginPageRoutingModule,HttpClientModule
-    ],
-  declarations: [LoginPage]
+    HttpClientModule,
+    VerifyCodePageRoutingModule
+  ],
+  declarations: [VerifyCodePage]
 })
-export class LoginPageModule {}
+export class VerifyCodePageModule {}
