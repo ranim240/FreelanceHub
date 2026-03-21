@@ -1,0 +1,721 @@
+
+// =============================================
+// REGISTER PAGE — Freeflow · Studio Clair
+// Multi-step registration (3 étapes)
+// =============================================
+
+// ── Variables (mêmes que login) ────────────
+:root {
+  --bg-page:        #f7f5f2;
+  --bg-card:        #ffffff;
+  --bg-input:       #fafaf9;
+
+  --indigo:         #5c4ff5;
+  --indigo-dark:    #4338d4;
+  --indigo-light:   #ede9fe;
+  --indigo-glow:    rgba(92, 79, 245, 0.18);
+
+  --coral:          #ff6b52;
+  --coral-light:    #fff1ee;
+  --coral-glow:     rgba(255, 107, 82, 0.18);
+
+  --amber:          #f5a623;
+  --amber-light:    #fef3dc;
+  --amber-glow:     rgba(245, 166, 35, 0.18);
+
+  --text-title:     #1a1825;
+  --text-body:      #44405c;
+  --text-muted:     #9590ac;
+
+  --border:         #e8e4f0;
+  --border-input:   #ddd8ed;
+
+  --r-card:         22px;
+  --r-input:        12px;
+  --r-btn:          14px;
+  --r-pill:         100px;
+}
+
+// ── Content ────────────────────────────────
+.register-content {
+  --background: var(--bg-page);
+  --color: var(--text-body);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+// ── Background (même que login) ────────────
+.bg-shape {
+  position: fixed;
+  pointer-events: none;
+  z-index: 0;
+
+  &--circle {
+    width: 380px;
+    height: 380px;
+    top: -140px;
+    right: -100px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, #ede9fe 0%, #e0d9fb 40%, transparent 70%);
+    animation: shapeFloat 9s ease-in-out infinite;
+  }
+
+  &--blob {
+    width: 260px;
+    height: 260px;
+    bottom: -60px;
+    left: -60px;
+    border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%;
+    background: linear-gradient(135deg, #fff1ee 0%, #fde8d8 100%);
+    animation: blobMorph 12s ease-in-out infinite;
+  }
+}
+
+.bg-dots {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #d4cee8 1.2px, transparent 1.2px);
+  background-size: 28px 28px;
+  opacity: 0.5;
+}
+
+@keyframes shapeFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%       { transform: translateY(-18px) rotate(4deg); }
+}
+
+@keyframes blobMorph {
+  0%, 100% { border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; }
+  50%       { border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%; }
+}
+
+// ── Wrapper ────────────────────────────────
+.register-wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  padding: 24px 20px 40px;
+  gap: 20px;
+}
+
+// ── Animations staggerées ──────────────────
+.page-header    { animation: slideUp 0.5s 0.05s cubic-bezier(0.16,1,0.3,1) both; }
+.welcome-block  { animation: slideUp 0.5s 0.1s  cubic-bezier(0.16,1,0.3,1) both; }
+.role-selector  { animation: slideUp 0.5s 0.15s cubic-bezier(0.16,1,0.3,1) both; }
+.steps-indicator{ animation: slideUp 0.5s 0.18s cubic-bezier(0.16,1,0.3,1) both; }
+.form-card      { animation: slideUp 0.5s 0.22s cubic-bezier(0.16,1,0.3,1) both; }
+.login-row      { animation: slideUp 0.5s 0.28s cubic-bezier(0.16,1,0.3,1) both; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Page Header ────────────────────────────
+.page-header {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-body);
+  transition: all 0.2s;
+
+  ion-icon { font-size: 20px; }
+
+  &:hover {
+    border-color: var(--indigo);
+    color: var(--indigo);
+    background: var(--indigo-light);
+  }
+}
+
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--indigo) 0%, #836ef9 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px var(--indigo-glow);
+
+  // .brand-icon {
+  //   color: #fff;
+  //   font-size: 20px;
+  // }
+}
+
+.header-spacer { width: 40px; }
+
+// ── Welcome ────────────────────────────────
+.welcome-block {
+  text-align: center;
+
+  .welcome-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text-title);
+    margin: 0 0 6px;
+    letter-spacing: -0.8px;
+
+    .title-dot { color: var(--coral); }
+  }
+
+  .welcome-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+}
+
+// ── Role Selector ──────────────────────────
+.role-selector {
+  display: flex;
+  gap: 8px;
+  background: #eeeaf8;
+  border-radius: var(--r-pill);
+  padding: 4px;
+}
+
+.role-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: var(--r-pill);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
+
+  ion-icon { font-size: 15px; }
+
+  &--active {
+    background: var(--indigo);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--indigo-glow);
+  }
+
+  &:not(.role-btn--active):hover {
+    background: rgba(92,79,245,0.08);
+    color: var(--indigo);
+  }
+}
+
+// ── Steps Indicator ────────────────────────
+.steps-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 300px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 auto;
+
+  .step-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    transition: all 0.3s;
+  }
+
+  .step-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  &--active {
+    .step-num {
+      border-color: var(--indigo);
+      color: var(--indigo);
+      background: var(--indigo-light);
+    }
+    .step-label { color: var(--indigo); }
+  }
+
+  &--done {
+    .step-num {
+      border-color: var(--indigo);
+      background: var(--indigo);
+      color: #fff;
+
+      &::after {
+        content: '✓';
+        font-size: 13px;
+      }
+    }
+    // hide number when done
+    .step-num { font-size: 0; }
+  }
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  margin-bottom: 14px;
+  transition: background 0.4s;
+
+  &--active {
+    background: var(--indigo);
+  }
+}
+
+// ── Form Card ──────────────────────────────
+.form-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-card);
+  padding: 24px 22px;
+  box-shadow:
+    0 2px 8px rgba(92,79,245,0.04),
+    0 16px 48px rgba(26,24,37,0.08);
+}
+
+// ── Step Header ────────────────────────────
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.step-badge {
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  border-radius: 14px;
+  background: var(--indigo-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ion-icon {
+    font-size: 22px;
+    color: var(--indigo);
+  }
+
+  &--coral {
+    background: var(--coral-light);
+    ion-icon { color: var(--coral); }
+  }
+
+  &--amber {
+    background: var(--amber-light);
+    ion-icon { color: var(--amber); }
+  }
+}
+
+.step-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-title);
+  margin: 0 0 2px;
+}
+
+.step-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+// ── Form ───────────────────────────────────
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+// ── Field ──────────────────────────────────
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-body);
+  text-transform: uppercase;
+}
+
+.field-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.char-count { text-align: right; }
+
+// ── Input Shell ────────────────────────────
+.input-shell {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  .shell-icon {
+    position: absolute;
+    left: 12px;
+    z-index: 2;
+    color: var(--text-muted);
+    font-size: 17px;
+    pointer-events: none;
+    transition: color 0.2s;
+
+    &--right {
+      left: auto;
+      right: 12px;
+      pointer-events: all;
+      cursor: pointer;
+    }
+  }
+
+  .shell-input {
+    --background: var(--bg-input);
+    --color: var(--text-title);
+    --placeholder-color: var(--text-muted);
+    --border-color: var(--border-input);
+    --border-width: 1.5px;
+    --border-radius: var(--r-input);
+    --padding-start: 14px;
+    --padding-end: 14px;
+    --padding-top: 13px;
+    --padding-bottom: 13px;
+    --highlight-color-focused: var(--indigo);
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;
+
+    &--icon {
+      --padding-start: 40px;
+    }
+  }
+
+  .input-tag {
+    position: absolute;
+    right: 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg-page);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 7px;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .input-suffix {
+    position: absolute;
+    right: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  &:focus-within {
+    .shell-icon:not(.shell-icon--right) { color: var(--indigo); }
+    .shell-input {
+      --border-color: var(--indigo);
+      box-shadow: 0 0 0 3px var(--indigo-glow);
+      border-radius: var(--r-input);
+    }
+  }
+}
+
+// ── Textarea ───────────────────────────────
+.textarea-shell {
+  .shell-textarea {
+    --background: var(--bg-input);
+    --color: var(--text-title);
+    --placeholder-color: var(--text-muted);
+    --border-color: var(--border-input);
+    --border-width: 1.5px;
+    --border-radius: var(--r-input);
+    --padding-start: 14px;
+    --padding-end: 14px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --highlight-color-focused: var(--indigo);
+    font-size: 14px;
+    width: 100%;
+  }
+
+  &:focus-within .shell-textarea {
+    --border-color: var(--indigo);
+    box-shadow: 0 0 0 3px var(--indigo-glow);
+    border-radius: var(--r-input);
+  }
+}
+
+// ── Chips Domaines ─────────────────────────
+.chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--bg-page);
+  color: var(--text-muted);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  ion-icon { font-size: 14px; }
+
+  &--active {
+    border-color: var(--indigo);
+    background: var(--indigo-light);
+    color: var(--indigo);
+  }
+
+  &:hover:not(.chip--active) {
+    border-color: var(--indigo);
+    color: var(--indigo);
+  }
+}
+
+// ── Password Strength ──────────────────────
+.password-strength {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.strength-bars {
+  display: flex;
+  gap: 4px;
+  flex: 1;
+
+  .bar {
+    flex: 1;
+    height: 3px;
+    border-radius: 10px;
+    background: var(--border);
+    transition: background 0.3s;
+
+    &--weak   { background: var(--coral); }
+    &--medium { background: var(--amber); }
+    &--strong { background: #22c55e; }
+  }
+}
+
+.strength-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--coral);
+}
+
+// ── CGU ────────────────────────────────────
+.cgu-row {
+  .custom-checkbox {
+    --checkbox-background-checked: var(--indigo);
+    --border-color-checked: var(--indigo);
+    --border-radius: 6px;
+    --size: 18px;
+    align-items: flex-start;
+  }
+
+  .checkbox-label {
+    font-size: 12px;
+    color: var(--text-body);
+    margin-left: 8px;
+    line-height: 1.5;
+  }
+
+  .inline-link {
+    color: var(--indigo);
+    font-weight: 600;
+    text-decoration: none;
+  }
+}
+
+// ── Avatar Upload ──────────────────────────
+.avatar-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1.5px dashed var(--border-input);
+  border-radius: var(--r-input);
+  background: var(--bg-input);
+}
+
+.avatar-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--indigo-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  .avatar-placeholder {
+    font-size: 26px;
+    color: var(--indigo);
+    opacity: 0.6;
+  }
+}
+
+.avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+  color: var(--text-body);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  ion-icon { font-size: 16px; color: var(--indigo); }
+
+  &:hover {
+    border-color: var(--indigo);
+    color: var(--indigo);
+    background: var(--indigo-light);
+  }
+}
+
+// ── Navigation Buttons ─────────────────────
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.back-step-btn {
+  --color: var(--text-body);
+  --border-color: var(--border);
+  --border-width: 1.5px;
+  --border-radius: var(--r-btn);
+  --background-hover: var(--bg-page);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  flex: 0 0 auto;
+  height: 50px;
+}
+
+.next-btn {
+  --background: linear-gradient(135deg, var(--indigo) 0%, #836ef9 100%);
+  --background-hover: linear-gradient(135deg, var(--indigo-dark) 0%, var(--indigo) 100%);
+  --color: #7e3e3e;
+  --border-radius: var(--r-btn);
+  --box-shadow: 0 8px 24px var(--indigo-glow);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  height: 50px;
+  width: 100%;
+  transition: transform 0.2s;
+
+  &--flex { flex: 1; width: auto; }
+  &:active { transform: scale(0.98); }
+}
+
+.submit-btn {
+  @extend .next-btn;
+  --background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  --box-shadow: 0 8px 24px rgba(34, 197, 94, 0.25);
+  flex: 1;
+  width: auto;
+}
+
+// ── Login Row ──────────────────────────────
+.login-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .login-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--indigo);
+    cursor: pointer;
+    transition: gap 0.2s;
+
+    ion-icon { font-size: 16px; transition: transform 0.2s; }
+
+    &:hover {
+      gap: 8px;
+      ion-icon { transform: translateX(3px); }
+    }
+  }
+}
