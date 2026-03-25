@@ -37,7 +37,6 @@ def create_app():
     from app.routes.products import products_bp
     from app.routes.auth import auth_bp
     from app.routes.home import home_bp
-    from app.routes.auth import auth_bp
     app.register_blueprint(products_bp, url_prefix="/api")
     app.register_blueprint(home_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api")

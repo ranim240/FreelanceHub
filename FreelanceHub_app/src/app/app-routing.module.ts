@@ -12,13 +12,10 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-<<<<<<< HEAD
-=======
     path: 'splash',
     loadChildren: () => import('./splash/splash.module').then( m => m.SplashPageModule)
   },
   {
->>>>>>> origin/test_fusion
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   },
@@ -27,8 +24,6 @@ const routes: Routes = [
     loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
   },
   {
-<<<<<<< HEAD
-=======
     path: 'forgot-password',
     loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   },
@@ -44,9 +39,7 @@ const routes: Routes = [
     path: 'profile-view',
     loadChildren: () => import('./profile-view/profile-view.module').then( m => m.ProfileViewPageModule)
   },
-
   {
->>>>>>> origin/test_fusion
     path: 'store',
     loadChildren: () => import('./store/store.module').then( m => m.StorePageModule)
   },
@@ -54,10 +47,6 @@ const routes: Routes = [
     path: 'product-detail/:id',
     loadChildren: () => import('./product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
   },
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/test_fusion
 ];
 
 
