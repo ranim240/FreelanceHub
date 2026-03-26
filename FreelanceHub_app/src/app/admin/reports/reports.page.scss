@@ -1,0 +1,90 @@
+// reports.page.scss
+@import "../../admin/users/users.page.scss"; // Réutilisation des styles admin existants
+
+.rep-item {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+}
+
+.rep-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.rep-date {
+  font-size: 11px;
+  color: #94A3B8;
+  margin-left: auto;
+}
+
+.rep-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: #F8FAFC;
+  border-radius: 10px;
+  border: 1px solid #E2E8F0;
+}
+
+.rep-target {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rep-target-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rep-target-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1A1A2E;
+}
+
+.rep-reason {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #EF4444;
+  ion-icon { font-size: 18px; }
+}
+
+.rep-description {
+  font-size: 13px;
+  color: #475569;
+  margin: 4px 0 0;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.rep-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.badge-target {
+  background: #F1F5F9;
+  color: #475569;
+  text-transform: uppercase;
+  font-size: 9px;
+}
+
+.badge-product { background: rgba(245,158,11,0.1); color: #F59E0B; }
+.badge-announcement { background: rgba(16,185,129,0.1); color: #10B981; }
+.badge-user { background: rgba(59,130,246,0.1); color: #3B82F6; }

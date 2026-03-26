@@ -37,8 +37,14 @@ export class LoginPage implements OnInit {
         // store authenticated user and update state
         if (res.user) {
           this.auth.login(res.user as User);
+          if (res.user.role === 'admin') {
+            this.router.navigate(['/admin']);
+          } else {
+            this.router.navigate(['/home']);
+          }
+        } else {
+          this.router.navigate(['/home']);
         }
-        this.router.navigate(['/home']);
       },
       error: (err: any) => {
         console.error('Erreur de connexion:', err);

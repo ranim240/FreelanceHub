@@ -1,0 +1,203 @@
+<!-- dashboard.page.html -->
+<ion-header class="ion-no-border adm-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="admin-menu">
+        <button class="adm-menu-btn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </ion-menu-toggle>
+      <span class="adm-page-title">Dashboard</span>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <button class="adm-header-action">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-page">
+  <div class="adm-wrapper">
+
+    <!-- Greeting -->
+    <div class="dash-greeting">
+      <p class="dash-hello">Hello,</p>
+      <h2 class="dash-name">{{ currentUser?.firstName || 'Administrator' }}</h2>
+      <p class="dash-date">{{ today }}</p>
+    </div>
+
+    <!-- Stats grid 2x2 -->
+    <p class="adm-section-title">Overview</p>
+    <div class="adm-stat-grid" *ngIf="stats">
+
+      <div class="adm-stat-card grad-purple clickable" (click)="goTo('users')" style="animation-delay:0.05s">
+        <div class="adm-stat-icon">
+          <ion-icon name="people"></ion-icon>
+        </div>
+        <p class="adm-stat-value">{{ stats.totalUsers }}</p>
+        <p class="adm-stat-label">Users</p>
+      </div>
+
+      <div class="adm-stat-card grad-blue clickable" (click)="goToUsers('all', 'freelancer')" style="animation-delay:0.1s">
+        <div class="adm-stat-icon">
+          <ion-icon name="briefcase"></ion-icon>
+        </div>
+        <p class="adm-stat-value">{{ stats.totalFreelancers }}</p>
+        <p class="adm-stat-label">Freelancers</p>
+      </div>
+
+      <div class="adm-stat-card grad-emerald clickable" (click)="goTo('products')" style="animation-delay:0.15s">
+        <div class="adm-stat-icon">
+          <ion-icon name="cube"></ion-icon>
+        </div>
+        <p class="adm-stat-value">{{ stats.totalProducts }}</p>
+        <p class="adm-stat-label">Products</p>
+      </div>
+
+      <div class="adm-stat-card grad-amber clickable" (click)="goTo('announcements')" style="animation-delay:0.2s">
+        <div class="adm-stat-icon">
+          <ion-icon name="megaphone"></ion-icon>
+        </div>
+        <p class="adm-stat-value">{{ stats.totalAnnouncements }}</p>
+        <p class="adm-stat-label">Announcements</p>
+      </div>
+
+    </div>
+
+    <!-- Pending actions -->
+    <p class="adm-section-title">Pending Actions</p>
+    <div class="adm-card dash-pending" *ngIf="stats">
+
+      <div class="pending-row clickable" (click)="goToUsers('pending', 'freelancer')">
+        <div class="pending-dot dot-warning"></div>
+        <div class="pending-info">
+          <p class="pending-label">Pending Freelancers</p>
+          <p class="pending-val">{{ stats.pendingFreelancers }}</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="pending-arrow"></ion-icon>
+      </div>
+
+      <div class="pending-row clickable" (click)="goTo('reports')">
+        <div class="pending-dot dot-danger"></div>
+        <div class="pending-info">
+          <p class="pending-label">Pending Reports</p>
+          <p class="pending-val">{{ stats.pendingReports }}</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="pending-arrow"></ion-icon>
+      </div>
+
+      <div class="pending-row clickable" style="border-bottom:none" (click)="goTo('categories')">
+        <div class="pending-dot dot-accent"></div>
+        <div class="pending-info">
+          <p class="pending-label">Active Categories</p>
+          <p class="pending-val">{{ stats.totalCategories }}</p>
+        </div>
+        <ion-icon name="chevron-forward-outline" class="pending-arrow"></ion-icon>
+      </div>
+
+    </div>
+
+    <!-- Recent users -->
+    <p class="adm-section-title" style="margin-top:20px">Recent Users</p>
+    <div class="adm-card">
+      <div class="adm-list">
+        <div class="adm-list-item" *ngFor="let user of recentUsers" (click)="openUserModal(user)">
+          <div class="adm-avatar">
+            {{ user.firstName?.charAt(0) || '?' }}{{ user.lastName?.charAt(0) || '' }}
+          </div>
+          <div class="adm-item-info">
+            <p class="adm-item-name">{{ user.firstName }} {{ user.lastName }}</p>
+            <p class="adm-item-sub">{{ user.email }}</p>
+          </div>
+          <span class="adm-badge" [ngClass]="'badge-' + user.role">{{ user.role }}</span>
+        </div>
+        <div class="adm-empty" *ngIf="recentUsers.length === 0">
+          <ion-icon name="people-outline"></ion-icon>
+          <p>No users yet</p>
+        </div> 
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- User Details Modal -->
+  <div class="cat-modal-overlay" *ngIf="isUserModalOpen" (click)="closeUserModal()">
+    <div class="cat-modal adm-card" (click)="$event.stopPropagation()" style="max-height: 85vh; display: flex; flex-direction: column;">
+
+      <div class="cat-modal-header">
+        <p class="cat-modal-title">Détails de l'utilisateur</p>
+        <button class="adm-btn btn-delete" (click)="closeUserModal()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="cat-modal-body" *ngIf="selectedUser" style="padding-bottom: 24px; overflow-y: auto;">
+        <!-- Profile Header -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom: 4px;">
+          <div class="adm-avatar" style="width: 54px; height: 54px; font-size: 18px; border-radius: 14px;">
+            {{ selectedUser.firstName?.charAt(0) || '?' }}{{ selectedUser.lastName?.charAt(0) || '' }}
+          </div>
+          <div>
+            <h2 style="margin:0 0 4px; font-size:16px; font-weight:800; color:#1A1A2E;">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h2>
+            <p style="margin:0 0 6px; font-size:13px; color:#94A3B8;">{{ selectedUser.email }}</p>
+            <div style="display:flex; gap:6px;">
+               <span class="adm-badge" [ngClass]="'badge-' + selectedUser.role">{{ selectedUser.role }}</span>
+               <span class="adm-badge" [ngClass]="'badge-' + (selectedUser.status || 'active')">{{ selectedUser.status || 'active' }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Details -->
+        <div class="cat-field" *ngIf="selectedUser.domain">
+          <label class="cat-label">Domaine</label>
+          <div class="cat-input">{{ selectedUser.domain }}</div>
+        </div>
+        
+        <div class="cat-field" *ngIf="selectedUser.bio">
+          <label class="cat-label">Bio</label>
+          <div class="cat-input" style="white-space:pre-wrap; min-height: 80px;">{{ selectedUser.bio }}</div>
+        </div>
+        
+        <div class="cat-field" *ngIf="selectedUser.skills && selectedUser.skills.length > 0">
+          <label class="cat-label">Compétences</label>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; padding: 4px 0;">
+            <span *ngFor="let skill of selectedUser.skills" style="background:#EEF2FF; color:#4F46E5; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:600;">
+              {{ skill }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="cat-field">
+          <label class="cat-label">Date d'inscription</label>
+          <div class="cat-input">{{ (selectedUser.createdAt | date:'longDate') || 'N/A' }}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<!-- Bottom tab bar -->
+<div class="adm-tab-bar">
+  <button class="adm-tab-btn adm-tab-active" (click)="goTo('dashboard')">
+    <ion-icon name="grid"></ion-icon>
+    <span>Dashboard</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('users')">
+    <ion-icon name="people-outline"></ion-icon>
+    <span>Users</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <span>Produits</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('announcements')">
+    <ion-icon name="megaphone-outline"></ion-icon>
+    <span>Annonces</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('categories')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Catégories</span>
+  </button>
+</div>

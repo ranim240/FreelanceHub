@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: false
 })
 export class AppComponent {
-  constructor(private router: Router) {}
+  constructor(public auth: AuthService, private router: Router) {}
 
   goTo(path: string): void {
     this.router.navigate([path]);

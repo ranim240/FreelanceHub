@@ -23,6 +23,12 @@
 
           <p class="sb-section-label">Navigate</p>
           <nav class="sb-nav">
+            <ion-menu-toggle auto-hide="false" *ngIf="auth.currentUser?.role === 'admin'">
+              <button class="sb-nav-item" (click)="goTo('/admin')">
+                <span class="sb-nav-icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>
+                <span class="sb-nav-label" style="color: #8B5CF6; font-weight: 600;">Admin Dashboard</span>
+              </button>
+            </ion-menu-toggle>
             <ion-menu-toggle auto-hide="false">
               <button class="sb-nav-item" (click)="goTo('/home')">
                 <span class="sb-nav-icon"><ion-icon name="home-outline"></ion-icon></span>

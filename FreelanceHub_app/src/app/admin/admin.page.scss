@@ -1,0 +1,185 @@
+// ══════════════════════════════════════════════════════════════
+//  ADMIN LAYOUT — Sidebar mobile (ion-menu)
+//  Thème cohérent avec home : blanc + #1A1A2E
+// ══════════════════════════════════════════════════════════════
+
+:host {
+  --adm-ink:        #1A1A2E;
+  --adm-ink-soft:   #475569;
+  --adm-muted:      #94A3B8;
+  --adm-accent:     #4F46E5;
+  --adm-accent-soft:#EEF2FF;
+  --adm-surface:    #F8FAFC;
+  --adm-card:       #FFFFFF;
+  --adm-border:     #E2E8F0;
+  --adm-danger:     #EF4444;
+  --adm-success:    #10B981;
+  --adm-warning:    #F59E0B;
+  --radius:         14px;
+}
+
+ion-menu {
+  --width: 285px;
+  --background: var(--adm-card);
+}
+
+.adm-sidebar-content {
+  --background: var(--adm-card);
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.adm-sidebar-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+// Brand header
+.adm-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--adm-border);
+}
+
+.adm-brand-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--adm-ink);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 19px; color: #fff; }
+}
+
+.adm-brand-name {
+  font-size: 14px; font-weight: 700;
+  color: var(--adm-ink); margin: 0;
+}
+
+.adm-brand-sub {
+  font-size: 10px; color: var(--adm-muted); margin: 0;
+}
+
+.adm-close-btn {
+  margin-left: auto;
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: 50%;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  ion-icon { font-size: 18px; color: var(--adm-ink-soft); }
+  &:active { background: var(--adm-border); }
+}
+
+// Ensure the close button in header is pushed right
+.adm-brand ion-menu-toggle {
+  margin-left: auto;
+}
+
+// Admin user block
+.adm-user-block {
+  display: flex; align-items: center; gap: 12px;
+  margin: 14px 16px;
+  padding: 12px 14px;
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--radius);
+}
+
+.adm-user-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: var(--adm-ink); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+
+.adm-user-name {
+  font-size: 13px; font-weight: 700;
+  color: var(--adm-ink); margin: 0 0 3px;
+}
+
+.adm-user-badge {
+  font-size: 10px; font-weight: 600;
+  color: var(--adm-accent);
+  background: var(--adm-accent-soft);
+  padding: 2px 8px; border-radius: 20px;
+}
+
+// Nav section label
+.adm-nav-label {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--adm-muted);
+  padding: 12px 20px 4px; margin: 0;
+}
+
+// Nav items
+.adm-nav { padding: 0 12px 4px; }
+
+.adm-nav-item {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 10px 10px;
+  background: transparent; border: none;
+  border-radius: 10px; cursor: pointer;
+  transition: background 0.15s;
+  &:active { background: var(--adm-surface); }
+}
+
+.adm-nav-item--active {
+  background: var(--adm-surface) !important;
+  border: 1px solid var(--adm-border);
+
+  .adm-nav-icon {
+    background: var(--adm-ink) !important;
+    border-color: var(--adm-ink) !important;
+    ion-icon { color: #fff !important; }
+  }
+  .adm-nav-label-text { color: var(--adm-ink) !important; font-weight: 700 !important; }
+  .adm-nav-arrow { opacity: 1; }
+}
+
+.adm-nav-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  ion-icon { font-size: 17px; color: var(--adm-ink-soft); }
+}
+
+.adm-nav-label-text {
+  font-size: 14px; font-weight: 500;
+  color: var(--adm-ink); flex: 1; text-align: left;
+}
+
+.adm-nav-arrow {
+  font-size: 14px; color: var(--adm-muted); opacity: 0.4;
+}
+
+.adm-sidebar-spacer { flex: 1; }
+
+// Logout button
+.adm-logout-btn {
+  display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+  width: calc(100% - 32px);
+  margin: 0 16px;
+  padding: 12px 16px;
+  background: rgba(239,68,68,0.06);
+  border: 1px solid rgba(239,68,68,0.15);
+  border-radius: 12px;
+  color: var(--adm-danger);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  ion-icon { font-size: 18px; }
+  &:active { background: rgba(239,68,68,0.12); }
+}
+
+.adm-copy {
+  font-size: 11px; color: var(--adm-muted);
+  text-align: center; padding: 16px; margin: 0;
+}

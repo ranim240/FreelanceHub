@@ -35,3 +35,275 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* ═══════════════════════════════════════════════════════════ */
+/*  ADMIN PREMIUM THEME (Global Utility Classes)                 */
+/* ═══════════════════════════════════════════════════════════ */
+:root {
+  --admin-bg: #0F0F1A;
+  --admin-surface: rgba(255, 255, 255, 0.05);
+  --admin-surface-hover: rgba(255, 255, 255, 0.08);
+  --admin-border: rgba(255, 255, 255, 0.08);
+  --admin-text: #E2E8F0;
+  --admin-text-muted: #64748B;
+  --admin-accent: #8B5CF6;
+  --admin-accent-glow: rgba(139, 92, 246, 0.3);
+  --admin-success: #10B981;
+  --admin-warning: #F59E0B;
+  --admin-danger: #EF4444;
+}
+
+.admin-page {
+  --background: var(--admin-bg);
+  --padding-start: 24px;
+  --padding-end: 24px;
+  --padding-top: 24px;
+  --padding-bottom: 24px;
+  font-family: 'Inter', sans-serif;
+  color: var(--admin-text);
+  
+  .page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+    
+    .page-header {
+      margin-bottom: 32px;
+      animation: fadeIn 0.4s ease-out;
+      
+      h1 {
+        font-size: 28px;
+        font-weight: 700;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.5px;
+      }
+      p {
+        color: var(--admin-text-muted);
+        margin: 0;
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+  background: var(--admin-surface);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--admin-border);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, border-color 0.3s;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+}
+
+/* Badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+
+  &.status-active, &.status-approved {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--admin-success);
+  }
+  &.status-pending {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--admin-warning);
+  }
+  &.status-blocked, &.status-rejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--admin-danger);
+  }
+}
+
+.role-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  &.role-admin { background: rgba(139, 92, 246, 0.2); color: var(--admin-accent); }
+  &.role-client { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
+  &.role-freelancer { background: rgba(16, 185, 129, 0.15); color: var(--admin-success); }
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--admin-accent), #6366F1);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px var(--admin-accent-glow);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--admin-accent-glow);
+  }
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  ion-icon { font-size: 18px; }
+
+  &.btn-green {
+    background: rgba(16, 185, 129, 0.1); color: var(--admin-success);
+    &:hover { background: rgba(16, 185, 129, 0.2); }
+  }
+  &.btn-red {
+    background: rgba(239, 68, 68, 0.1); color: var(--admin-danger);
+    &:hover { background: rgba(239, 68, 68, 0.2); }
+  }
+  &.btn-orange {
+    background: rgba(245, 158, 11, 0.1); color: var(--admin-warning);
+    &:hover { background: rgba(245, 158, 11, 0.2); }
+  }
+  &.btn-blue {
+    background: rgba(59, 130, 246, 0.1); color: #3B82F6;
+    &:hover { background: rgba(59, 130, 246, 0.2); }
+  }
+}
+
+/* Admin Tables */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    text-align: left;
+    padding: 16px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--admin-text-muted);
+    border-bottom: 1px solid var(--admin-border);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+  
+  tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--admin-accent), #6366F1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+}
+
+/* Filters Bar */
+.filters-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  animation: fadeIn 0.4s ease-out 0.1s both;
+
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    padding: 0 16px;
+    flex: 1;
+
+    ion-icon {
+      color: var(--admin-text-muted);
+      font-size: 20px;
+    }
+
+    input {
+      background: transparent;
+      border: none;
+      color: var(--admin-text);
+      width: 100%;
+      height: 44px;
+      font-size: 14px;
+      outline: none;
+      
+      &::placeholder {
+        color: var(--admin-text-muted);
+      }
+    }
+  }
+
+  .filter-select {
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-border);
+    border-radius: 12px;
+    color: var(--admin-text);
+    padding: 0 16px;
+    min-width: 160px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    
+    option {
+      background: var(--admin-bg);
+    }
+  }
+}
+
+/* General Layout Utilities */
+.text-muted { color: var(--admin-text-muted); }
+.empty-text {
+  text-align: center;
+  padding: 40px;
+  color: var(--admin-text-muted);
+  font-size: 14px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

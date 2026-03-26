@@ -1,0 +1,131 @@
+<!-- categories.page.html -->
+<ion-header class="ion-no-border adm-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="admin-menu">
+        <button class="adm-menu-btn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </ion-menu-toggle>
+      <span class="adm-page-title">Categories</span>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <button class="adm-header-action" (click)="openAddModal()">
+        <ion-icon name="add-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-page">
+  <div class="adm-wrapper">
+
+    <!-- Categories list -->
+    <div class="adm-card">
+      <div class="adm-list">
+
+        <div class="adm-list-item cat-item" *ngFor="let cat of categories">
+          <div class="cat-icon-wrap">
+            <ion-icon [name]="cat.icon"></ion-icon>
+          </div>
+          <div class="adm-item-info">
+            <p class="adm-item-name">{{ cat.name }}</p>
+            <p class="adm-item-sub">Industry Sector</p>
+          </div>
+          <div class="adm-actions">
+            <button class="adm-btn btn-edit" (click)="openEditModal(cat)">
+              <ion-icon name="pencil-outline"></ion-icon>
+            </button>
+            <button class="adm-btn btn-delete" (click)="deleteCategory(cat._id)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="adm-empty" *ngIf="categories.length === 0">
+          <ion-icon name="grid-outline"></ion-icon>
+          <p>No categories found</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- Modal overlay -->
+<div class="cat-modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="cat-modal adm-card" (click)="$event.stopPropagation()">
+
+    <div class="cat-modal-header">
+      <p class="cat-modal-title">
+        {{ isEditing ? 'Edit Category' : 'New Category' }}
+      </p>
+      <button class="adm-btn btn-delete" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="cat-modal-body">
+
+      <div class="cat-field">
+        <label class="cat-label">Category Name</label>
+        <input
+          class="cat-input"
+          type="text"
+          placeholder="Ex: Web Development"
+          [(ngModel)]="catName" />
+      </div>
+
+      <div class="cat-field">
+        <label class="cat-label">Icon (Ionicons)</label>
+        <div class="cat-icon-input">
+          <div class="cat-icon-preview">
+            <ion-icon [name]="catIcon || 'help-outline'"></ion-icon>
+          </div>
+          <input
+            class="cat-input"
+            type="text"
+            placeholder="Ex: code-slash-outline"
+            [(ngModel)]="catIcon" />
+        </div>
+        <p class="cat-hint">Icon name from ionicons.com</p>
+      </div>
+
+    </div>
+
+    <div class="cat-modal-footer">
+      <button class="cat-btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="cat-btn-save"
+              (click)="saveCategory()"
+              [disabled]="!catName || !catIcon">
+        Save
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom tab bar -->
+<div class="adm-tab-bar">
+  <button class="adm-tab-btn" (click)="goTo('dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Dashboard</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('users')">
+    <ion-icon name="people-outline"></ion-icon>
+    <span>Users</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <span>Products</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('announcements')">
+    <ion-icon name="megaphone-outline"></ion-icon>
+    <span>Announcements</span>
+  </button>
+  <button class="adm-tab-btn adm-tab-active" (click)="goTo('categories')">
+    <ion-icon name="grid"></ion-icon>
+    <span>Categories</span>
+  </button>
+</div>
