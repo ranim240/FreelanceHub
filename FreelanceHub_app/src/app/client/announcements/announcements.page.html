@@ -1,0 +1,144 @@
+<ion-header class="ann-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/client/dashboard" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Announcements</ion-title>
+    <ion-buttons slot="end">
+      <button class="add-btn" (click)="goToPost()">
+        <ion-icon name="add-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ann-content">
+
+  <!-- ── Search ── -->
+  <div class="search-wrap">
+    <div class="search-shell">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <ion-input
+        [(ngModel)]="searchText"
+        type="search"
+        placeholder="Search announcements..."
+        class="search-input"
+        fill="outline">
+      </ion-input>
+    </div>
+  </div>
+
+  <!-- ── Filter Tabs ── -->
+  <div class="filter-tabs">
+    <button
+      class="filter-tab"
+      *ngFor="let f of filters"
+      [class.filter-tab--active]="activeFilter === f.value"
+      (click)="setFilter(f.value)">
+      {{ f.label }}
+      <span class="filter-count" *ngIf="f.count > 0">{{ f.count }}</span>
+    </button>
+  </div>
+
+  <!-- ── Empty State ── -->
+  <div class="empty-state" *ngIf="filteredAnnouncements.length === 0">
+    <div class="empty-icon-wrap">
+      <ion-icon name="megaphone-outline"></ion-icon>
+    </div>
+    <h3 class="empty-title">No announcements yet</h3>
+    <p class="empty-sub">Post your first announcement and find the perfect freelancer</p>
+    <button class="empty-cta" (click)="goToPost()">
+      <ion-icon name="add-outline"></ion-icon>
+      Post Announcement
+    </button>
+  </div>
+
+  <!-- ── Announcements List ── -->
+  <div class="ann-list" *ngIf="filteredAnnouncements.length > 0">
+    <div
+      class="ann-card"
+      *ngFor="let ann of filteredAnnouncements"
+      (click)="viewDetail(ann)">
+
+      <!-- Top row -->
+      <div class="ann-top">
+        <div class="ann-avatar">{{ ann.initials }}</div>
+        <div class="ann-meta">
+          <h4 class="ann-title">{{ ann.title }}</h4>
+          <p class="ann-time">
+            <ion-icon name="time-outline"></ion-icon>
+            {{ ann.timeAgo }}
+          </p>
+        </div>
+        <span class="status-badge" [ngClass]="'status-badge--' + ann.status.toLowerCase()">
+          {{ ann.status }}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <p class="ann-desc">{{ ann.description }}</p>
+
+      <!-- Tags -->
+      <div class="ann-tags">
+        <span class="tag" *ngFor="let tag of ann.tags">{{ tag }}</span>
+      </div>
+
+      <!-- Footer -->
+      <div class="ann-footer">
+        <div class="ann-stats">
+          <div class="stat-item">
+            <ion-icon name="wallet-outline"></ion-icon>
+            <span>{{ ann.budget }}</span>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span>{{ ann.deadline }}</span>
+          </div>
+          <div class="stat-item">
+            <ion-icon name="people-outline"></ion-icon>
+            <span>{{ ann.proposals }} proposals</span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="ann-actions" (click)="$event.stopPropagation()">
+          <button class="action-icon-btn action-icon-btn--edit" (click)="editAnn(ann)">
+            <ion-icon name="create-outline"></ion-icon>
+          </button>
+          <button class="action-icon-btn action-icon-btn--delete" (click)="deleteAnn(ann)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="height: 90px;"></div>
+
+</ion-content>
+
+<!-- ── Bottom Nav ── -->
+<ion-tab-bar class="bottom-nav">
+  <ion-tab-button (click)="navigate('client/dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <ion-label>Dashboard</ion-label>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/freelancers')">
+    <ion-icon name="people-outline"></ion-icon>
+    <ion-label>Freelancers</ion-label>
+  </ion-tab-button>
+  <ion-tab-button class="fab-tab" (click)="goToPost()">
+    <div class="fab-circle">
+      <ion-icon name="add-outline"></ion-icon>
+    </div>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <ion-label>Products</ion-label>
+  </ion-tab-button>
+  <ion-tab-button selected>
+    <ion-icon name="megaphone-outline"></ion-icon>
+    <ion-label>Mine</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

@@ -53,11 +53,13 @@ const routes: Routes = [
     loadChildren: () => import('./product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
   },
   {
-    path: 'client-dashboard',
-    loadChildren: () => import('./client-dashboard/client-dashboard.module').then( m => m.ClientDashboardPageModule)
+    path: 'client',
+    loadChildren: () => import('./client/client.module').then( m => m.ClientPageModule)
   },
+ 
 
 ];
+
 
 
 

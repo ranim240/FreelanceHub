@@ -1,0 +1,93 @@
+<ion-header class="notif-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/client/dashboard" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notifications</ion-title>
+    <ion-buttons slot="end">
+      <button class="mark-all-btn" (click)="markAllRead()" *ngIf="hasUnread">
+        <ion-icon name="checkmark-done-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="notif-content">
+
+  <!-- ── Filter Tabs ── -->
+  <div class="filter-tabs">
+    <button
+      class="filter-tab"
+      *ngFor="let f of filters"
+      [class.filter-tab--active]="activeFilter === f.value"
+      (click)="setFilter(f.value)">
+      {{ f.label }}
+      <span class="filter-count" *ngIf="f.count > 0">{{ f.count }}</span>
+    </button>
+  </div>
+
+  <!-- ── Empty State ── -->
+  <div class="empty-state" *ngIf="filteredNotifications.length === 0">
+    <div class="empty-icon-wrap">
+      <ion-icon name="notifications-outline"></ion-icon>
+    </div>
+    <h3 class="empty-title">No notifications</h3>
+    <p class="empty-sub">You're all caught up!</p>
+  </div>
+
+  <!-- ── Notifications List ── -->
+  <div class="notif-list" *ngIf="filteredNotifications.length > 0">
+
+    <div
+      class="notif-item"
+      *ngFor="let n of filteredNotifications"
+      [class.notif-item--unread]="!n.read"
+      (click)="markRead(n)">
+
+      <div class="notif-icon-wrap" [ngClass]="'notif-icon--' + n.type">
+        <ion-icon [name]="getIcon(n.type)"></ion-icon>
+      </div>
+
+      <div class="notif-body">
+        <h4 class="notif-title">{{ n.title }}</h4>
+        <p class="notif-desc">{{ n.description }}</p>
+        <span class="notif-time">
+          <ion-icon name="time-outline"></ion-icon>
+          {{ n.time }}
+        </span>
+      </div>
+
+      <div class="notif-unread-dot" *ngIf="!n.read"></div>
+
+    </div>
+
+  </div>
+
+  <div style="height: 90px;"></div>
+
+</ion-content>
+
+<!-- ── Bottom Nav ── -->
+<ion-tab-bar class="bottom-nav">
+  <ion-tab-button (click)="navigate('client/dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <ion-label>Dashboard</ion-label>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/freelancers')">
+    <ion-icon name="people-outline"></ion-icon>
+    <ion-label>Freelancers</ion-label>
+  </ion-tab-button>
+  <ion-tab-button class="fab-tab" (click)="navigate('client/post-announcement')">
+    <div class="fab-circle">
+      <ion-icon name="add-outline"></ion-icon>
+    </div>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <ion-label>Products</ion-label>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/messages')">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <ion-label>Messages</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

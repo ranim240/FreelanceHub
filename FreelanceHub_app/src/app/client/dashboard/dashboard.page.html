@@ -1,0 +1,197 @@
+<ion-header class="cd-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="client-menu">
+        <button class="menu-btn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </ion-menu-toggle>
+      <span class="page-title">Dashboard</span>
+    </ion-buttons>
+   <ion-buttons slot="end">
+      <button class="notif-badge">
+        <ion-icon name="notifications-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cd-content">
+
+  <!-- ── Greeting ── -->
+  <div class="greeting-block">
+    <p class="greeting-hello">Hello,</p>
+    <h1 class="greeting-name">{{ clientName }}</h1>
+    <p class="greeting-date">{{ todayDate }}</p>
+  </div>
+
+  <!-- ── Stats Overview ── -->
+  <div class="section-label">OVERVIEW</div>
+  <div class="stats-grid">
+
+    <div class="stat-card stat-card--indigo" (click)="goTo('my-announcements')">
+      <div class="stat-icon-wrap">
+        <ion-icon name="megaphone-outline"></ion-icon>
+      </div>
+      <span class="stat-value">{{ stats.announcements }}</span>
+      <span class="stat-name">My Announcements</span>
+    </div>
+
+    <div class="stat-card stat-card--blue" (click)="goTo('freelancers')">
+      <div class="stat-icon-wrap">
+        <ion-icon name="people-outline"></ion-icon>
+      </div>
+      <span class="stat-value">{{ stats.freelancers }}</span>
+      <span class="stat-name">Freelancers</span>
+    </div>
+
+    <div class="stat-card stat-card--green" (click)="goTo('products')">
+      <div class="stat-icon-wrap">
+        <ion-icon name="cube-outline"></ion-icon>
+      </div>
+      <span class="stat-value">{{ stats.products }}</span>
+      <span class="stat-name">Products</span>
+    </div>
+
+    <div class="stat-card stat-card--orange" (click)="goTo('messages')">
+      <div class="stat-icon-wrap">
+        <ion-icon name="chatbubbles-outline"></ion-icon>
+      </div>
+      <span class="stat-value">{{ stats.messages }}</span>
+      <span class="stat-name">Messages</span>
+    </div>
+
+  </div>
+
+  <!-- ── Quick Actions ── -->
+  <div class="section-label">QUICK ACTIONS</div>
+  <div class="actions-row">
+
+    <button class="action-pill action-pill--primary" (click)="goTo('post-announcement')">
+      <ion-icon name="add-circle-outline"></ion-icon>
+      <span>Post Announcement</span>
+    </button>
+
+    <button class="action-pill" (click)="goTo('freelancers')">
+      <ion-icon name="search-outline"></ion-icon>
+      <span>Find Freelancer</span>
+    </button>
+
+  </div>
+
+  <!-- ── Mes annonces récentes ── -->
+  <div class="section-row">
+    <div class="section-label" style="margin-bottom: 0;">MY ANNOUNCEMENTS</div>
+    <span class="see-all" (click)="goTo('my-announcements')">See all</span>
+  </div>
+
+  <div class="empty-state" *ngIf="myAnnouncements.length === 0">
+    <ion-icon name="megaphone-outline" class="empty-icon"></ion-icon>
+    <p>No announcements yet</p>
+    <button class="empty-btn" (click)="goTo('post-announcement')">Post your first one</button>
+  </div>
+
+  <div class="announce-list" *ngIf="myAnnouncements.length > 0">
+    <div class="announce-card" *ngFor="let ann of myAnnouncements.slice(0,2)">
+      <div class="announce-top">
+        <div class="announce-avatar">{{ ann.initials }}</div>
+        <div class="announce-meta">
+          <h4 class="announce-title">{{ ann.title }}</h4>
+          <p class="announce-time">
+            <ion-icon name="time-outline"></ion-icon> {{ ann.timeAgo }}
+          </p>
+        </div>
+        <span class="announce-badge" [class]="'badge--' + ann.status.toLowerCase()">
+          {{ ann.status }}
+        </span>
+      </div>
+      <p class="announce-desc">{{ ann.description }}</p>
+      <div class="announce-tags">
+        <span class="tag" *ngFor="let tag of ann.tags">{{ tag }}</span>
+      </div>
+      <div class="announce-footer">
+        <div class="announce-budget">
+          <ion-icon name="wallet-outline"></ion-icon>
+          <span>{{ ann.budget }}</span>
+        </div>
+        <div class="announce-deadline">
+          <ion-icon name="calendar-outline"></ion-icon>
+          <span>{{ ann.deadline }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Freelancers récents ── -->
+  <div class="section-row">
+    <div class="section-label" style="margin-bottom: 0;">TOP FREELANCERS</div>
+    <span class="see-all" (click)="goTo('freelancers')">See all</span>
+  </div>
+
+  <div class="freelancers-scroll">
+    <div class="freelancer-card" *ngFor="let fl of topFreelancers" (click)="goTo('freelancer-profile')">
+      <div class="fl-avatar">{{ fl.initials }}</div>
+      <div class="fl-info">
+        <h4 class="fl-name">{{ fl.name }}</h4>
+        <p class="fl-domain">{{ fl.domain }}</p>
+      </div>
+      <div class="fl-rating">
+        <ion-icon name="star" class="star-icon"></ion-icon>
+        <span>{{ fl.rating }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Produits récents ── -->
+  <div class="section-row">
+    <div class="section-label" style="margin-bottom: 0;">RECENT PRODUCTS</div>
+    <span class="see-all" (click)="goTo('products')">See all</span>
+  </div>
+
+  <div class="products-scroll">
+    <div class="product-card" *ngFor="let p of recentProducts" (click)="goTo('products')">
+      <div class="product-img-wrap">
+        <div class="product-img-placeholder">
+          <ion-icon name="cube-outline"></ion-icon>
+        </div>
+        <span class="product-price">{{ p.price }} DT</span>
+      </div>
+      <h4 class="product-name">{{ p.name }}</h4>
+      <p class="product-by">by {{ p.seller }}</p>
+      <div class="product-rating">
+        <ion-icon name="star" class="star-icon"></ion-icon>
+        <span>{{ p.rating }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 90px;"></div>
+
+</ion-content>
+
+
+<!-- ── Bottom Nav ── -->
+<ion-tab-bar class="bottom-nav">
+  <ion-tab-button selected (click)="goTo('client-dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <ion-label>Dashboard</ion-label>
+  </ion-tab-button>
+  <ion-tab-button (click)="goTo('freelancers')">
+    <ion-icon name="people-outline"></ion-icon>
+    <ion-label>Freelancers</ion-label>
+  </ion-tab-button>
+  <ion-tab-button class="fab-tab" (click)="goTo('post-announcement')">
+    <div class="fab-circle">
+      <ion-icon name="add-outline"></ion-icon>
+    </div>
+  </ion-tab-button>
+  <ion-tab-button (click)="goTo('products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <ion-label>Products</ion-label>
+  </ion-tab-button>
+  <ion-tab-button (click)="goTo('messages')">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <ion-label>Messages</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>
