@@ -1,0 +1,144 @@
+<ion-header class="msg-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/client/dashboard" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Messages</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="msg-content">
+
+  <!-- ── Search ── -->
+  <div class="search-wrap">
+    <div class="search-shell">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <ion-input
+        [(ngModel)]="searchText"
+        type="search"
+        placeholder="Search conversations..."
+        class="search-input"
+        fill="outline">
+      </ion-input>
+    </div>
+  </div>
+
+  <!-- ── Empty State ── -->
+  <div class="empty-state" *ngIf="filteredConversations.length === 0">
+    <div class="empty-icon-wrap">
+      <ion-icon name="chatbubbles-outline"></ion-icon>
+    </div>
+    <h3 class="empty-title">No messages yet</h3>
+    <p class="empty-sub">Contact a freelancer to start a conversation</p>
+    <button class="empty-cta" (click)="navigate('client/freelancers')">
+      <ion-icon name="people-outline"></ion-icon>
+      Browse Freelancers
+    </button>
+  </div>
+
+  <!-- ── Conversations List ── -->
+  <div class="conv-list" *ngIf="filteredConversations.length > 0">
+    <div
+      class="conv-item"
+      *ngFor="let conv of filteredConversations"
+      (click)="openChat(conv)">
+
+      <div class="conv-avatar" [style.background]="conv.avatarColor">
+        {{ conv.initials }}
+        <span class="online-dot" *ngIf="conv.online"></span>
+      </div>
+
+      <div class="conv-body">
+        <div class="conv-top">
+          <h4 class="conv-name">{{ conv.name }}</h4>
+          <span class="conv-time">{{ conv.time }}</span>
+        </div>
+        <div class="conv-bottom">
+          <p class="conv-last">{{ conv.lastMessage }}</p>
+          <span class="unread-badge" *ngIf="conv.unread > 0">{{ conv.unread }}</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <!-- CHAT VIEW                           -->
+  <!-- ════════════════════════════════════ -->
+  <div class="chat-overlay" *ngIf="activeChatId" (click)="closeChat()"></div>
+  <div class="chat-sheet" [class.chat-sheet--open]="activeChatId">
+
+    <!-- Chat Header -->
+    <div class="chat-header" *ngIf="activeConv">
+      <button class="chat-back" (click)="closeChat()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <div class="chat-avatar" [style.background]="activeConv.avatarColor">
+        {{ activeConv.initials }}
+        <span class="online-dot" *ngIf="activeConv.online"></span>
+      </div>
+      <div class="chat-info">
+        <h4 class="chat-name">{{ activeConv.name }}</h4>
+        <p class="chat-status">{{ activeConv.online ? 'Online' : 'Offline' }}</p>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" #chatMessages>
+      <div
+        class="msg-bubble-wrap"
+        *ngFor="let msg of activeMessages"
+        [class.msg-bubble-wrap--mine]="msg.mine">
+        <div class="msg-bubble" [class.msg-bubble--mine]="msg.mine">
+          <p>{{ msg.text }}</p>
+          <span class="msg-time">{{ msg.time }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input-row">
+      <div class="chat-input-shell">
+        <ion-input
+          [(ngModel)]="newMessage"
+          type="text"
+          placeholder="Type a message..."
+          class="chat-input"
+          (keyup.enter)="sendMessage()">
+        </ion-input>
+      </div>
+      <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+        <ion-icon name="send-outline"></ion-icon>
+      </button>
+    </div>
+
+  </div>
+
+  <div style="height: 90px;"></div>
+
+</ion-content>
+
+<!-- ── Bottom Nav ── -->
+<ion-tab-bar class="bottom-nav">
+  <ion-tab-button (click)="navigate('client/dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <ion-label>Dashboard</ion-label>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/freelancers')">
+    <ion-icon name="people-outline"></ion-icon>
+    <ion-label>Freelancers</ion-label>
+  </ion-tab-button>
+  <ion-tab-button class="fab-tab" (click)="navigate('client/post-announcement')">
+    <div class="fab-circle">
+      <ion-icon name="add-outline"></ion-icon>
+    </div>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <ion-label>Products</ion-label>
+  </ion-tab-button>
+  <ion-tab-button selected>
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <ion-label>Messages</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>

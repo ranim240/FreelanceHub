@@ -1,0 +1,74 @@
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  CLIENT LAYOUT — ion-menu mobile navigation              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<!-- Sidebar as ion-menu -->
+<ion-menu contentId="client-content" menuId="client-menu" side="start" type="overlay">
+  <ion-content class="clt-sidebar-content">
+    <div class="clt-sidebar-layout">
+
+      <!-- Brand -->
+      <div class="clt-brand">
+        <div class="clt-brand-icon">
+          <ion-icon name="business-outline"></ion-icon>
+        </div>
+        <div class="clt-brand-text">
+          <p class="clt-brand-name">FreelanceHub</p>
+          <p class="clt-brand-sub">Client</p>
+        </div>
+        <ion-menu-toggle>
+          <button class="clt-close-btn">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </ion-menu-toggle>
+      </div>
+
+      <!-- Client user block -->
+      <div class="clt-user-block">
+        <div class="clt-user-avatar">
+          {{ currentUser?.firstName?.charAt(0) || 'C' }}{{ currentUser?.lastName?.charAt(0) || 'L' }}
+        </div>
+        <div class="clt-user-info">
+          <p class="clt-user-name">{{ currentUser?.firstName || clientName }} {{ currentUser?.lastName || '' }}</p>
+          <span class="clt-user-badge">Client</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <p class="clt-nav-label">Menu</p>
+      <nav class="clt-nav">
+        <ion-menu-toggle auto-hide="false" *ngFor="let item of menuItems">
+          <button
+            class="clt-nav-item"
+            [class.clt-nav-item--active]="isActive(item.path)"
+            (click)="navigateTo(item.path)">
+            <span class="clt-nav-icon">
+              <ion-icon [name]="item.icon"></ion-icon>
+            </span>
+            <span class="clt-nav-label-text">{{ item.label }}</span>
+            <ion-icon name="chevron-forward-outline" class="clt-nav-arrow"></ion-icon>
+          </button>
+        </ion-menu-toggle>
+      </nav>
+
+      <!-- Pushes the bottom content down -->
+      <div class="clt-sidebar-spacer"></div>
+
+      <!-- Logout -->
+      <ion-menu-toggle>
+        <button class="clt-logout-btn" (click)="logout()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          <span>Déconnexion</span>
+        </button>
+      </ion-menu-toggle>
+
+      <p class="clt-copy">© 2026 FreelanceHub · ENSIT</p>
+
+    </div>
+  </ion-content>
+</ion-menu>
+
+<!-- Main content outlet -->
+<div class="client-page">
+  <ion-router-outlet id="client-content"></ion-router-outlet>
+</div>

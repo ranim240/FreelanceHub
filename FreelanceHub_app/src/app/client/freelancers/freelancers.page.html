@@ -1,0 +1,142 @@
+<ion-header class="fl-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/client/dashboard" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Freelancers</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="fl-content">
+
+  <!-- ── Search ── -->
+  <div class="search-wrap">
+    <div class="search-shell">
+      <ion-icon name="search-outline" class="search-icon"></ion-icon>
+      <ion-input
+        [(ngModel)]="searchText"
+        type="search"
+        placeholder="Search freelancers..."
+        class="search-input"
+        fill="outline">
+      </ion-input>
+    </div>
+  </div>
+
+  <!-- ── Domain Filter ── -->
+  <div class="domain-tabs">
+    <button
+      class="domain-tab"
+      *ngFor="let d of domains"
+      [class.domain-tab--active]="activeDomain === d.value"
+      (click)="setDomain(d.value)">
+      <ion-icon [name]="d.icon"></ion-icon>
+      {{ d.label }}
+    </button>
+  </div>
+
+  <!-- ── Results count ── -->
+  <div class="results-row">
+    <span class="results-count">{{ filteredFreelancers.length }} freelancers found</span>
+    <button class="sort-btn">
+      <ion-icon name="options-outline"></ion-icon>
+      Sort
+    </button>
+  </div>
+
+  <!-- ── Empty State ── -->
+  <div class="empty-state" *ngIf="filteredFreelancers.length === 0">
+    <div class="empty-icon-wrap">
+      <ion-icon name="people-outline"></ion-icon>
+    </div>
+    <h3 class="empty-title">No freelancers found</h3>
+    <p class="empty-sub">Try adjusting your search or filters</p>
+  </div>
+
+  <!-- ── Freelancers List ── -->
+  <div class="fl-list" *ngIf="filteredFreelancers.length > 0">
+    <div
+      class="fl-card"
+      *ngFor="let fl of filteredFreelancers"
+      (click)="viewProfile(fl)">
+
+      <!-- Header card -->
+      <div class="fl-card-top">
+        <div class="fl-avatar" [style.background]="fl.avatarColor">
+          {{ fl.initials }}
+        </div>
+        <div class="fl-info">
+          <h4 class="fl-name">{{ fl.name }}</h4>
+          <p class="fl-domain">{{ fl.domain }}</p>
+          <div class="fl-location">
+            <ion-icon name="location-outline"></ion-icon>
+            <span>{{ fl.location }}</span>
+          </div>
+        </div>
+        <div class="fl-rating-wrap">
+          <div class="fl-rating">
+            <ion-icon name="star"></ion-icon>
+            <span>{{ fl.rating }}</span>
+          </div>
+          <p class="fl-reviews">{{ fl.reviews }} reviews</p>
+        </div>
+      </div>
+
+      <!-- Bio -->
+      <p class="fl-bio">{{ fl.bio }}</p>
+
+      <!-- Skills -->
+      <div class="fl-skills">
+        <span class="skill-tag" *ngFor="let s of fl.skills.slice(0,4)">{{ s }}</span>
+        <span class="skill-tag skill-tag--more" *ngIf="fl.skills.length > 4">
+          +{{ fl.skills.length - 4 }}
+        </span>
+      </div>
+
+      <!-- Footer -->
+      <div class="fl-footer">
+        <div class="fl-tjm">
+          <span class="tjm-label">TJM</span>
+          <span class="tjm-value">{{ fl.tjm }} DT/day</span>
+        </div>
+        <div class="fl-completed">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>{{ fl.completed }} jobs done</span>
+        </div>
+        <button class="contact-btn" (click)="$event.stopPropagation(); contactFreelancer(fl)">
+          <ion-icon name="chatbubble-outline"></ion-icon>
+          Contact
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="height: 90px;"></div>
+
+</ion-content>
+
+<!-- ── Bottom Nav ── -->
+<ion-tab-bar class="bottom-nav">
+  <ion-tab-button (click)="navigate('client/dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <ion-label>Dashboard</ion-label>
+  </ion-tab-button>
+  <ion-tab-button selected>
+    <ion-icon name="people-outline"></ion-icon>
+    <ion-label>Freelancers</ion-label>
+  </ion-tab-button>
+  <ion-tab-button class="fab-tab" (click)="navigate('client/post-announcement')">
+    <div class="fab-circle">
+      <ion-icon name="add-outline"></ion-icon>
+    </div>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <ion-label>Products</ion-label>
+  </ion-tab-button>
+  <ion-tab-button (click)="navigate('client/messages')">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <ion-label>Messages</ion-label>
+  </ion-tab-button>
+</ion-tab-bar>
