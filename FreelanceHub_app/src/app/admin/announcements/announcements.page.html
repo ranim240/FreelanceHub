@@ -1,0 +1,135 @@
+<!-- announcements.page.html -->
+<ion-header class="ion-no-border adm-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="admin-menu">
+        <button class="adm-menu-btn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </ion-menu-toggle>
+      <span class="adm-page-title">Announcements</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-page">
+  <div class="adm-wrapper">
+
+    <!-- Search -->
+    <div class="adm-search">
+      <ion-icon name="search-outline"></ion-icon>
+      <input
+        type="text"
+        placeholder="Search (title, client)..."
+        [(ngModel)]="searchText"
+        (input)="applyFilters()">
+    </div>
+
+    <!-- Filter chips -->
+    <div class="adm-filters">
+      <button class="adm-filter-chip" [class.active]="statusFilter === ''"
+              (click)="setFilter('')">All</button>
+      <button class="adm-filter-chip" [class.active]="statusFilter === 'Open'"
+              (click)="setFilter('Open')">Open</button>
+      <button class="adm-filter-chip" [class.active]="statusFilter === 'Urgent'"
+              (click)="setFilter('Urgent')">Urgent</button>
+      <button class="adm-filter-chip" [class.active]="statusFilter === 'Closed'"
+              (click)="setFilter('Closed')">Closed</button>
+    </div>
+
+    <!-- Announcements list -->
+    <div class="ann-list" style="display: flex; flex-direction: column; gap: 14px;">
+
+        <div class="adm-card ann-item" *ngFor="let a of filteredAnnouncements" style="padding: 18px; border-radius: 16px; border: 1px solid #E2E8F0; box-shadow: 0 4px 15px rgba(15,23,42,0.03); background:#FFF;">
+          
+          <!-- Header: Avatar + Title + Badge -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="adm-avatar" style="width: 48px; height: 48px; border-radius: 14px; background: #F8FAFC; color: #1A1A2E; font-size: 16px; font-weight: 800; border: 1px solid #E2E8F0;">
+                {{ a.clientInitials || '?' }}
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <p style="margin: 0; font-size: 15px; font-weight: 800; color: #1A1A2E; letter-spacing: -0.2px;">{{ a.title }}</p>
+                <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #64748B; font-weight: 500;">
+                  <span style="display:flex; align-items:center; gap:4px;"><ion-icon name="person-outline"></ion-icon> {{ a.clientName || 'Client' }}</span>
+                  <span style="color: #CBD5E1;">•</span>
+                  <span style="display:flex; align-items:center; gap:4px;"><ion-icon name="time-outline"></ion-icon> {{ a.postedAt || 'Recently' }}</span>
+                </div>
+              </div>
+            </div>
+            <span class="adm-badge" [ngClass]="'badge-' + (a.status?.toLowerCase() || 'open')" style="font-size: 10px; padding: 6px 12px; border-radius: 20px;">
+              {{ a.status || 'Open' }}
+            </span>
+          </div>
+
+          <!-- Description & Tags -->
+          <div style="margin-bottom: 16px;">
+            <p style="margin: 0 0 12px 0; font-size: 13px; color: #475569; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+              {{ a.description }}
+            </p>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px;" *ngIf="a.tags && a.tags.length">
+              <span *ngFor="let tag of a.tags" class="adm-badge" style="background: #EEF2FF; color: #4F46E5; font-size: 11px; padding: 4px 10px; border-radius: 8px;">
+                {{ tag }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Footer: Budget, Deadline, Actions -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 14px; border-top: 1px dashed #E2E8F0;">
+            <div style="display: flex; gap: 20px;">
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-size: 10px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px;">Budget</span>
+                <div style="display:flex; align-items:center; gap:4px; font-size: 14px; font-weight: 800; color: #1A1A2E;">
+                  <ion-icon name="wallet-outline" style="color: #10B981; font-size:16px;"></ion-icon>
+                  {{ a.budget || 'N/A' }}
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px;">
+                <span style="font-size: 10px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px;">Deadline</span>
+                <div style="display:flex; align-items:center; gap:4px; font-size: 13px; font-weight: 700; color: #475569;">
+                  <ion-icon name="calendar-outline" style="color: #F59E0B; font-size:15px;"></ion-icon>
+                  {{ a.deadline || 'N/A' }}
+                </div>
+              </div>
+            </div>
+            
+            <button class="adm-btn btn-delete" (click)="deleteAnnouncement(a._id)" style="width: 38px; height: 38px; border-radius: 10px;">
+              <ion-icon name="trash-outline" style="font-size: 18px;"></ion-icon>
+            </button>
+          </div>
+
+        </div>
+
+        <div class="adm-empty" *ngIf="filteredAnnouncements.length === 0">
+          <ion-icon name="megaphone-outline"></ion-icon>
+          <p>No announcements found</p>
+        </div>
+
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- Bottom tab bar -->
+<div class="adm-tab-bar">
+  <button class="adm-tab-btn" (click)="goTo('dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Dashboard</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('users')">
+    <ion-icon name="people-outline"></ion-icon>
+    <span>Users</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <span>Products</span>
+  </button>
+  <button class="adm-tab-btn adm-tab-active" (click)="goTo('announcements')">
+    <ion-icon name="megaphone"></ion-icon>
+    <span>Announcements</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('categories')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Categories</span>
+  </button>
+</div>

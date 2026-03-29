@@ -1,0 +1,196 @@
+<!-- products.page.html -->
+<ion-header class="ion-no-border adm-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="admin-menu">
+        <button class="adm-menu-btn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </ion-menu-toggle>
+      <span class="adm-page-title">Products</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-page">
+  <div class="adm-wrapper">
+
+    <!-- Search -->
+    <div class="adm-search">
+      <ion-icon name="search-outline"></ion-icon>
+      <input
+        type="text"
+        placeholder="Search product..."
+        [(ngModel)]="searchText"
+        (input)="applyFilters()">
+    </div>
+
+    <!-- Filter chips -->
+    <div class="adm-filters">
+      <button class="adm-filter-chip" [class.active]="statusFilter === ''"
+              (click)="setFilter('')">All</button>
+      <button class="adm-filter-chip" [class.active]="statusFilter === 'pending'"
+              (click)="setFilter('pending')">Pending</button>
+      <button class="adm-filter-chip" [class.active]="statusFilter === 'approved'"
+              (click)="setFilter('approved')">Approved</button>
+      <button class="adm-filter-chip" [class.active]="statusFilter === 'rejected'"
+              (click)="setFilter('rejected')">Rejected</button>
+    </div>
+
+    <!-- Product cards -->
+    <div class="prod-list">
+      <div class="adm-card prod-card" *ngFor="let p of filteredProducts" (click)="openProductModal(p)">
+
+        <!-- Image + status badge -->
+        <div class="prod-img-wrap">
+          <img [src]="p.image" [alt]="p.title" class="prod-img" />
+          <span class="prod-status-badge adm-badge" [ngClass]="'badge-' + (p.moderationStatus || p.status || 'pending')">
+            {{ p.moderationStatus || p.status || 'pending' | titlecase }}
+          </span>
+        </div>
+
+        <!-- Info -->
+        <div class="prod-body">
+          <div class="prod-body-top">
+            <div class="prod-text">
+              <p class="prod-title">{{ p.title }}</p>
+              <p class="prod-author">by {{ p.author || (p.freelancer?.firstName + ' ' + (p.freelancer?.lastName || '')) }}</p>
+            </div>
+            <p class="prod-price">{{ p.price }} DT</p>
+          </div>
+
+          <!-- Rating -->
+          <div class="prod-rating">
+            <ion-icon name="star" class="prod-star" *ngFor="let s of getStars(p.rating)"></ion-icon>
+            <span class="prod-rating-val">{{ p.rating || 0 }}</span>
+          </div>
+
+          <!-- Actions -->
+          <div class="prod-actions">
+            <button class="prod-action-btn btn-approve-full"
+                    *ngIf="(p.moderationStatus || p.status || 'pending') !== 'approved'"
+                    (click)="$event.stopPropagation(); changeStatus(p._id, 'approved')">
+              <ion-icon name="checkmark-outline"></ion-icon>
+              Approve
+            </button>
+            <button class="prod-action-btn btn-reject-full"
+                    *ngIf="(p.moderationStatus || p.status || 'pending') !== 'rejected'"
+                    (click)="$event.stopPropagation(); changeStatus(p._id, 'rejected')">
+              <ion-icon name="close-outline"></ion-icon>
+              Reject
+            </button>
+            <button class="adm-btn btn-delete" (click)="$event.stopPropagation(); deleteProduct(p._id)">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="adm-empty" *ngIf="filteredProducts.length === 0">
+        <ion-icon name="cube-outline"></ion-icon>
+        <p>No products found</p>
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- Product Details Modal -->
+  <div class="cat-modal-overlay" *ngIf="isProductModalOpen" (click)="closeProductModal()">
+    <div class="cat-modal adm-card" (click)="$event.stopPropagation()" style="max-height: 85vh; display: flex; flex-direction: column;">
+      
+      <div class="cat-modal-header">
+        <p class="cat-modal-title">Product Details</p>
+        <button class="cat-modal-close" (click)="closeProductModal()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="cat-modal-body" *ngIf="selectedProduct" style="padding-bottom: 24px; overflow-y: auto;">
+        
+        <img [src]="selectedProduct.image" style="width:100%; height:200px; object-fit:cover; border-radius:12px; margin-bottom:8px;">
+        
+        <div class="cat-field">
+          <label class="cat-label">Product Title</label>
+          <div class="cat-input" style="font-weight: 700; color: #1A1A2E;">{{ selectedProduct.title }}</div>
+        </div>
+
+        <div style="display:flex; gap:12px;">
+          <div class="cat-field" style="flex:1;">
+            <label class="cat-label">Author</label>
+            <div class="cat-input">{{ selectedProduct.author || (selectedProduct.freelancer?.firstName + ' ' + selectedProduct.freelancer?.lastName) || 'Unknown' }}</div>
+          </div>
+          <div class="cat-field" style="flex:1;">
+            <label class="cat-label">Category</label>
+            <div class="cat-input">{{ selectedProduct.category || selectedProduct.badge || 'N/A' }}</div>
+          </div>
+        </div>
+        
+        <div style="display:flex; gap:12px;">
+          <div class="cat-field" style="flex:1;">
+            <label class="cat-label">Price (DT)</label>
+            <div class="cat-input" style="font-weight: 800; color: #1A1A2E;">{{ selectedProduct.price }}</div>
+          </div>
+          <div class="cat-field" style="flex:1;">
+            <label class="cat-label">Last Update</label>
+            <div class="cat-input">{{ selectedProduct.lastUpdate || 'N/A' }} <span *ngIf="selectedProduct.version" style="color:#94A3B8; font-size:11px;">(v{{selectedProduct.version}})</span></div>
+          </div>
+        </div>
+
+        <div class="cat-field">
+          <label class="cat-label">Product Description</label>
+          <div class="cat-input" style="white-space: pre-wrap; line-height: 1.6;">{{ selectedProduct.description || 'No description provided.' }}</div>
+        </div>
+
+        <div class="cat-field" *ngIf="selectedProduct.techStack && selectedProduct.techStack.length">
+          <label class="cat-label">Technologies (Tech Stack)</label>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:4px;">
+            <span *ngFor="let tech of selectedProduct.techStack" class="adm-badge" style="background:#EEF2FF; color:#4F46E5; padding:6px 12px; font-size:11px; border-radius:8px;">{{ tech }}</span>
+          </div>
+        </div>
+
+        <div class="cat-field" *ngIf="selectedProduct.features && selectedProduct.features.length">
+          <label class="cat-label">Included Features</label>
+          <ul class="cat-input" style="margin:0; padding-left:26px; color:#475569; font-size:13px; line-height:1.6; display:flex; flex-direction:column; gap:6px;">
+            <li *ngFor="let feature of selectedProduct.features">{{ feature }}</li>
+          </ul>
+        </div>
+
+        <!-- Adm actions inside modal -->
+        <div style="display:flex; gap:10px; margin-top: 12px;" *ngIf="(selectedProduct.moderationStatus || selectedProduct.status || 'pending') === 'pending'">
+          <button class="prod-action-btn btn-approve-full" (click)="changeStatus(selectedProduct._id, 'approved'); closeProductModal()">
+            <ion-icon name="checkmark-outline"></ion-icon> Approve
+          </button>
+          <button class="prod-action-btn btn-reject-full" (click)="changeStatus(selectedProduct._id, 'rejected'); closeProductModal()">
+            <ion-icon name="close-outline"></ion-icon> Reject
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<!-- Bottom tab bar -->
+<div class="adm-tab-bar">
+  <button class="adm-tab-btn" (click)="goTo('dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Dashboard</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('users')">
+    <ion-icon name="people-outline"></ion-icon>
+    <span>Users</span>
+  </button>
+  <button class="adm-tab-btn adm-tab-active" (click)="goTo('products')">
+    <ion-icon name="cube"></ion-icon>
+    <span>Products</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('announcements')">
+    <ion-icon name="megaphone-outline"></ion-icon>
+    <span>Announcements</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('categories')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Categories</span>
+  </button>
+</div>

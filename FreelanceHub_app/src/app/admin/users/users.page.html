@@ -1,0 +1,208 @@
+<!-- users.page.html -->
+<ion-header class="ion-no-border adm-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="admin-menu">
+        <button class="adm-menu-btn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </ion-menu-toggle>
+      <span class="adm-page-title">Utilisateurs</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-page">
+  <div class="adm-wrapper">
+
+    <!-- Segment Tabs -->
+    <div class="adm-segment">
+      <button class="seg-btn" [class.active]="currentTab === 'all'" (click)="setTab('all')">
+        Users
+      </button>
+      <button class="seg-btn" [class.active]="currentTab === 'pending'" (click)="setTab('pending')">
+        Pending
+        <span class="seg-badge" *ngIf="pendingCount > 0">{{ pendingCount }}</span>
+      </button>
+    </div>
+
+    <!-- Search -->
+    <div class="adm-search">
+      <ion-icon name="search-outline"></ion-icon>
+      <input
+        type="text"
+        placeholder="Search user..."
+        [(ngModel)]="searchText"
+        (input)="applyFilters()">
+    </div>
+
+    <!-- Filter chips -->
+    <div class="adm-filters" *ngIf="currentTab === 'all'">
+      <button class="adm-filter-chip" [class.active]="roleFilter === ''"
+              (click)="setFilter('')">All</button>
+      <button class="adm-filter-chip" [class.active]="roleFilter === 'client'"
+              (click)="setFilter('client')">Clients</button>
+      <button class="adm-filter-chip" [class.active]="roleFilter === 'freelancer'"
+              (click)="setFilter('freelancer')">Freelancers</button>
+      <button class="adm-filter-chip" [class.active]="roleFilter === 'admin'"
+              (click)="setFilter('admin')">Admins</button>
+    </div>
+
+    <!-- Users list -->
+    <div class="adm-card">
+      <div class="adm-list">
+
+        <div class="adm-list-item usr-item"
+             *ngFor="let user of filteredUsers" (click)="openUserModal(user)">
+          <div class="adm-avatar">
+            {{ user.firstName?.charAt(0) || '?' }}{{ user.lastName?.charAt(0) || '' }}
+          </div>
+          <div class="adm-item-info">
+            <p class="adm-item-name">{{ user.firstName }} {{ user.lastName }}</p>
+            <p class="adm-item-sub">{{ user.email }}</p>
+            <div class="usr-badges">
+              <span class="adm-badge" [ngClass]="'badge-' + user.role">{{ user.role }}</span>
+              <span class="adm-badge" [ngClass]="'badge-' + (user.status || 'active')">
+                {{ user.status || 'active' }}
+              </span>
+            </div>
+          </div>
+          <div class="adm-actions">
+            <!-- Activate (Pending, non-freelancer) -->
+            <button class="adm-btn btn-approve"
+                    *ngIf="user.status === 'pending' && user.role !== 'freelancer'"
+                    (click)="$event.stopPropagation(); changeStatus(user._id, 'active')"
+                    title="Activate">
+              <ion-icon name="checkmark-outline"></ion-icon>
+            </button>
+            
+            <!-- Approve Freelancer (Pending) -->
+            <button class="adm-btn btn-approve"
+                    *ngIf="user.status === 'pending' && user.role === 'freelancer'"
+                    (click)="$event.stopPropagation(); validateFreelancer(user._id, 'approve')"
+                    title="Approve application">
+              <ion-icon name="checkmark-outline"></ion-icon>
+            </button>
+            
+            <!-- Reject Freelancer (Pending) -->
+            <button class="adm-btn btn-delete"
+                    *ngIf="user.status === 'pending' && user.role === 'freelancer'"
+                    (click)="$event.stopPropagation(); validateFreelancer(user._id, 'reject')"
+                    title="Reject application">
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+            
+            <!-- Unblock (Blocked) -->
+            <button class="adm-btn" style="background: rgba(59,130,246,0.12); color: #3B82F6;"
+                    *ngIf="user.status === 'blocked'"
+                    (click)="$event.stopPropagation(); changeStatus(user._id, 'active')"
+                    title="Unblock">
+              <ion-icon name="lock-open-outline"></ion-icon>
+            </button>
+
+            <!-- Block (Active / Pending) -->
+            <button class="adm-btn btn-reject"
+                    *ngIf="user.status !== 'blocked' && user.role !== 'admin'"
+                    (click)="$event.stopPropagation(); changeStatus(user._id, 'blocked')"
+                    title="Block">
+              <ion-icon name="lock-closed-outline"></ion-icon>
+            </button>
+            <button class="adm-btn btn-delete"
+                    *ngIf="user.role !== 'admin'"
+                    (click)="$event.stopPropagation(); deleteUser(user._id)"
+                    title="Delete">
+              <ion-icon name="trash-outline"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="adm-empty" *ngIf="filteredUsers.length === 0">
+          <ion-icon name="people-outline"></ion-icon>
+          <p>No users found</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- User Details Modal -->
+  <div class="cat-modal-overlay" *ngIf="isUserModalOpen" (click)="closeUserModal()">
+    <div class="cat-modal adm-card" (click)="$event.stopPropagation()" style="max-height: 85vh; display: flex; flex-direction: column;">
+
+      <div class="cat-modal-header">
+        <p class="cat-modal-title">User Details</p>
+        <button class="adm-btn btn-delete" (click)="closeUserModal()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="cat-modal-body" *ngIf="selectedUser" style="padding-bottom: 24px; overflow-y: auto;">
+        <!-- Profile Header -->
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom: 4px;">
+          <div class="adm-avatar" style="width: 54px; height: 54px; font-size: 18px; border-radius: 14px;">
+            {{ selectedUser.firstName?.charAt(0) || '?' }}{{ selectedUser.lastName?.charAt(0) || '' }}
+          </div>
+          <div>
+            <h2 style="margin:0 0 4px; font-size:16px; font-weight:800; color:#1A1A2E;">{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h2>
+            <p style="margin:0 0 6px; font-size:13px; color:#94A3B8;">{{ selectedUser.email }}</p>
+            <div style="display:flex; gap:6px;">
+               <span class="adm-badge" [ngClass]="'badge-' + selectedUser.role">{{ selectedUser.role }}</span>
+               <span class="adm-badge" [ngClass]="'badge-' + (selectedUser.status || 'active')">{{ selectedUser.status || 'active' }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Details -->
+        <div class="cat-field" *ngIf="selectedUser.domain">
+          <label class="cat-label">Domain</label>
+          <div class="cat-input">{{ selectedUser.domain }}</div>
+        </div>
+        
+        <div class="cat-field" *ngIf="selectedUser.bio">
+          <label class="cat-label">Bio</label>
+          <div class="cat-input" style="white-space:pre-wrap; min-height: 80px;">{{ selectedUser.bio }}</div>
+        </div>
+        
+        <div class="cat-field" *ngIf="selectedUser.skills && selectedUser.skills.length > 0">
+          <label class="cat-label">Skills</label>
+          <div style="display:flex; flex-wrap:wrap; gap:6px; padding: 4px 0;">
+            <span *ngFor="let skill of selectedUser.skills" style="background:#EEF2FF; color:#4F46E5; padding:6px 12px; border-radius:20px; font-size:12px; font-weight:600;">
+              {{ skill }}
+            </span>
+          </div>
+        </div>
+        
+        <div class="cat-field">
+          <label class="cat-label">Registration Date</label>
+          <div class="cat-input">{{ (selectedUser.createdAt | date:'longDate') || 'N/A' }}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<!-- Bottom tab bar -->
+<div class="adm-tab-bar">
+  <button class="adm-tab-btn" (click)="goTo('dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Dashboard</span>
+  </button>
+  <button class="adm-tab-btn adm-tab-active" (click)="goTo('users')">
+    <ion-icon name="people"></ion-icon>
+    <span>Users</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <span>Produits</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('announcements')">
+    <ion-icon name="megaphone-outline"></ion-icon>
+    <span>Annonces</span>
+  </button>
+  <button class="adm-tab-btn" (click)="goTo('categories')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Catégories</span>
+  </button>
+</div>

@@ -1,7 +1,14 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+import { AdminGuard } from './guards/admin.guard';
+
 const routes: Routes = [
+  {
+    path: 'admin',
+    canActivate: [AdminGuard],
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminPageModule)
+  },
   {
     path: 'home',
     loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
@@ -39,7 +46,6 @@ const routes: Routes = [
     path: 'profile-view',
     loadChildren: () => import('./profile-view/profile-view.module').then( m => m.ProfileViewPageModule)
   },
-
   {
     path: 'store',
     loadChildren: () => import('./store/store.module').then( m => m.StorePageModule)
@@ -56,6 +62,8 @@ const routes: Routes = [
     path: 'client-dashboard',
     loadChildren: () => import('./client-dashboard/client-dashboard.module').then( m => m.ClientDashboardPageModule)
   },
+
+
 
 ];
 

@@ -1,0 +1,222 @@
+// ── Shared styles (copié dans chaque page car Angular isole les composants) ──
+
+.admin-page { --background: #F8FAFC; }
+
+.adm-header ion-toolbar {
+  --background: #FFFFFF;
+  --border-width: 0;
+  box-shadow: 0 1px 0 #E2E8F0;
+  padding: 4px 8px;
+}
+.adm-menu-btn {
+  background: transparent; border: none;
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 10px; cursor: pointer;
+  ion-icon { font-size: 22px; color: #1A1A2E; }
+  &:active { background: #F8FAFC; }
+}
+.adm-page-title {
+  font-size: 16px; font-weight: 800;
+  color: #1A1A2E; letter-spacing: -0.3px; margin-left: 4px;
+}
+.adm-header-action {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: #1A1A2E; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; margin-right: 4px;
+  ion-icon { font-size: 20px; color: #fff; }
+  &:active { opacity: 0.85; }
+}
+.adm-wrapper { padding: 20px 16px 90px; }
+.adm-section-title {
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.2px;
+  color: #94A3B8; margin: 0 0 10px;
+}
+.adm-card {
+  background: #FFFFFF; border-radius: 14px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 2px 12px rgba(15,23,42,0.05);
+}
+.adm-search {
+  display: flex; align-items: center; gap: 10px;
+  background: #FFFFFF; border: 1.5px solid #E2E8F0;
+  border-radius: 12px; padding: 0 14px; height: 46px;
+  margin-bottom: 12px; transition: border-color 0.2s;
+  &:focus-within { border-color: #1A1A2E; }
+  ion-icon { font-size: 18px; color: #94A3B8; flex-shrink: 0; }
+  input {
+    flex: 1; border: none; outline: none;
+    background: transparent; font-size: 14px; color: #1A1A2E; font-family: inherit;
+    &::placeholder { color: #94A3B8; }
+  }
+}
+.adm-filters {
+  display: flex; gap: 8px; overflow-x: auto;
+  padding-bottom: 4px; margin-bottom: 16px;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+.adm-filter-chip {
+  display: flex; align-items: center; gap: 5px;
+  padding: 8px 16px; white-space: nowrap;
+  background: #FFFFFF; border: 1.5px solid #E2E8F0;
+  border-radius: 20px; font-size: 13px; font-weight: 500;
+  color: #475569; cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+  &.active { background: #1A1A2E; border-color: #1A1A2E; color: #fff; }
+}
+.adm-list { display: flex; flex-direction: column; }
+.adm-list-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-bottom: 1px solid #E2E8F0;
+  cursor: pointer; transition: background 0.15s;
+  &:last-child { border-bottom: none; }
+  &:active { background: #F8FAFC; }
+}
+.adm-avatar {
+  width: 42px; height: 42px; border-radius: 12px;
+  background: #1A1A2E; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+.adm-item-info { flex: 1; min-width: 0; }
+.adm-item-name { font-size: 14px; font-weight: 600; color: #1A1A2E; margin: 0 0 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adm-item-sub  { font-size: 12px; color: #94A3B8; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.adm-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: capitalize; white-space: nowrap; }
+.badge-admin      { background: #EEF2FF;                    color: #2e298c; }
+.badge-freelancer { background: rgba(75, 135, 153, 0.12);      color: #19758c; }
+.badge-client     { background: rgba(59,130,246,0.12);      color: #457cd5; }
+.badge-active     { background: rgba(16,185,129,0.12);      color: #10B981; }
+.badge-pending    { background: rgba(245,158,11,0.12);      color: #F59E0B; }
+.badge-blocked    { background: rgba(239,68,68,0.12);       color: #EF4444; }
+.badge-approved   { background: rgba(16,185,129,0.12);      color: #10B981; }
+.badge-rejected   { background: rgba(239,68,68,0.12);       color: #EF4444; }
+.badge-open       { background: rgba(16,185,129,0.12);      color: #10B981; }
+.badge-urgent     { background: rgba(239,68,68,0.12);       color: #EF4444; }
+.badge-closed     { background: rgba(148,163,184,0.15);     color: #94A3B8; }
+.adm-actions { display: flex; gap: 6px; }
+.adm-btn {
+  width: 34px; height: 34px; border-radius: 9px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-family: inherit;
+  ion-icon { font-size: 16px; }
+  &:active { opacity: 0.7; }
+}
+.btn-approve { background: rgba(16,185,129,0.12); color: #10B981; }
+.btn-reject  { background: rgba(245,158,11,0.12); color: #F59E0B; }
+.btn-delete  { background: rgba(239,68,68,0.12);  color: #EF4444; }
+.btn-edit    { background: rgba(79,70,229,0.12);  color: #4F46E5; }
+.adm-empty {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 20px; gap: 10px;
+  ion-icon { font-size: 40px; color: #94A3B8; }
+  p { font-size: 14px; color: #94A3B8; margin: 0; text-align: center; }
+}
+.adm-tab-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  height: 64px; background: #FFFFFF;
+  border-top: 1px solid #E2E8F0;
+  box-shadow: 0 -4px 20px rgba(15,23,42,0.07);
+  display: flex; align-items: center;
+  justify-content: space-around; padding: 0 4px; z-index: 1000;
+}
+.adm-tab-btn {
+  flex: 1; background: transparent; border: none;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 4px; cursor: pointer; padding: 0; height: 100%; font-family: inherit;
+  ion-icon { font-size: 20px; color: #94A3B8; }
+  span { font-size: 9px; font-weight: 500; color: #94A3B8; }
+  &::after { content: ''; width: 4px; height: 4px; border-radius: 50%; background: transparent; }
+  &.adm-tab-active {
+    ion-icon { color: #1A1A2E; }
+    span { color: #1A1A2E; font-weight: 700; }
+    &::after { background: #1A1A2E; }
+  }
+}
+@keyframes admFadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Segments ──────────────────────────────────────────────────
+.adm-segment {
+  display: flex; background: #E2E8F0; padding: 4px; border-radius: 12px; margin-bottom: 16px;
+}
+.seg-btn {
+  flex: 1; padding: 10px 0; border: none; background: transparent;
+  border-radius: 8px; font-size: 14px; font-weight: 600; color: #64748B;
+  cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; font-family: inherit;
+  &.active { background: #FFFFFF; color: #1A1A2E; box-shadow: 0 2px 4px rgba(15,23,42,0.05); }
+}
+.seg-badge {
+  background: #EF4444; color: #FFF; padding: 2px 6px; border-radius: 10px; font-size: 10px; font-weight: 800;
+}
+
+// ── Users specific ─────────────────────────────────────────────
+.usr-item { align-items: flex-start !important; }
+.usr-badges { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+
+// ── Modal ──────────────────────────────────────────────────────
+.cat-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(15,23,42,0.5); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 2000; animation: overlayIn 0.2s ease;
+}
+@keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+.cat-modal {
+  width: 100%; max-width: 500px;
+  border-radius: 20px 20px 0 0 !important; padding: 0;
+  animation: modalUp 0.3s cubic-bezier(0.34,1.2,0.64,1);
+}
+@keyframes modalUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.cat-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 16px 16px; border-bottom: 1px solid #E2E8F0;
+}
+.cat-modal-title { font-size: 16px; font-weight: 700; color: #1A1A2E; margin: 0; }
+.cat-modal-body  { padding: 20px 16px; display: flex; flex-direction: column; gap: 16px; }
+.cat-field { display: flex; flex-direction: column; gap: 6px; }
+.cat-label { font-size: 12px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.8px; }
+.cat-input {
+  width: 100%; padding: 12px 14px;
+  background: #F8FAFC; border: 1.5px solid #E2E8F0;
+  border-radius: 10px; font-size: 14px; color: #1A1A2E;
+  outline: none; font-family: inherit; box-sizing: border-box;
+  transition: border-color 0.2s;
+  &:focus { border-color: #1A1A2E; }
+  &::placeholder { color: #94A3B8; }
+}
+.cat-icon-input { display: flex; align-items: center; gap: 10px; }
+.cat-icon-preview {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: #EEF2FF;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  ion-icon { font-size: 22px; color: #4F46E5; }
+}
+.cat-hint { font-size: 11px; color: #94A3B8; margin: 0; }
+.cat-modal-footer {
+  display: flex; gap: 10px;
+  padding: 16px 16px 32px; border-top: 1px solid #E2E8F0;
+}
+.cat-btn-cancel {
+  flex: 1; padding: 12px 0;
+  background: #F8FAFC; border: 1.5px solid #E2E8F0;
+  border-radius: 10px; font-size: 14px; font-weight: 600;
+  color: #475569; cursor: pointer; font-family: inherit;
+}
+.cat-btn-save {
+  flex: 2; padding: 12px 0;
+  background: #1A1A2E; border: none; border-radius: 10px;
+  font-size: 14px; font-weight: 700; color: #fff;
+  cursor: pointer; font-family: inherit; transition: opacity 0.2s;
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+  &:active:not(:disabled) { opacity: 0.85; }
+}

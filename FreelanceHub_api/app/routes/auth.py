@@ -167,15 +167,15 @@ def forgot_password():
             subject="Code de vérification - Réinitialisation du mot de passe",
             recipients=[email],
             body=f"""Bonjour,
-
+ 
 Vous avez demandé la réinitialisation de votre mot de passe.
-
+ 
 Votre code de vérification est : {verification_code}
-
+ 
 Ce code est valide pendant 15 minutes.
-
+ 
 Si vous n'avez pas demandé cette réinitialisation, veuillez ignorer cet email.
-
+ 
 Cordialement,
 L'équipe FreelanceHub"""
         )

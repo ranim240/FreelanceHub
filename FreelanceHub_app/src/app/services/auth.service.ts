@@ -8,7 +8,8 @@ export interface User {
   firstName?: string;
   lastName?: string;
   avatarUrl?: string;
-  role?: 'client' | 'freelancer';
+  // role?: 'client' | 'freelancer';
+  role?: string;
   [key: string]: any;
 }
 

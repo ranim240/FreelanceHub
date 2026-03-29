@@ -1,0 +1,133 @@
+<!-- reports.page.html -->
+<ion-header class="ion-no-border adm-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="admin-menu">
+        <button class="adm-menu-btn">
+          <ion-icon name="menu-outline"></ion-icon>
+        </button>
+      </ion-menu-toggle>
+      <span class="adm-page-title">Reports</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="admin-page">
+  <div class="adm-wrapper">
+
+    <!-- Filter chips -->
+    <div class="adm-filters">
+      <button class="adm-filter-chip" [class.active]="currentStatus === 'all'"
+              (click)="setStatus('all')">All</button>
+      <button class="adm-filter-chip" [class.active]="currentStatus === 'pending'"
+              (click)="setStatus('pending')">
+        Pending
+      </button>
+      <button class="adm-filter-chip" [class.active]="currentStatus === 'resolved'"
+              (click)="setStatus('resolved')">Resolved</button>
+      <button class="adm-filter-chip" [class.active]="currentStatus === 'ignored'"
+              (click)="setStatus('ignored')">Ignored</button>
+    </div>
+
+    <!-- Search -->
+    <div class="adm-search">
+      <ion-icon name="search-outline"></ion-icon>
+      <input
+        type="text"
+        placeholder="Search (reporter, target, reason...)"
+        [(ngModel)]="searchText"
+        (input)="applyFilters()">
+    </div>
+
+    <!-- Reports list -->
+    <div class="adm-card">
+      <div class="adm-list">
+
+        <div class="adm-list-item rep-item" *ngFor="let report of filteredReports">
+          
+          <div class="rep-header">
+            <div class="adm-avatar">
+              {{ report.reportedBy.name?.charAt(0) || '?' }}
+            </div>
+            <div class="adm-item-info">
+              <p class="adm-item-name">{{ report.reportedBy.name }}</p>
+              <span class="adm-badge" [ngClass]="'badge-' + report.reportedBy.role">{{ report.reportedBy.role }}</span>
+            </div>
+            <div class="rep-date">{{ report.createdAt | date:'short' }}</div>
+          </div>
+
+          <div class="rep-body">
+            <div class="rep-target">
+              <span class="rep-target-label">Target:</span>
+              <span class="rep-target-name">{{ report.targetName }}</span>
+              <span class="adm-badge badge-target" [ngClass]="'badge-' + report.targetType">{{ report.targetType }}</span>
+            </div>
+            
+            <div class="rep-reason">
+              <ion-icon name="alert-circle-outline"></ion-icon>
+              <span>{{ report.reason | titlecase }}</span>
+            </div>
+            
+            <p class="rep-description" *ngIf="report.description">{{ report.description }}</p>
+          </div>
+
+          <div class="rep-footer">
+            <div class="rep-status-badge">
+                <span class="adm-badge" [ngClass]="'badge-' + report.status">{{ report.status }}</span>
+            </div>
+            
+            <div class="adm-actions" *ngIf="report.status === 'pending'">
+              <button class="adm-btn btn-approve" (click)="resolveReport(report._id)" title="Resolve">
+                <ion-icon name="checkmark-outline"></ion-icon>
+              </button>
+              <button class="adm-btn btn-reject" (click)="ignoreReport(report._id)" title="Ignore">
+                <ion-icon name="close-outline"></ion-icon>
+              </button>
+              <button class="adm-btn btn-delete" (click)="deleteReport(report._id)" title="Delete">
+                <ion-icon name="trash-outline"></ion-icon>
+              </button>
+            </div>
+            
+            <div class="adm-actions" *ngIf="report.status !== 'pending'">
+                <button class="adm-btn btn-delete" (click)="deleteReport(report._id)" title="Delete">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </button>
+            </div>
+          </div>
+          
+        </div>
+
+        <div class="adm-empty" *ngIf="filteredReports.length === 0">
+          <ion-icon name="flag-outline"></ion-icon>
+          <p>No reports found</p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+
+<!-- Bottom tab bar (facultatif si menu sur le côté) -->
+<div class="adm-tab-bar">
+    <button class="adm-tab-btn" (click)="goTo('dashboard')">
+      <ion-icon name="grid-outline"></ion-icon>
+      <span>Dashboard</span>
+    </button>
+    <button class="adm-tab-btn" (click)="goTo('users')">
+      <ion-icon name="people-outline"></ion-icon>
+      <span>Users</span>
+    </button>
+    <button class="adm-tab-btn" (click)="goTo('products')">
+      <ion-icon name="cube-outline"></ion-icon>
+      <span>Produits</span>
+    </button>
+    <button class="adm-tab-btn" (click)="goTo('announcements')">
+      <ion-icon name="megaphone-outline"></ion-icon>
+      <span>Annonces</span>
+    </button>
+    <button class="adm-tab-btn" (click)="goTo('categories')">
+      <ion-icon name="grid-outline"></ion-icon>
+      <span>Catégories</span>
+    </button>
+  </div>

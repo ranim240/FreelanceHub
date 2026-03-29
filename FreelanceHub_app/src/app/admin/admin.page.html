@@ -1,0 +1,72 @@
+<!-- ══════════════════════════════════════════════════════════ -->
+<!--  ADMIN LAYOUT — ion-menu mobile navigation              -->
+<!-- ══════════════════════════════════════════════════════════ -->
+
+<!-- Sidebar as ion-menu -->
+<ion-menu contentId="admin-content" menuId="admin-menu" side="start" type="overlay">
+  <ion-content class="adm-sidebar-content">
+    <div class="adm-sidebar-layout">
+
+      <!-- Brand -->
+      <div class="adm-brand">
+        <div class="adm-brand-icon">
+          <ion-icon name="shield-checkmark"></ion-icon>
+        </div>
+        <div class="adm-brand-text">
+          <p class="adm-brand-name">FreelanceHub</p>
+          <p class="adm-brand-sub">Administration</p>
+        </div>
+        <ion-menu-toggle>
+          <button class="adm-close-btn">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </ion-menu-toggle>
+      </div>
+
+      <!-- Admin user block -->
+      <div class="adm-user-block">
+        <div class="adm-user-avatar">
+          {{ currentUser?.firstName?.charAt(0) || 'A' }}{{ currentUser?.lastName?.charAt(0) || 'D' }}
+        </div>
+        <div class="adm-user-info">
+          <p class="adm-user-name">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</p>
+          <span class="adm-user-badge">Administrateur</span>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <p class="adm-nav-label">Menu</p>
+      <nav class="adm-nav">
+        <ion-menu-toggle auto-hide="false" *ngFor="let item of menuItems">
+          <button
+            class="adm-nav-item"
+            [class.adm-nav-item--active]="isActive(item.path)"
+            (click)="navigateTo(item.path)">
+            <span class="adm-nav-icon">
+              <ion-icon [name]="item.icon"></ion-icon>
+            </span>
+            <span class="adm-nav-label-text">{{ item.label }}</span>
+            <ion-icon name="chevron-forward-outline" class="adm-nav-arrow"></ion-icon>
+          </button>
+        </ion-menu-toggle>
+      </nav>
+
+      <!-- Pushes the bottom content down -->
+      <div class="adm-sidebar-spacer"></div>
+
+      <!-- Logout -->
+      <ion-menu-toggle>
+        <button class="adm-logout-btn" (click)="logout()">
+          <ion-icon name="log-out-outline"></ion-icon>
+          <span>Déconnexion</span>
+        </button>
+      </ion-menu-toggle>
+
+      <p class="adm-copy">© 2026 FreelanceHub · ENSIT</p>
+
+    </div>
+  </ion-content>
+</ion-menu>
+
+<!-- Main content outlet -->
+<ion-router-outlet id="admin-content"></ion-router-outlet>

@@ -11,7 +11,7 @@ import { HttpClient } from '@angular/common/http'; // 1. On ajoute l'import
 export class RegisterPage implements OnInit {
 
   currentStep: number = 1;
-  selectedRole: 'freelance' | 'client' = 'freelance';
+  selectedRole: 'freelancer' | 'client' = 'freelancer';
   selectedDomain: string = '';
   
   // 2. Ajout des variables pour le formulaire (étape 3)
@@ -27,7 +27,7 @@ export class RegisterPage implements OnInit {
 
   ngOnInit() {}
 
-  setRole(role: 'freelance' | 'client') {
+  setRole(role: 'freelancer' | 'client') {
     this.selectedRole = role;
   }
 
