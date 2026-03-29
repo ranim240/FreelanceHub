@@ -21,14 +21,6 @@ export class RegisterPage implements OnInit {
   email = '';
   password = '';
   
-  domains = [
-    { key: 'dev',       label: 'Développement', icon: 'code-slash-outline'    },
-    { key: 'design',    label: 'Design',         icon: 'color-palette-outline' },
-    { key: 'marketing', label: 'Marketing',      icon: 'megaphone-outline'     },
-    { key: 'redaction', label: 'Rédaction',      icon: 'pencil-outline'        },
-    { key: 'video',     label: 'Vidéo',          icon: 'videocam-outline'      },
-    { key: 'data',      label: 'Data / BI',      icon: 'stats-chart-outline'   },
-  ];
 
   // 3. On injecte HttpClient en plus de Router
   constructor(private router: Router, private http: HttpClient) {}
@@ -39,9 +31,7 @@ export class RegisterPage implements OnInit {
     this.selectedRole = role;
   }
 
-  setDomain(key: string) {
-    this.selectedDomain = key;
-  }
+
 
   nextStep() {
     if (this.currentStep < 3) {
@@ -59,10 +49,9 @@ export class RegisterPage implements OnInit {
   register() {
     const finalData = {
       role: this.selectedRole,
-      domain: this.selectedDomain,
       firstName: this.firstName,
       lastName: this.lastName,
-      username: this.username,
+      username: this.firstName+this.lastName,
       email: this.email,
       password: this.password
     };

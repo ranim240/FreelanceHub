@@ -83,11 +83,16 @@ export class HomePage implements OnInit {
   // ── Navigation ────────────────────────────────────────────────
   goToLogin():         void { this.router.navigate(['/login']); }
   goToSignup():        void { this.router.navigate(['/register']); }
-  goToProfile():       void { this.router.navigate(['/profile-view']);} 
+  goToProfile():       void { this.router.navigate(['/profile']);} 
   goToStore():         void { this.router.navigate(['/store']); }
-
   goToAnnouncements(): void { console.log('Navigate to Announcements'); /* this.router.navigate(['/announcements']); */ }
-  goToMessages(): void { console.log('Messages'); }
+  goToMessages(): void { this.router.navigate(['/messages']); }
+
+  testClientDashboard() {
+    localStorage.setItem('fh_user', JSON.stringify({ _id: 'test', email: 'client@test.com', role: 'client', firstName: 'Client', lastName: 'Client' }));
+    this.router.navigate(['/client-dashboard']);
+  }
+
   goToSearch(): void { this.router.navigate(['/store']); }
 
   // ── Announcements ─────────────────────────────────────────────

@@ -326,43 +326,6 @@
   }
 }
 
-// ── Social Grid ─────────────────────────────────────────────
-.social-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.social-pill {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 16px;
-  border: 1.5px solid var(--fh-border);
-  border-radius: 12px;
-  background: #fff;
-  color: var(--fh-muted);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-
-  ion-icon { font-size: 18px; }
-
-  &:hover {
-    border-color: var(--fh-accent);
-    color: var(--fh-accent);
-    background: var(--fh-accent-soft);
-
-    ion-icon { color: var(--fh-accent); }
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-}
-
 // ── Register Row ────────────────────────────────────────────
 .register-row {
   display: flex;

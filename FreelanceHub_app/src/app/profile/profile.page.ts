@@ -4,12 +4,12 @@ import { ProfileService } from '../profile.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
-  selector: 'app-profil',
-  templateUrl: './profil.page.html',
-  styleUrls: ['./profil.page.scss'],
+  selector: 'app-profile',
+  templateUrl: './profile.page.html',
+  styleUrls: ['./profile.page.scss'],
   standalone: false,
 })
-export class ProfilPage implements OnInit {
+export class ProfilePage implements OnInit {
 
   // ── Section active (null = aucune) ─────────
   activeSection: 'personal' | 'education' | 'work' | null = null;

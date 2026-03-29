@@ -1,0 +1,50 @@
+<ion-header collapse="condense">
+  <ion-toolbar>
+    <ion-title size="large">Publier un Projet</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+    <ion-item>
+      <ion-label position="stacked">Titre <ion-note color="danger">*</ion-note></ion-label>
+      <ion-input formControlName="title" type="text"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Description <ion-note color="danger">*</ion-note></ion-label>
+      <ion-textarea formControlName="description" autoGrow={true} rows="4"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Catégorie <ion-note color="danger">*</ion-note></ion-label>
+      <ion-select formControlName="category" interface="popover">
+        <ion-select-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Compétences requises</ion-label>
+      <ion-chip *ngFor="let skill of skills" color="light" (click)="removeSkill(skill)">
+        {{ skill }}
+        <ion-icon name="close-circle" slot="close"></ion-icon>
+      </ion-chip>
+      <ion-input #skillInput placeholder="Ajouter compétence" (keyup.enter)="onSkillEnter(skillInput)"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Budget (DT) <ion-note color="danger">*</ion-note></ion-label>
+      <ion-input formControlName="budget" type="number"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Timeline <ion-note color="danger">*</ion-note></ion-label>
+      <ion-input formControlName="timeline" type="text" placeholder="e.g. 2 semaines"></ion-input>
+    </ion-item>
+
+    <ion-button expand="block" type="submit" color="dark" class="publish-btn" [disabled]="!projectForm.valid">
+      Publier
+    </ion-button>
+  </form>
+</ion-content>
+

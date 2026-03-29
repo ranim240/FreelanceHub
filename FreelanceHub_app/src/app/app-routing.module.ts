@@ -32,8 +32,8 @@ const routes: Routes = [
     loadChildren: () => import('./verify-code/verify-code.module').then( m => m.VerifyCodePageModule)
   },
   {
-    path: 'profil',
-    loadChildren: () => import('./profil/profil.module').then( m => m.ProfilPageModule)
+    path: 'profile',
+    loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
   },
   {
     path: 'profile-view',
@@ -44,9 +44,17 @@ const routes: Routes = [
     path: 'store',
     loadChildren: () => import('./store/store.module').then( m => m.StorePageModule)
   },
+  // {
+  //   path: 'messages',
+  //   loadChildren: () => import('./').then( m => m.)
+  // },
   {
     path: 'product-detail/:id',
     loadChildren: () => import('./product-detail/product-detail.module').then( m => m.ProductDetailPageModule)
+  },
+  {
+    path: 'client-dashboard',
+    loadChildren: () => import('./client-dashboard/client-dashboard.module').then( m => m.ClientDashboardPageModule)
   },
 
 ];

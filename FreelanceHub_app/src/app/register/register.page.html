@@ -72,22 +72,29 @@
           <div class="field-group">
             <label class="field-label">First name</label>
             <div class="input-shell">
-              <ion-input type="text" name="firstName" [(ngModel)]="firstName" placeholder="John" class="shell-input" fill="outline"></ion-input>
+              <ion-icon name="person-outline" class="shell-icon"></ion-icon>
+              <ion-input type="text" name="firstName" [(ngModel)]="firstName" placeholder="firstName" class="shell-input" fill="outline"></ion-input>
             </div>
           </div>
           <div class="field-group">
             <label class="field-label">Last name</label>
             <div class="input-shell">
-              <ion-input type="text" name="lastName" [(ngModel)]="lastName" placeholder="Doe" class="shell-input" fill="outline"></ion-input>
+             <ion-icon name="person-outline" class="shell-icon"></ion-icon>
+              <ion-input type="text" name="lastName" [(ngModel)]="lastName" placeholder="lastName" class="shell-input" fill="outline"></ion-input>
             </div>
           </div>
         </div>
+
+
+  
+
+
 
         <div class="field-group">
           <label class="field-label">Email address</label>
           <div class="input-shell">
             <ion-icon name="mail-outline" class="shell-icon"></ion-icon>
-            <ion-input type="email" name="email" [(ngModel)]="email" placeholder="you@example.com" class="shell-input shell-input--icon" fill="outline"></ion-input>
+            <ion-input type="email" name="email" [(ngModel)]="email" placeholder="you@gmail.com" class="shell-input shell-input--icon" fill="outline"></ion-input>
           </div>
         </div>
 
