@@ -11,11 +11,13 @@ import { MenuController, NavController } from '@ionic/angular';
 })
 export class ClientPage implements OnInit, OnDestroy {
   menuItems = [
+    { label: 'Back to Home', icon: 'home-outline', path: '/home' },
     { label: 'Dashboard', icon: 'grid-outline', path: '/client/dashboard' },
     { label: 'Announcements', icon: 'megaphone-outline', path: '/client/announcements' },
     { label: 'Freelancers', icon: 'people-outline', path: '/client/freelancers' },
     { label: 'Products', icon: 'cube-outline', path: '/client/products' },
     { label: 'Messages', icon: 'chatbubbles-outline', path: '/client/messages' },
+    { label: 'Reports', icon: 'shield-outline', path: '/client/reports' },
     { label: 'Notifications', icon: 'notifications-outline', path: '/client/notifications' },
   ];
 
@@ -28,9 +30,13 @@ export class ClientPage implements OnInit, OnDestroy {
     private navCtrl: NavController
   ) {}
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.menuCtrl.enable(false, 'main-menu');
     this.menuCtrl.enable(true, 'client-menu');
+    this.menuCtrl.close('client-menu');
+  }
+
+  ngOnInit() {
     this.loadClientName();
   }
 

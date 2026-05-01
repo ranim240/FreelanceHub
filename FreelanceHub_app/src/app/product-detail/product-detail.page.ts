@@ -4,6 +4,9 @@ import { Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
+import { CartService } from '../services/cart.service';
+import { AuthService } from '../services/auth.service';
+import { ToastController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-product-detail',
@@ -43,6 +46,10 @@ export class ProductDetailPage implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private productService: ProductService,
     private cdr: ChangeDetectorRef,
+    private authService: AuthService,
+    private cartService: CartService,
+    private toastController: ToastController,
+    private navCtrl: NavController
   ) {}
 
   ngOnInit(): void {
@@ -177,8 +184,37 @@ export class ProductDetailPage implements OnInit, AfterViewInit, OnDestroy {
   // ── Add to cart ───────────────────────────────────────────────
   addToCart(): void {
     if (!this.product) return;
-    this.isAddedToCart = true;
-    console.log('Added to cart:', this.product.title);
+    
+    const user = this.authService.currentUser;
+    if (!user) {
+      this.presentToast('Veuillez vous connecter pour ajouter au panier.', 'warning');
+      return;
+    }
+
+    this.cartService.addToCart(user._id, this.product._id).subscribe({
+      next: () => {
+        this.isAddedToCart = true;
+        this.presentToast('Produit ajouté au panier !', 'success');
+      },
+      error: (err) => {
+        console.error(err);
+        this.presentToast('Erreur lors de l\'ajout au panier.', 'danger');
+      }
+    });
+  }
+
+  goToCart(): void {
+    this.router.navigate(['/client/dashboard'], { queryParams: { showCart: 'true' } });
+  }
+
+  async presentToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'top'
+    });
+    toast.present();
   }
 
   // ── Download after purchase ───────────────────────────────────
@@ -189,7 +225,7 @@ export class ProductDetailPage implements OnInit, AfterViewInit, OnDestroy {
   }
 
   goBack(): void {
-    this.router.navigate(['/store']);
+    this.navCtrl.back();
   }
 
   // ── Star helpers ──────────────────────────────────────────────

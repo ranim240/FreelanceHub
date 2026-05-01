@@ -61,22 +61,23 @@
   --padding-bottom: 24px;
   font-family: 'Inter', sans-serif;
   color: var(--admin-text);
-  
+
   .page-wrapper {
     max-width: 1200px;
     margin: 0 auto;
     padding: 24px;
-    
+
     .page-header {
       margin-bottom: 32px;
       animation: fadeIn 0.4s ease-out;
-      
+
       h1 {
         font-size: 28px;
         font-weight: 700;
         margin: 0 0 8px 0;
         letter-spacing: -0.5px;
       }
+
       p {
         color: var(--admin-text-muted);
         margin: 0;
@@ -108,15 +109,19 @@
   font-weight: 600;
   text-transform: capitalize;
 
-  &.status-active, &.status-approved {
+  &.status-active,
+  &.status-approved {
     background: rgba(16, 185, 129, 0.15);
     color: var(--admin-success);
   }
+
   &.status-pending {
     background: rgba(245, 158, 11, 0.15);
     color: var(--admin-warning);
   }
-  &.status-blocked, &.status-rejected {
+
+  &.status-blocked,
+  &.status-rejected {
     background: rgba(239, 68, 68, 0.15);
     color: var(--admin-danger);
   }
@@ -129,9 +134,20 @@
   font-weight: 700;
   text-transform: uppercase;
 
-  &.role-admin { background: rgba(139, 92, 246, 0.2); color: var(--admin-accent); }
-  &.role-client { background: rgba(59, 130, 246, 0.15); color: #3B82F6; }
-  &.role-freelancer { background: rgba(16, 185, 129, 0.15); color: var(--admin-success); }
+  &.role-admin {
+    background: rgba(139, 92, 246, 0.2);
+    color: var(--admin-accent);
+  }
+
+  &.role-client {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3B82F6;
+  }
+
+  &.role-freelancer {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--admin-success);
+  }
 }
 
 /* Buttons */
@@ -167,23 +183,44 @@
   cursor: pointer;
   transition: all 0.2s ease;
 
-  ion-icon { font-size: 18px; }
+  ion-icon {
+    font-size: 18px;
+  }
 
   &.btn-green {
-    background: rgba(16, 185, 129, 0.1); color: var(--admin-success);
-    &:hover { background: rgba(16, 185, 129, 0.2); }
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--admin-success);
+
+    &:hover {
+      background: rgba(16, 185, 129, 0.2);
+    }
   }
+
   &.btn-red {
-    background: rgba(239, 68, 68, 0.1); color: var(--admin-danger);
-    &:hover { background: rgba(239, 68, 68, 0.2); }
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--admin-danger);
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
   }
+
   &.btn-orange {
-    background: rgba(245, 158, 11, 0.1); color: var(--admin-warning);
-    &:hover { background: rgba(245, 158, 11, 0.2); }
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--admin-warning);
+
+    &:hover {
+      background: rgba(245, 158, 11, 0.2);
+    }
   }
+
   &.btn-blue {
-    background: rgba(59, 130, 246, 0.1); color: #3B82F6;
-    &:hover { background: rgba(59, 130, 246, 0.2); }
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+
+    &:hover {
+      background: rgba(59, 130, 246, 0.2);
+    }
   }
 }
 
@@ -213,11 +250,11 @@
   tr:last-child td {
     border-bottom: none;
   }
-  
+
   tr:hover td {
     background: rgba(255, 255, 255, 0.02);
   }
-  
+
   .user-cell {
     display: flex;
     align-items: center;
@@ -270,7 +307,7 @@
       height: 44px;
       font-size: 14px;
       outline: none;
-      
+
       &::placeholder {
         color: var(--admin-text-muted);
       }
@@ -287,7 +324,7 @@
     font-size: 14px;
     outline: none;
     cursor: pointer;
-    
+
     option {
       background: var(--admin-bg);
     }
@@ -295,7 +332,10 @@
 }
 
 /* General Layout Utilities */
-.text-muted { color: var(--admin-text-muted); }
+.text-muted {
+  color: var(--admin-text-muted);
+}
+
 .empty-text {
   text-align: center;
   padding: 40px;
@@ -304,6 +344,13 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

@@ -90,5 +90,23 @@ export class ProfileViewPage implements OnInit {
   goToMessages(): void {
     // placeholder until messaging feature implemented
     console.log('Navigate to messages');
+    this.router.navigate(['/client/messages']);
+  }
+
+  goToReports(): void {
+    this.router.navigate(['/client/reports']);
+  }
+
+  goToProfile(): void {
+    const user = this.auth.currentUser;
+    if (!user) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    if (user.role === 'client') {
+      this.router.navigate(['/client/dashboard']);
+    } else {
+      this.router.navigate(['/profile']);
+    }
   }
 }

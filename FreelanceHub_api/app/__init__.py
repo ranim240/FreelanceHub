@@ -39,10 +39,12 @@ def create_app():
     from app.routes.home import home_bp
     from app.routes.admin import admin_bp
     from app.routes.reports import reports_bp
+    from app.routes.cart import cart_bp
     app.register_blueprint(products_bp, url_prefix="/api")
     app.register_blueprint(home_bp, url_prefix="/api")
     app.register_blueprint(auth_bp, url_prefix="/api")
     app.register_blueprint(admin_bp, url_prefix="/api")
     app.register_blueprint(reports_bp, url_prefix="/api")
+    app.register_blueprint(cart_bp, url_prefix="/api")
 
     return app

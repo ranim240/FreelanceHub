@@ -80,3 +80,29 @@ def delete_report(report_id):
     if result.deleted_count == 0:
         return jsonify({"error": "Report not found"}), 404
     return jsonify({"message": "Report deleted"}), 200
+
+@reports_bp.route("/reports", methods=["POST"])
+def create_report():
+    """Crée un nouveau signalement (report)."""
+    data = request.get_json()
+    if not data or not data.get("reason"):
+        return jsonify({"error": "Reason is required"}), 400
+
+    report = {
+        "reportedBy": {
+            "userId": ObjectId(data["reportedBy"]["userId"]),
+            "name": data["reportedBy"]["name"],
+            "role": data["reportedBy"].get("role", "client")
+        },
+        "targetType": data.get("targetType", "general"), # user, product, announcement
+        "targetId": ObjectId(data["targetId"]) if data.get("targetId") else None,
+        "targetName": data.get("targetName", "Platform"),
+        "reason": data["reason"],
+        "description": data.get("description", ""),
+        "status": "pending",
+        "createdAt": datetime.utcnow()
+    }
+    
+    result = db.reports.insert_one(report)
+    report["_id"] = str(result.inserted_id)
+    return jsonify(serialize_doc(report)), 201

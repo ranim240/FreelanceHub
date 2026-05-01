@@ -100,4 +100,8 @@ export class AdminService {
   deleteReport(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/admin/reports/${id}`);
   }
+
+  createReport(reportData: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reports`, reportData);
+  }
 }

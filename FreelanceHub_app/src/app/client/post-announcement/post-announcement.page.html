@@ -1,7 +1,7 @@
 <ion-header class="pa-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/client/dashboard" text=""></ion-back-button>
+      <ion-back-button defaultHref="/client/dashboard" text="" force-show="true"></ion-back-button>
     </ion-buttons>
     <ion-title>Post Announcement</ion-title>
   </ion-toolbar>
@@ -14,14 +14,14 @@
     <div class="step-item" [class.active]="currentStep >= 1" [class.done]="currentStep > 1">
       <div class="step-circle">
         <ion-icon name="document-text-outline" *ngIf="currentStep <= 1"></ion-icon>
-        <ion-icon name="checkmark-outline"     *ngIf="currentStep > 1"></ion-icon>
+        <ion-icon name="checkmark-outline" *ngIf="currentStep > 1"></ion-icon>
       </div>
       <span class="step-name">Details</span>
     </div>
     <div class="step-line" [class.active]="currentStep > 1"></div>
     <div class="step-item" [class.active]="currentStep >= 2" [class.done]="currentStep > 2">
       <div class="step-circle">
-        <ion-icon name="pricetag-outline"  *ngIf="currentStep <= 2"></ion-icon>
+        <ion-icon name="pricetag-outline" *ngIf="currentStep <= 2"></ion-icon>
         <ion-icon name="checkmark-outline" *ngIf="currentStep > 2"></ion-icon>
       </div>
       <span class="step-name">Budget</span>
@@ -55,13 +55,8 @@
       <div class="field-group">
         <label class="field-label">Title <span class="req">*</span></label>
         <div class="input-shell">
-          <ion-input
-            [(ngModel)]="announcement.title"
-            name="title"
-            type="text"
-            placeholder="e.g. Logo Design for my Startup"
-            class="shell-input"
-            fill="outline">
+          <ion-input [(ngModel)]="announcement.title" name="title" type="text"
+            placeholder="e.g. Logo Design for my Startup" class="shell-input" fill="outline">
           </ion-input>
         </div>
       </div>
@@ -69,12 +64,8 @@
       <div class="field-group">
         <label class="field-label">Category <span class="req">*</span></label>
         <div class="select-shell">
-          <ion-select
-            [(ngModel)]="announcement.category"
-            name="category"
-            placeholder="Select a category"
-            class="shell-select"
-            fill="outline">
+          <ion-select [(ngModel)]="announcement.category" name="category" placeholder="Select a category"
+            class="shell-select" fill="outline">
             <ion-select-option value="design">Design</ion-select-option>
             <ion-select-option value="dev">Development</ion-select-option>
             <ion-select-option value="writing">Writing</ion-select-option>
@@ -89,14 +80,9 @@
       <div class="field-group">
         <label class="field-label">Description <span class="req">*</span></label>
         <div class="textarea-shell">
-          <ion-textarea
-            [(ngModel)]="announcement.description"
-            name="description"
+          <ion-textarea [(ngModel)]="announcement.description" name="description"
             placeholder="Describe your project in detail. What do you need? What are the requirements?"
-            class="shell-textarea"
-            fill="outline"
-            [autoGrow]="true"
-            rows="5">
+            class="shell-textarea" fill="outline" [autoGrow]="true" rows="5">
           </ion-textarea>
         </div>
         <p class="field-hint">{{ announcement.description.length }} / 500 characters</p>
@@ -106,14 +92,8 @@
         <label class="field-label">Skills Required</label>
         <div class="chips-input-row">
           <div class="input-shell chips-input-shell">
-            <ion-input
-              [(ngModel)]="newSkill"
-              name="newSkill"
-              type="text"
-              placeholder="e.g. Figma, React..."
-              class="shell-input"
-              fill="outline"
-              (keyup.enter)="addSkill()">
+            <ion-input [(ngModel)]="newSkill" name="newSkill" type="text" placeholder="e.g. Figma, React..."
+              class="shell-input" fill="outline" (keyup.enter)="addSkill()">
             </ion-input>
           </div>
           <button class="add-chip-btn" type="button" (click)="addSkill()">
@@ -131,20 +111,12 @@
       <div class="field-group">
         <label class="field-label">Urgency Level</label>
         <div class="urgency-selector">
-          <button
-            type="button"
-            class="urgency-btn"
-            [class.urgency-btn--active]="announcement.urgency === 'open'"
-            [class.urgency-btn--open]="announcement.urgency === 'open'"
-            (click)="announcement.urgency = 'open'">
+          <button type="button" class="urgency-btn" [class.urgency-btn--active]="announcement.urgency === 'open'"
+            [class.urgency-btn--open]="announcement.urgency === 'open'" (click)="announcement.urgency = 'open'">
             <ion-icon name="checkmark-circle-outline"></ion-icon> Open
           </button>
-          <button
-            type="button"
-            class="urgency-btn"
-            [class.urgency-btn--active]="announcement.urgency === 'urgent'"
-            [class.urgency-btn--urgent]="announcement.urgency === 'urgent'"
-            (click)="announcement.urgency = 'urgent'">
+          <button type="button" class="urgency-btn" [class.urgency-btn--active]="announcement.urgency === 'urgent'"
+            [class.urgency-btn--urgent]="announcement.urgency === 'urgent'" (click)="announcement.urgency = 'urgent'">
             <ion-icon name="flash-outline"></ion-icon> Urgent
           </button>
         </div>
@@ -173,18 +145,12 @@
       <div class="field-group">
         <label class="field-label">Budget Type</label>
         <div class="budget-type-selector">
-          <button
-            type="button"
-            class="budget-type-btn"
-            [class.active]="announcement.budgetType === 'fixed'"
+          <button type="button" class="budget-type-btn" [class.active]="announcement.budgetType === 'fixed'"
             (click)="announcement.budgetType = 'fixed'">
             <ion-icon name="cash-outline"></ion-icon>
             <span>Fixed Price</span>
           </button>
-          <button
-            type="button"
-            class="budget-type-btn"
-            [class.active]="announcement.budgetType === 'range'"
+          <button type="button" class="budget-type-btn" [class.active]="announcement.budgetType === 'range'"
             (click)="announcement.budgetType = 'range'">
             <ion-icon name="bar-chart-outline"></ion-icon>
             <span>Price Range</span>
@@ -196,13 +162,8 @@
       <div class="field-group" *ngIf="announcement.budgetType === 'fixed'">
         <label class="field-label">Budget (DT) <span class="req">*</span></label>
         <div class="input-shell">
-          <ion-input
-            [(ngModel)]="announcement.budgetFixed"
-            name="budgetFixed"
-            type="number"
-            placeholder="e.g. 300"
-            class="shell-input"
-            fill="outline">
+          <ion-input [(ngModel)]="announcement.budgetFixed" name="budgetFixed" type="number" placeholder="e.g. 300"
+            class="shell-input" fill="outline">
           </ion-input>
           <span class="input-suffix">DT</span>
         </div>
@@ -213,26 +174,16 @@
         <div class="field-group">
           <label class="field-label">Min (DT) <span class="req">*</span></label>
           <div class="input-shell">
-            <ion-input
-              [(ngModel)]="announcement.budgetMin"
-              name="budgetMin"
-              type="number"
-              placeholder="150"
-              class="shell-input"
-              fill="outline">
+            <ion-input [(ngModel)]="announcement.budgetMin" name="budgetMin" type="number" placeholder="150"
+              class="shell-input" fill="outline">
             </ion-input>
           </div>
         </div>
         <div class="field-group">
           <label class="field-label">Max (DT) <span class="req">*</span></label>
           <div class="input-shell">
-            <ion-input
-              [(ngModel)]="announcement.budgetMax"
-              name="budgetMax"
-              type="number"
-              placeholder="500"
-              class="shell-input"
-              fill="outline">
+            <ion-input [(ngModel)]="announcement.budgetMax" name="budgetMax" type="number" placeholder="500"
+              class="shell-input" fill="outline">
             </ion-input>
           </div>
         </div>
@@ -241,12 +192,8 @@
       <div class="field-group">
         <label class="field-label">Deadline <span class="req">*</span></label>
         <div class="deadline-selector">
-          <button
-            type="button"
-            class="deadline-btn"
-            *ngFor="let d of deadlineOptions"
-            [class.active]="announcement.deadline === d.value"
-            (click)="announcement.deadline = d.value">
+          <button type="button" class="deadline-btn" *ngFor="let d of deadlineOptions"
+            [class.active]="announcement.deadline === d.value" (click)="announcement.deadline = d.value">
             {{ d.label }}
           </button>
         </div>
@@ -255,11 +202,7 @@
       <div class="field-group">
         <label class="field-label">Custom Deadline Date</label>
         <div class="input-shell date-shell">
-          <ion-input
-            [(ngModel)]="announcement.deadlineDate"
-            name="deadlineDate"
-            type="date"
-            class="shell-input"
+          <ion-input [(ngModel)]="announcement.deadlineDate" name="deadlineDate" type="date" class="shell-input"
             fill="outline">
           </ion-input>
           <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
@@ -308,7 +251,8 @@
         <div class="preview-budget">
           <ion-icon name="wallet-outline"></ion-icon>
           <span *ngIf="announcement.budgetType === 'fixed'">{{ announcement.budgetFixed }} DT</span>
-          <span *ngIf="announcement.budgetType === 'range'">{{ announcement.budgetMin }} – {{ announcement.budgetMax }} DT</span>
+          <span *ngIf="announcement.budgetType === 'range'">{{ announcement.budgetMin }} – {{ announcement.budgetMax }}
+            DT</span>
         </div>
         <div class="preview-deadline">
           <ion-icon name="calendar-outline"></ion-icon>
@@ -320,29 +264,22 @@
 
     <div class="review-note">
       <ion-icon name="information-circle-outline"></ion-icon>
-      <p>Your announcement will be reviewed by our team before being published. This usually takes less than 24 hours.</p>
+      <p>Your announcement will be reviewed by our team before being published. This usually takes less than 24 hours.
+      </p>
     </div>
 
   </div>
 
   <!-- ── Navigation Buttons ── -->
   <div class="nav-buttons">
-    <ion-button
-      fill="outline"
-      class="prev-btn"
-      *ngIf="currentStep > 1"
-      (click)="prevStep()">
+    <ion-button fill="outline" class="prev-btn" *ngIf="currentStep > 1" (click)="prevStep()">
       <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
       Back
     </ion-button>
 
-    <ion-button
-      class="next-btn"
-      [class.next-btn--submit]="currentStep === 3"
+    <ion-button class="next-btn" [class.next-btn--submit]="currentStep === 3"
       (click)="currentStep < 3 ? nextStep() : submit()">
-      <ion-icon
-        [name]="currentStep === 3 ? 'paper-plane-outline' : 'arrow-forward-outline'"
-        slot="end">
+      <ion-icon [name]="currentStep === 3 ? 'paper-plane-outline' : 'arrow-forward-outline'" slot="end">
       </ion-icon>
       {{ currentStep === 3 ? 'Publish Announcement' : 'Continue' }}
     </ion-button>

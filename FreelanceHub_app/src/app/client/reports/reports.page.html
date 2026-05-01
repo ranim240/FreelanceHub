@@ -1,0 +1,132 @@
+<!-- reports.page.html -->
+<ion-header class="rpt-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="rpt-back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>Reports & Support</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="rpt-content">
+  <div class="rpt-wrapper">
+    
+    <!-- Hero section -->
+    <div class="rpt-hero">
+      <div class="rpt-hero-icon">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+      </div>
+      <div>
+        <h2 class="rpt-hero-title">Need help or encountered a problem?</h2>
+        <p class="rpt-hero-sub">Report any suspicious behavior or technical issue on the platform.</p>
+      </div>
+    </div>
+
+    <!-- Action Card -->
+    <div class="rpt-action-card">
+      <div class="rpt-action-icon">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+      </div>
+      <h3 class="rpt-action-title">New Report</h3>
+      <p class="rpt-action-desc">Your safety is our priority. Our administrators will review your request as soon as possible.</p>
+      
+      <button class="rpt-submit-btn" (click)="openReportModal()">
+        <ion-icon name="add-outline"></ion-icon> Submit a Report
+      </button>
+    </div>
+
+    <!-- Info box -->
+    <div class="rpt-info-box">
+      <ion-icon name="information-circle" class="rpt-info-icon"></ion-icon>
+      <div>
+        <h4 class="rpt-info-title">How does it work?</h4>
+        <p class="rpt-info-text">
+          Once submitted, your report remains anonymous to the reported party. Our moderators handle requests within 24 to 48 hours.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="height: 90px;"></div>
+</ion-content>
+
+<!-- Report Modal -->
+<div class="rpt-modal-overlay" *ngIf="isModalOpen" (click)="closeModal()">
+  <div class="rpt-modal" (click)="$event.stopPropagation()">
+
+    <div class="rpt-modal-header">
+      <p class="rpt-modal-title">New Report</p>
+      <button class="rpt-modal-close" (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="rpt-modal-body">
+      
+      <div class="rpt-field">
+        <label class="rpt-label">Issue Type</label>
+        <select class="rpt-input" [(ngModel)]="reportType">
+          <option value="general">General / Other</option>
+          <option value="user">A User</option>
+          <option value="product">A Product</option>
+          <option value="announcement">An Announcement</option>
+        </select>
+      </div>
+
+      <div class="rpt-field" *ngIf="reportType !== 'general'">
+        <label class="rpt-label">Target Name (User, Product...)</label>
+        <input class="rpt-input" type="text" placeholder="e.g. John Doe" [(ngModel)]="targetName" />
+      </div>
+
+      <div class="rpt-field">
+        <label class="rpt-label">Main Reason</label>
+        <select class="rpt-input" [(ngModel)]="reason">
+          <option value="" disabled selected>Choose a reason</option>
+          <option *ngFor="let r of reasons" [value]="r.value">{{ r.label }}</option>
+        </select>
+      </div>
+
+      <div class="rpt-field">
+        <label class="rpt-label">Detailed Description</label>
+        <textarea class="rpt-input rpt-textarea" rows="4" placeholder="Describe the issue in detail..." [(ngModel)]="description"></textarea>
+      </div>
+
+    </div>
+
+    <div class="rpt-modal-footer">
+      <button class="rpt-btn-cancel" (click)="closeModal()">Cancel</button>
+      <button class="rpt-btn-submit" (click)="submitReport()" [disabled]="!reason || !description">
+        Submit Report
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Bottom Nav (same as Dashboard) ── -->
+<div class="bottom-nav">
+  <button class="nav-btn" (click)="navigate('client/dashboard')">
+    <ion-icon name="grid-outline"></ion-icon>
+    <span>Dashboard</span>
+  </button>
+  <button class="nav-btn" (click)="navigate('client/freelancers')">
+    <ion-icon name="people-outline"></ion-icon>
+    <span>Freelancers</span>
+  </button>
+  <button class="fab-tab" (click)="navigate('client/post-announcement')">
+    <div class="fab-circle">
+      <ion-icon name="add-outline"></ion-icon>
+    </div>
+  </button>
+  <button class="nav-btn" (click)="navigate('client/products')">
+    <ion-icon name="cube-outline"></ion-icon>
+    <span>Products</span>
+  </button>
+  <button class="nav-btn" (click)="navigate('client/messages')">
+    <ion-icon name="chatbubbles-outline"></ion-icon>
+    <span>Messages</span>
+  </button>
+</div>

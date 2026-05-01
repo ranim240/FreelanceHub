@@ -186,6 +186,13 @@ ion-menu {
 
 .client-page { 
   --background: #F8FAFC; 
+  background: #F8FAFC;
+  min-height: 100vh;
+}
+
+ion-back-button {
+  --color: #1A1A2E !important;
+  color: #1A1A2E !important;
 }
 
 // Logout button

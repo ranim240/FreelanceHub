@@ -196,13 +196,13 @@
   <button
     class="cta-pill"
     [class.cta-done]="isAddedToCart"
-    (click)="isAddedToCart ? downloadProduct() : addToCart()">
+    (click)="isAddedToCart ? goToCart() : addToCart()">
 
     <span class="cta-glow"></span>
 
     <span class="cta-content">
-      <ion-icon [name]="isAddedToCart ? 'cloud-download-outline' : 'bag-add-outline'"></ion-icon>
-      <span>{{ isAddedToCart ? 'Download Now' : 'Add to Cart · ' + product.price + ' DT' }}</span>
+      <ion-icon [name]="isAddedToCart ? 'cart-outline' : 'bag-add-outline'"></ion-icon>
+      <span>{{ isAddedToCart ? 'Added to Cart · View Cart' : 'Add to Cart · ' + product.price + ' DT' }}</span>
     </span>
   </button>
 </div>

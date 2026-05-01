@@ -151,7 +151,7 @@
   </button>
 
   <!-- Store active -->
-  <button class="tab-btn ">
+  <button class="tab-btn" (click)="goToStore()">
     <ion-icon name="briefcase"></ion-icon>
   </button>
 
@@ -160,14 +160,13 @@
     <ion-icon name="search"></ion-icon>
   </button>
 
-  <button class="tab-btn tab-active">
+  <button class="tab-btn tab-active" (click)="goToProfile()">
     <ion-icon name="person-outline"></ion-icon>
     <span class="tab-dot"></span>
-
   </button>
 
-  <button class="tab-btn">
-    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+  <button class="tab-btn" (click)="goToReports()">
+    <ion-icon name="shield-checkmark-outline"></ion-icon>
   </button>
 
 </div>

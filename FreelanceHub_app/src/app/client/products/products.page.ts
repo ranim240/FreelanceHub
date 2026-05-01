@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ProductService } from '../../services/product.service';
+import { CartService } from '../../services/cart.service';
+import { AuthService } from '../../services/auth.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-products',
@@ -14,26 +18,30 @@ export class ProductsPage implements OnInit {
   cartCount    = 0;
 
   filters = [
-    { label: 'All',      value: 'all'      },
-    { label: 'Design',   value: 'design'   },
-    { label: 'Dev',      value: 'dev'      },
-    { label: 'Writing',  value: 'writing'  },
-    { label: 'Marketing',value: 'marketing'},
+    { label: 'All',      value: 'all',       icon: 'apps-outline' },
+    { label: 'Design',   value: 'design',    icon: 'brush-outline' },
+    { label: 'Dev',      value: 'dev',       icon: 'code-slash-outline' },
+    { label: 'Writing',  value: 'writing',   icon: 'pencil-outline' },
+    { label: 'Marketing',value: 'marketing', icon: 'megaphone-outline' },
   ];
 
-  products = [
-    { id: 1, name: 'SEO Content Template Pack',  seller: 'ContentPro',  price: 80,  rating: '4.3', reviewCount: 21, category: 'writing',  status: 'Approved' },
-    { id: 2, name: 'Brand Identity Mega Pack',    seller: 'CreativeHub', price: 120, rating: '4.4', reviewCount: 15, category: 'design',   status: 'Approved' },
-    { id: 3, name: 'React Dashboard UI Kit',      seller: 'DevStudio',   price: 60,  rating: '4.6', reviewCount: 38, category: 'dev',      status: 'Approved' },
-    { id: 4, name: 'Social Media Post Templates', seller: 'DesignLab',   price: 45,  rating: '4.2', reviewCount: 9,  category: 'marketing',status: 'Approved' },
-    { id: 5, name: 'Mobile App Wireframe Kit',    seller: 'UXPro',       price: 90,  rating: '4.7', reviewCount: 27, category: 'design',   status: 'Approved' },
-    { id: 6, name: 'Email Marketing Templates',   seller: 'MailCraft',   price: 35,  rating: '4.1', reviewCount: 44, category: 'marketing',status: 'Pending'  },
-  ];
+  products: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    public  router: Router,
+    private productService: ProductService,
+    private cartService: CartService,
+    private auth: AuthService,
+    private toastController: ToastController
+  ) {}
 
   ngOnInit() {
-    // TODO: this.http.get('/api/products').subscribe(...)
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.products = data;
+      },
+      error: (err) => console.error('Erreur chargement produits:', err)
+    });
   }
 
   setFilter(value: string) {
@@ -44,19 +52,43 @@ export class ProductsPage implements OnInit {
     return this.products.filter(p => {
       const matchFilter = this.activeFilter === 'all' || p.category === this.activeFilter;
       const matchSearch = !this.searchText
-        || p.name.toLowerCase().includes(this.searchText.toLowerCase())
-        || p.seller.toLowerCase().includes(this.searchText.toLowerCase());
+        || (p.title && p.title.toLowerCase().includes(this.searchText.toLowerCase()))
+        || (p.author && p.author.toLowerCase().includes(this.searchText.toLowerCase()));
       return matchFilter && matchSearch;
     });
   }
 
   viewProduct(p: any) {
-    this.router.navigate(['/client/products', p.id]);
+    this.router.navigate(['/product-detail', p._id]);
   }
 
   addToCart(p: any) {
-    this.cartCount++;
-    // TODO: ajouter au panier
+    const user = this.auth.currentUser;
+    if (!user) {
+      this.presentToast('Veuillez vous connecter pour ajouter au panier.', 'warning');
+      return;
+    }
+
+    this.cartService.addToCart(user._id, p._id).subscribe({
+      next: () => {
+        this.cartCount++;
+        this.presentToast('Produit ajouté au panier !', 'success');
+      },
+      error: (err) => {
+        console.error(err);
+        this.presentToast('Erreur lors de l\'ajout au panier.', 'danger');
+      }
+    });
+  }
+
+  async presentToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'top'
+    });
+    toast.present();
   }
 
   navigate(page: string) {

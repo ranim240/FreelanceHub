@@ -1,7 +1,7 @@
 <ion-header class="ann-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/client/dashboard" text=""></ion-back-button>
+      <ion-back-button defaultHref="/client/dashboard" text="" force-show="true"></ion-back-button>
     </ion-buttons>
     <ion-title>My Announcements</ion-title>
     <ion-buttons slot="end">
@@ -119,26 +119,26 @@
 </ion-content>
 
 <!-- ── Bottom Nav ── -->
-<ion-tab-bar class="bottom-nav">
-  <ion-tab-button (click)="navigate('client/dashboard')">
+<div class="bottom-nav">
+  <button class="nav-btn" (click)="navigate('client/dashboard')">
     <ion-icon name="grid-outline"></ion-icon>
-    <ion-label>Dashboard</ion-label>
-  </ion-tab-button>
-  <ion-tab-button (click)="navigate('client/freelancers')">
+    <span>Dashboard</span>
+  </button>
+  <button class="nav-btn" (click)="navigate('client/freelancers')">
     <ion-icon name="people-outline"></ion-icon>
-    <ion-label>Freelancers</ion-label>
-  </ion-tab-button>
-  <ion-tab-button class="fab-tab" (click)="goToPost()">
+    <span>Freelancers</span>
+  </button>
+  <button class="fab-tab" (click)="goToPost()">
     <div class="fab-circle">
       <ion-icon name="add-outline"></ion-icon>
     </div>
-  </ion-tab-button>
-  <ion-tab-button (click)="navigate('client/products')">
+  </button>
+  <button class="nav-btn" (click)="navigate('client/products')">
     <ion-icon name="cube-outline"></ion-icon>
-    <ion-label>Products</ion-label>
-  </ion-tab-button>
-  <ion-tab-button selected>
+    <span>Products</span>
+  </button>
+  <button class="nav-btn active">
     <ion-icon name="megaphone-outline"></ion-icon>
-    <ion-label>Mine</ion-label>
-  </ion-tab-button>
-</ion-tab-bar>
+    <span>Mine</span>
+  </button>
+</div>

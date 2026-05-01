@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-store',
@@ -27,6 +28,7 @@ export class StorePage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private productService: ProductService,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -91,6 +93,27 @@ export class StorePage implements OnInit {
 
   goBack(): void {
     this.router.navigate(['/home']);
+  }
+
+  goToProfile(): void {
+    const user = this.auth.currentUser;
+    if (!user) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    if (user.role === 'client') {
+      this.router.navigate(['/client/dashboard']);
+    } else {
+      this.router.navigate(['/profile']);
+    }
+  }
+
+  goToMessages(): void {
+    this.router.navigate(['/client/messages']);
+  }
+
+  goToReports(): void {
+    this.router.navigate(['/client/reports']);
   }
 
   // ── Star array helper for template ───────────────────────────

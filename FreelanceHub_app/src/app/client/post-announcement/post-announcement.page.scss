@@ -5,7 +5,15 @@
   --border-width: 0;
   box-shadow: 0 1px 0 #E2E8F0;
 }
-.pa-content { padding-bottom: 40px; font-family: inherit; }
+.pa-content { 
+  --background: #F8FAFC; 
+  background: #F8FAFC;
+  padding-bottom: 40px; font-family: inherit; 
+}
+ion-back-button {
+  --color: #1A1A2E !important;
+  color: #1A1A2E !important;
+}
 .steps-bar { 
   display: flex; align-items: center; padding: 20px 24px 8px;
   background: #F8FAFC; border-bottom: 1px solid #E2E8F0;
@@ -55,7 +63,11 @@
 .field-hint { font-size: 11px; color: #94A3B8; text-align: right; margin: 0; font-weight: 500; }
 .input-shell { position: relative; }
 .shell-input {
-  width: 100%; padding: 14px 16px; border-radius: 10px; font-size: 14px; color: #1A1A2E;
+  width: 100%; padding: 14px 16px; border-radius: 10px; font-size: 14px; 
+  --color: #1A1A2E !important;
+  --placeholder-color: #94A3B8 !important;
+  --placeholder-opacity: 1 !important;
+  color: #1A1A2E !important;
   background: #F8FAFC; border: 1.5px solid #E2E8F0; outline: none;
 }
 .input-shell:focus-within .shell-input { border-color: #1A1A2E; box-shadow: 0 0 0 3px rgba(26,26,46,0.1); }
@@ -64,6 +76,10 @@
 .select-shell ion-select { --padding-start: 16px; --padding-end: 16px; --border-radius: 10px; }
 .shell-select, .shell-textarea {
   background: #F8FAFC; border: 1.5px solid #E2E8F0; border-radius: 10px; font-size: 14px;
+  --color: #1A1A2E !important;
+  --placeholder-color: #94A3B8 !important;
+  --placeholder-opacity: 1 !important;
+  color: #1A1A2E !important;
 }
 .chips-input-row { display: flex; gap: 10px; align-items: center; }
 .chips-input-shell { flex: 1; }

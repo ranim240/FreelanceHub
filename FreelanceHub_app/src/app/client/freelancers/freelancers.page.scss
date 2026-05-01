@@ -1,8 +1,13 @@
 /* Freelancers Page - Client light glassmorphism theme matching dashboard */
 
-.fl-content { 
+.fl-content, .prod-content, .job-content { 
   --background: #F8FAFC; 
+  background: #F8FAFC;
   padding-bottom: 90px; 
+}
+ion-back-button {
+  --color: #1A1A2E !important;
+  color: #1A1A2E !important;
 }
 
 .fl-header ion-toolbar {
@@ -43,7 +48,12 @@
   border-radius: 10px;
   --border-radius: 10px;
   border: 1px solid #E2E8F0;
-  --background: #F8FAFC;
+  --background: #FFFFFF;
+  background: #FFFFFF;
+  --color: #1A1A2E !important;
+  color: #1A1A2E !important;
+  --placeholder-color: #94A3B8 !important;
+  --placeholder-opacity: 1;
 }
 
 /* Domain Tabs */
@@ -109,6 +119,10 @@
 
 /* Empty State */
 .empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 48px 24px;
   background: #FFFFFF;
@@ -120,7 +134,6 @@
 .empty-icon-wrap ion-icon {
   font-size: 48px;
   color: #94A3B8;
-  display: block;
   margin-bottom: 16px;
 }
 .empty-title {
@@ -316,18 +329,23 @@
 
 /* Bottom Nav (consistent) */
 .bottom-nav {
-  --background: #FFFFFF;
-  border-top: 1px solid #E2E8F0;
-  box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  --background: #FFFFFF; background: #FFFFFF;
+  border-top: 1px solid #E2E8F0; box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: space-around; align-items: center;
+  height: 60px; padding-bottom: env(safe-area-inset-bottom);
 }
-.bottom-nav ion-tab-button {
-  --color: #94A3B8;
-  --color-selected: #1A1A2E;
-  padding-bottom: 8px;
-  padding-top: 8px;
+.nav-btn {
+  background: transparent; border: none; outline: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; color: #94A3B8; cursor: pointer; flex: 1; height: 100%;
 }
+.nav-btn.active { color: #1A1A2E; }
+.nav-btn ion-icon { font-size: 22px; }
+.nav-btn span { font-size: 10px; font-weight: 500; }
 .fab-tab {
-  position: relative;
+  position: relative; overflow: visible !important; contain: none !important;
+  background: transparent; border: none; flex: 1; height: 100%;
 }
 .fab-circle {
   position: absolute;

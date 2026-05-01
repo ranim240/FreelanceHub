@@ -1,11 +1,11 @@
 <ion-header class="prod-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/client/dashboard" text=""></ion-back-button>
+      <ion-back-button defaultHref="/client/dashboard" text="" force-show="true"></ion-back-button>
     </ion-buttons>
     <ion-title>Products</ion-title>
     <ion-buttons slot="end">
-      <button class="cart-btn" (click)="navigate('client/cart')">
+      <button class="cart-btn" (click)="router.navigate(['/client/dashboard'], { queryParams: { showCart: 'true' } })">
         <ion-icon name="bag-outline"></ion-icon>
         <span class="cart-badge" *ngIf="cartCount > 0">{{ cartCount }}</span>
       </button>
@@ -36,6 +36,7 @@
       *ngFor="let f of filters"
       [class.filter-tab--active]="activeFilter === f.value"
       (click)="setFilter(f.value)">
+      <ion-icon [name]="f.icon" style="margin-right: 6px; font-size: 16px;"></ion-icon>
       {{ f.label }}
     </button>
   </div>
@@ -49,23 +50,24 @@
 
       <!-- Image -->
       <div class="prod-img-wrap">
-        <div class="prod-img-placeholder">
+        <img *ngIf="p.image" [src]="p.image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 12px; position: absolute; top: 0; left: 0;" />
+        <div class="prod-img-placeholder" *ngIf="!p.image">
           <ion-icon name="cube-outline"></ion-icon>
         </div>
         <span class="prod-status-badge"
-          [ngClass]="'prod-badge--' + p.status.toLowerCase()">
-          {{ p.status }}
+          [ngClass]="'prod-badge--' + (p.status || 'approved').toLowerCase()">
+          {{ p.status || 'Approved' }}
         </span>
       </div>
 
       <!-- Info -->
       <div class="prod-info">
-        <h4 class="prod-name">{{ p.name }}</h4>
-        <p class="prod-seller">by {{ p.seller }}</p>
+        <h4 class="prod-name">{{ p.title }}</h4>
+        <p class="prod-seller">by {{ p.author }}</p>
         <div class="prod-rating">
           <ion-icon name="star"></ion-icon>
           <span>{{ p.rating }}</span>
-          <span class="prod-reviews">({{ p.reviewCount }})</span>
+          <span class="prod-reviews">({{ p.reviews }})</span>
         </div>
         <div class="prod-footer">
           <span class="prod-price">{{ p.price }} DT</span>
@@ -94,26 +96,26 @@
 </ion-content>
 
 <!-- ── Bottom Nav ── -->
-<ion-tab-bar class="bottom-nav">
-  <ion-tab-button (click)="navigate('client/dashboard')">
+<div class="bottom-nav">
+  <button class="nav-btn" (click)="navigate('client/dashboard')">
     <ion-icon name="grid-outline"></ion-icon>
-    <ion-label>Dashboard</ion-label>
-  </ion-tab-button>
-  <ion-tab-button (click)="navigate('client/freelancers')">
+    <span>Dashboard</span>
+  </button>
+  <button class="nav-btn" (click)="navigate('client/freelancers')">
     <ion-icon name="people-outline"></ion-icon>
-    <ion-label>Freelancers</ion-label>
-  </ion-tab-button>
-  <ion-tab-button class="fab-tab" (click)="navigate('client/post-announcement')">
+    <span>Freelancers</span>
+  </button>
+  <button class="fab-tab" (click)="navigate('client/post-announcement')">
     <div class="fab-circle">
       <ion-icon name="add-outline"></ion-icon>
     </div>
-  </ion-tab-button>
-  <ion-tab-button selected>
+  </button>
+  <button class="nav-btn active">
     <ion-icon name="cube-outline"></ion-icon>
-    <ion-label>Products</ion-label>
-  </ion-tab-button>
-  <ion-tab-button (click)="navigate('client/messages')">
+    <span>Products</span>
+  </button>
+  <button class="nav-btn" (click)="navigate('client/messages')">
     <ion-icon name="chatbubbles-outline"></ion-icon>
-    <ion-label>Messages</ion-label>
-  </ion-tab-button>
-</ion-tab-bar>
+    <span>Messages</span>
+  </button>
+</div>

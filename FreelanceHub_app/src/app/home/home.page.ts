@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
 import { AuthService, User } from '../services/auth.service';
+import { MenuController } from '@ionic/angular';
 
 import { Announcement } from '../models/announcement.model';
 import { Category } from '../models/category.model';
@@ -37,8 +38,14 @@ export class HomePage implements OnInit {
     private router: Router,
     private productService: ProductService,
     private homeService: HomeService,
-    private auth: AuthService
+    private auth: AuthService,
+    private menuCtrl: MenuController
   ) { }
+
+  ionViewWillEnter() {
+    this.menuCtrl.enable(true, 'main-menu');
+    this.menuCtrl.enable(false, 'client-menu');
+  }
 
 
   ngOnInit(): void {
@@ -50,7 +57,7 @@ export class HomePage implements OnInit {
         if (user.avatarUrl) {
           this.currentUser.avatar = user.avatarUrl;
         } else {
-          const initials = ((user.firstName?.[0]||'') + (user.lastName?.[0]||'')).toUpperCase();
+          const initials = ((user.firstName?.[0] || '') + (user.lastName?.[0] || '')).toUpperCase();
           this.currentUser.initials = initials;
         }
       } else {
@@ -65,7 +72,15 @@ export class HomePage implements OnInit {
     // Load announcements
     this.homeService.getAnnouncements().subscribe(anns => this.announcements = anns);
     // Load categories
-    this.homeService.getCategories().subscribe(cats => this.categories = cats);
+    this.homeService.getCategories().subscribe(cats => {
+      // Mettre 'All' en premier si elle existe
+      const allIndex = cats.findIndex(c => c.name.toLowerCase() === 'all');
+      if (allIndex > -1) {
+        const allCat = cats.splice(allIndex, 1)[0];
+        cats.unshift(allCat);
+      }
+      this.categories = cats;
+    });
     // Load FAQs
     this.homeService.getFaqs().subscribe(faqs => this.faqs = faqs);
   }
@@ -81,16 +96,23 @@ export class HomePage implements OnInit {
   }
 
   // ── Navigation ────────────────────────────────────────────────
-  goToLogin():         void { this.router.navigate(['/login']); }
-  goToSignup():        void { this.router.navigate(['/register']); }
-  goToProfile():       void { this.router.navigate(['/profile']);} 
+  goToLogin(): void { this.router.navigate(['/login']); }
+  goToSignup(): void { this.router.navigate(['/register']); }
+  goToProfile():       void {
+    if (this.auth.currentUser?.role === 'client') {
+      this.router.navigate(['/client/dashboard']);
+    } else {
+      this.router.navigate(['/profile']);
+    }
+  } 
   goToStore():         void { this.router.navigate(['/store']); }
   goToAnnouncements(): void { console.log('Navigate to Announcements'); /* this.router.navigate(['/announcements']); */ }
-  goToMessages(): void { this.router.navigate(['/messages']); }
+  goToMessages(): void {
+    this.router.navigate(['/client/messages']);
+  }
 
-  testClientDashboard() {
-    localStorage.setItem('fh_user', JSON.stringify({ _id: 'test', email: 'client@test.com', role: 'client', firstName: 'Client', lastName: 'Client' }));
-    this.router.navigate(['/client-dashboard']);
+  goToReports(): void {
+    this.router.navigate(['/client/reports']);
   }
 
   goToSearch(): void { this.router.navigate(['/store']); }

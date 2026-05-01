@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { CartService } from '../../services/cart.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-dashboard',
@@ -57,12 +60,21 @@ export class DashboardPage implements OnInit {
 
   // ── Produits récents (données exemple) ─────
   recentProducts = [
-    { name: 'SEO Content Template Pack', seller: 'ContentPro', price: 80,  rating: '4.3' },
-    { name: 'Brand Identity Mega Pack',  seller: 'CreativeHub', price: 120, rating: '4.4' },
-    { name: 'React Dashboard UI Kit',    seller: 'DevStudio',   price: 60,  rating: '4.6' },
+    { _id: '1', name: 'SEO Content Template Pack', seller: 'ContentPro', price: 80,  rating: '4.3' },
+    { _id: '2', name: 'Brand Identity Mega Pack',  seller: 'CreativeHub', price: 120, rating: '4.4' },
+    { _id: '3', name: 'React Dashboard UI Kit',    seller: 'DevStudio',   price: 60,  rating: '4.6' },
   ];
 
-  constructor(private router: Router) {}
+  cartItems: any[] = [];
+  showCartModal = false;
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private auth: AuthService,
+    private cartService: CartService,
+    private toastController: ToastController
+  ) {}
 
   ngOnInit() {
     this.todayDate = new Date().toLocaleDateString('fr-FR', {
@@ -71,16 +83,111 @@ export class DashboardPage implements OnInit {
       month:   'long',
       year:    'numeric',
     });
+
+    // Load user data
+    const user = this.auth.currentUser;
+    if (user) {
+      this.clientName = user.firstName || 'Client';
+      this.loadCart();
+    }
+
+    // Check payment status and cart modal request from URL
+    this.route.queryParams.subscribe(params => {
+      if (params['payment'] === 'success') {
+        const user = this.auth.currentUser;
+        if (user) {
+          this.cartService.clearCart(user._id).subscribe({
+            next: () => {
+              this.cartItems = [];
+              this.presentToast('Paiement réussi ! Votre panier a été vidé.', 'success');
+            },
+            error: (err) => console.error('Erreur vidage panier:', err)
+          });
+        }
+      } else if (params['payment'] === 'cancelled') {
+        this.presentToast('Paiement annulé.', 'warning');
+      }
+
+      if (params['showCart'] === 'true') {
+        this.openCart();
+      }
+    });
+  }
+
+  // ── Cart Methods ─────────────────────────────
+  openCart() {
+    this.showCartModal = true;
+    this.loadCart();
+  }
+
+  closeCart() {
+    this.showCartModal = false;
+  }
+
+  loadCart() {
+    const user = this.auth.currentUser;
+    if (user) {
+      this.cartService.getCart(user._id).subscribe({
+        next: (items) => this.cartItems = items,
+        error: (err) => console.error('Erreur chargement panier:', err)
+      });
+    }
+  }
+
+  removeFromCart(productId: string) {
+    const user = this.auth.currentUser;
+    if (user) {
+      this.cartService.removeFromCart(user._id, productId).subscribe({
+        next: () => {
+          this.cartItems = this.cartItems.filter(item => item._id !== productId);
+          this.presentToast('Produit retiré du panier.', 'success');
+        },
+        error: (err) => console.error('Erreur suppression panier:', err)
+      });
+    }
+  }
+
+  checkout() {
+    const user = this.auth.currentUser;
+    if (user) {
+      this.cartService.checkout(user._id).subscribe({
+        next: (res) => {
+          if (res.url) {
+            window.location.href = res.url; // Redirect to Stripe
+          }
+        },
+        error: (err) => {
+          console.error('Erreur checkout:', err);
+          this.presentToast('Erreur lors de la redirection vers le paiement.', 'danger');
+        }
+      });
+    }
+  }
+
+  async presentToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 3000,
+      color: color,
+      position: 'top'
+    });
+    toast.present();
   }
 
   // ── Navigation ─────────────────────────────
   goTo(page: string) {
-    this.router.navigate(['/' + page]);
+    const target = page.startsWith('client') ? `/${page}` : `/client/${page}`;
+    this.router.navigate([target]);
+  }
+
+  goToProductDetail(id: string) {
+    this.router.navigate(['/product-detail', id]);
   }
 
   navigate(page: string) {
     this.menuOpen = false;
-    setTimeout(() => this.router.navigate(['/' + page]), 300);
+    const target = page.startsWith('client') ? `/${page}` : `/client/${page}`;
+    setTimeout(() => this.router.navigate([target]), 300);
   }
 
   // ── Menu ───────────────────────────────────

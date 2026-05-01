@@ -24,7 +24,7 @@
       </div>
 
       <!-- Client user block -->
-      <div class="clt-user-block">
+      <div class="clt-user-block" (click)="navigateTo('/client/dashboard')" style="cursor: pointer;">
         <div class="clt-user-avatar">
           {{ currentUser?.firstName?.charAt(0) || 'C' }}{{ currentUser?.lastName?.charAt(0) || 'L' }}
         </div>
