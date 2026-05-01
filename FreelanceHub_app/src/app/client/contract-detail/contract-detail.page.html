@@ -1,0 +1,140 @@
+<ion-header class="cd-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <span class="page-title">Contract Detail</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cd-content" *ngIf="!loading && contract">
+
+  <!-- ── Status Banner ── -->
+  <div class="cd-status-banner" [style.background]="getStatusColor(contract.status) + '12'" [style.border-color]="getStatusColor(contract.status) + '30'">
+    <div class="cd-status-dot" [style.background]="getStatusColor(contract.status)"></div>
+    <span class="cd-status-text" [style.color]="getStatusColor(contract.status)">{{ getStatusLabel(contract.status) }}</span>
+  </div>
+
+  <!-- ── Contract Info Card ── -->
+  <div class="cd-info-card">
+    <h2 class="cd-title">{{ contract.title }}</h2>
+    <p class="cd-desc" *ngIf="contract.description">{{ contract.description }}</p>
+
+    <div class="cd-meta-grid">
+      <div class="cd-meta-item">
+        <ion-icon name="person-outline"></ion-icon>
+        <div>
+          <span class="cd-meta-label">Freelancer</span>
+          <span class="cd-meta-value">{{ contract.freelancerName }}</span>
+        </div>
+      </div>
+      <div class="cd-meta-item">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <div>
+          <span class="cd-meta-label">Created</span>
+          <span class="cd-meta-value">{{ contract.createdAt | date:'mediumDate' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Escrow Visualization ── -->
+  <div class="cd-escrow-card">
+    <h3 class="cd-section-title">
+      <ion-icon name="lock-closed-outline"></ion-icon> Payment Escrow
+    </h3>
+
+    <div class="escrow-flow">
+      <!-- Client pays -->
+      <div class="escrow-step" [class.escrow-step--done]="contract.status !== 'pending'">
+        <div class="escrow-circle"><ion-icon name="card-outline"></ion-icon></div>
+        <span>Client Pays</span>
+        <span class="escrow-amount">{{ contract.amount }} {{ contract.currency }}</span>
+      </div>
+
+      <div class="escrow-arrow"><ion-icon name="arrow-forward-outline"></ion-icon></div>
+
+      <!-- Platform holds -->
+      <div class="escrow-step" [class.escrow-step--active]="['funded','in_progress','delivered'].includes(contract.status)" [class.escrow-step--done]="contract.status === 'completed'">
+        <div class="escrow-circle"><ion-icon name="shield-checkmark-outline"></ion-icon></div>
+        <span>Escrow</span>
+        <span class="escrow-amount">Held</span>
+      </div>
+
+      <div class="escrow-arrow"><ion-icon name="arrow-forward-outline"></ion-icon></div>
+
+      <!-- Freelancer receives -->
+      <div class="escrow-step" [class.escrow-step--done]="contract.status === 'completed'">
+        <div class="escrow-circle"><ion-icon name="person-outline"></ion-icon></div>
+        <span>Freelancer</span>
+        <span class="escrow-amount">{{ contract.freelancerAmount }} {{ contract.currency }}</span>
+      </div>
+    </div>
+
+    <div class="escrow-commission">
+      <span>Platform commission ({{ contract.commissionRate }}%)</span>
+      <strong>{{ contract.commission }} {{ contract.currency }}</strong>
+    </div>
+  </div>
+
+  <!-- ── Action Buttons ── -->
+  <div class="cd-actions">
+    <!-- Pay button (when pending) -->
+    <button class="cd-action-btn cd-action-btn--pay" *ngIf="contract.status === 'pending'" (click)="payContract()">
+      <ion-icon name="card-outline"></ion-icon> Pay & Fund Escrow
+    </button>
+
+    <!-- Validate button (when delivered) -->
+    <button class="cd-action-btn cd-action-btn--validate" *ngIf="contract.status === 'delivered'" (click)="validateContract()">
+      <ion-icon name="checkmark-circle-outline"></ion-icon> Validate & Release Payment
+    </button>
+
+    <!-- Completed message -->
+    <div class="cd-completed-msg" *ngIf="contract.status === 'completed'">
+      <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+      <span>Payment released on {{ contract.validatedAt | date:'mediumDate' }}</span>
+    </div>
+  </div>
+
+  <!-- ── Milestones Timeline ── -->
+  <div class="cd-milestones-card">
+    <h3 class="cd-section-title">
+      <ion-icon name="flag-outline"></ion-icon> Milestones
+    </h3>
+
+    <div class="ms-timeline">
+      <div class="ms-item" *ngFor="let m of contract.milestones; let last = last">
+        <div class="ms-icon-col">
+          <ion-icon [name]="getMilestoneIcon(m.status)" [style.color]="getStatusColor(m.status)" class="ms-icon"></ion-icon>
+          <div class="ms-line" *ngIf="!last" [style.background]="getStatusColor(m.status) + '40'"></div>
+        </div>
+        <div class="ms-content">
+          <h4 class="ms-title">{{ m.title }}</h4>
+          <p class="ms-desc" *ngIf="m.description">{{ m.description }}</p>
+          <div class="ms-meta">
+            <span class="ms-deadline" *ngIf="m.deadline">
+              <ion-icon name="calendar-outline"></ion-icon> {{ m.deadline }}
+            </span>
+            <span class="ms-status" [style.color]="getStatusColor(m.status)">{{ m.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ms-empty" *ngIf="!contract.milestones?.length">
+      <p>No milestones defined</p>
+    </div>
+  </div>
+
+  <div style="height: 40px;"></div>
+</ion-content>
+
+<!-- Loading -->
+<ion-content *ngIf="loading" class="cd-content">
+  <div style="text-align: center; padding: 60px 20px;">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p style="color: #94A3B8; margin-top: 12px;">Loading contract...</p>
+  </div>
+</ion-content>

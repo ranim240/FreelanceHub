@@ -18,6 +18,7 @@ export class ClientPage implements OnInit, OnDestroy {
     { label: 'Products', icon: 'cube-outline', path: '/client/products' },
     { label: 'Messages', icon: 'chatbubbles-outline', path: '/client/messages' },
     { label: 'Reports', icon: 'shield-outline', path: '/client/reports' },
+    { label: 'Contracts', icon: 'document-text-outline', path: '/client/contracts' },
     { label: 'Notifications', icon: 'notifications-outline', path: '/client/notifications' },
   ];
 

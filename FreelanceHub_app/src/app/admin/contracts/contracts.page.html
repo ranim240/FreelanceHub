@@ -1,0 +1,104 @@
+<ion-header class="adm-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="admin-menu">
+        <button class="menu-btn"><ion-icon name="menu-outline"></ion-icon></button>
+      </ion-menu-toggle>
+      <span class="page-title">Escrow Management</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="adm-content">
+
+  <!-- ── Financial Stats ── -->
+  <div class="esc-stats" *ngIf="stats">
+    <div class="esc-stat esc-stat--held">
+      <ion-icon name="lock-closed-outline"></ion-icon>
+      <div>
+        <span class="esc-stat-val">{{ stats.totalHeld | number:'1.0-0' }} DT</span>
+        <span class="esc-stat-lbl">Held in Escrow</span>
+      </div>
+    </div>
+    <div class="esc-stat esc-stat--released">
+      <ion-icon name="arrow-forward-circle-outline"></ion-icon>
+      <div>
+        <span class="esc-stat-val">{{ stats.totalReleased | number:'1.0-0' }} DT</span>
+        <span class="esc-stat-lbl">Released</span>
+      </div>
+    </div>
+    <div class="esc-stat esc-stat--commission">
+      <ion-icon name="trending-up-outline"></ion-icon>
+      <div>
+        <span class="esc-stat-val">{{ stats.totalCommissions | number:'1.0-0' }} DT</span>
+        <span class="esc-stat-lbl">Commissions (10%)</span>
+      </div>
+    </div>
+    <div class="esc-stat esc-stat--volume">
+      <ion-icon name="bar-chart-outline"></ion-icon>
+      <div>
+        <span class="esc-stat-val">{{ stats.totalVolume | number:'1.0-0' }} DT</span>
+        <span class="esc-stat-lbl">Total Volume</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Count Pills ── -->
+  <div class="esc-pills" *ngIf="stats">
+    <button class="esc-pill" [class.esc-pill--active]="activeFilter === ''" (click)="filterBy('')">
+      All ({{ stats.counts.total }})
+    </button>
+    <button class="esc-pill" [class.esc-pill--active]="activeFilter === 'funded'" (click)="filterBy('funded')">
+      Funded ({{ stats.counts.funded }})
+    </button>
+    <button class="esc-pill" [class.esc-pill--active]="activeFilter === 'in_progress'" (click)="filterBy('in_progress')">
+      In Progress ({{ stats.counts.inProgress }})
+    </button>
+    <button class="esc-pill" [class.esc-pill--active]="activeFilter === 'delivered'" (click)="filterBy('delivered')">
+      Delivered ({{ stats.counts.delivered }})
+    </button>
+    <button class="esc-pill" [class.esc-pill--active]="activeFilter === 'completed'" (click)="filterBy('completed')">
+      Completed ({{ stats.counts.completed }})
+    </button>
+  </div>
+
+  <!-- ── Contract List ── -->
+  <div class="esc-loading" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <div class="esc-list" *ngIf="!loading">
+    <div class="esc-card" *ngFor="let c of contracts">
+      <div class="esc-card-header">
+        <h4 class="esc-card-title">{{ c.title }}</h4>
+        <span class="esc-badge" [style.background]="getStatusColor(c.status) + '15'" [style.color]="getStatusColor(c.status)">
+          {{ getStatusLabel(c.status) }}
+        </span>
+      </div>
+      <div class="esc-card-parties">
+        <div class="esc-party">
+          <span class="esc-party-label">Client</span>
+          <span class="esc-party-name">{{ c.clientName }}</span>
+        </div>
+        <ion-icon name="arrow-forward-outline" class="esc-arrow"></ion-icon>
+        <div class="esc-party">
+          <span class="esc-party-label">Freelancer</span>
+          <span class="esc-party-name">{{ c.freelancerName }}</span>
+        </div>
+      </div>
+      <div class="esc-card-footer">
+        <div class="esc-amount">
+          <span class="esc-amount-total">{{ c.amount }} {{ c.currency }}</span>
+          <span class="esc-amount-detail">Commission: {{ c.commission }} · Freelancer: {{ c.freelancerAmount }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="esc-empty" *ngIf="contracts.length === 0">
+      <ion-icon name="document-text-outline"></ion-icon>
+      <p>No contracts found</p>
+    </div>
+  </div>
+
+  <div style="height: 40px;"></div>
+</ion-content>

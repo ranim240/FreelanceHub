@@ -1,0 +1,83 @@
+// ══════════════════════════════════════════════════════════
+//  ADMIN — Escrow Management
+// ══════════════════════════════════════════════════════════
+:host {
+  --adm-ink: #1A1A2E;
+  --adm-ink-soft: #475569;
+  --adm-muted: #94A3B8;
+  --adm-accent: #4F46E5;
+  --adm-surface: #F8FAFC;
+  --adm-card: #FFFFFF;
+  --adm-border: #E2E8F0;
+  --radius: 14px;
+}
+.adm-header ion-toolbar { --background: #FFF; --border-color: var(--adm-border); --min-height: 56px; }
+.menu-btn { background: none; border: none; font-size: 24px; color: var(--adm-ink); cursor: pointer; padding: 8px; }
+.page-title { font-size: 18px; font-weight: 700; color: var(--adm-ink); margin-left: 4px; }
+.adm-content { --background: var(--adm-surface); --padding-start: 16px; --padding-end: 16px; --padding-top: 16px; }
+
+// ── Stats ──
+.esc-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;
+}
+.esc-stat {
+  background: var(--adm-card); border: 1px solid var(--adm-border);
+  border-radius: var(--radius); padding: 14px; display: flex; gap: 12px; align-items: center;
+  ion-icon { font-size: 28px; flex-shrink: 0; }
+}
+.esc-stat--held ion-icon { color: #3B82F6; }
+.esc-stat--released ion-icon { color: #10B981; }
+.esc-stat--commission ion-icon { color: #8B5CF6; }
+.esc-stat--volume ion-icon { color: #F59E0B; }
+.esc-stat-val { display: block; font-size: 18px; font-weight: 800; color: var(--adm-ink); }
+.esc-stat-lbl { display: block; font-size: 11px; font-weight: 600; color: var(--adm-muted); text-transform: uppercase; }
+
+// ── Filter Pills ──
+.esc-pills {
+  display: flex; gap: 8px; overflow-x: auto; padding-bottom: 14px;
+  -webkit-overflow-scrolling: touch;
+  &::-webkit-scrollbar { display: none; }
+}
+.esc-pill {
+  flex-shrink: 0; padding: 8px 14px; border-radius: 20px;
+  background: var(--adm-card); border: 1px solid var(--adm-border);
+  font-size: 12px; font-weight: 600; color: var(--adm-ink-soft);
+  cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  &:active { background: var(--adm-surface); }
+}
+.esc-pill--active {
+  background: var(--adm-ink); color: #fff; border-color: var(--adm-ink);
+}
+
+// ── Loading / Empty ──
+.esc-loading { text-align: center; padding: 40px; }
+.esc-empty {
+  text-align: center; padding: 40px; color: var(--adm-muted);
+  ion-icon { font-size: 48px; opacity: 0.4; display: block; margin-bottom: 10px; }
+  p { font-size: 14px; }
+}
+
+// ── Contract Cards ──
+.esc-list { display: flex; flex-direction: column; gap: 12px; }
+.esc-card {
+  background: var(--adm-card); border: 1px solid var(--adm-border);
+  border-radius: var(--radius); padding: 16px;
+}
+.esc-card-header {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 12px;
+}
+.esc-card-title { font-size: 14px; font-weight: 700; color: var(--adm-ink); margin: 0; flex: 1; }
+.esc-badge {
+  font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+}
+.esc-card-parties {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  padding: 10px 14px; background: var(--adm-surface); border-radius: 10px;
+}
+.esc-party { flex: 1; }
+.esc-party-label { display: block; font-size: 10px; font-weight: 600; color: var(--adm-muted); text-transform: uppercase; }
+.esc-party-name { font-size: 13px; font-weight: 700; color: var(--adm-ink); }
+.esc-arrow { font-size: 18px; color: var(--adm-muted); flex-shrink: 0; }
+.esc-card-footer { display: flex; justify-content: space-between; align-items: center; }
+.esc-amount-total { font-size: 16px; font-weight: 800; color: var(--adm-accent); }
+.esc-amount-detail { display: block; font-size: 11px; color: var(--adm-muted); }

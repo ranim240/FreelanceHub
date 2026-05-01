@@ -47,6 +47,12 @@
                 <span class="sb-nav-label">{{ auth.currentUser?.role === 'client' ? 'Dashboard' : 'Profile' }}</span>
               </button>
             </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false" *ngIf="auth.currentUser?.role === 'freelancer'">
+              <button class="sb-nav-item" (click)="goTo('/my-contracts')">
+                <span class="sb-nav-icon"><ion-icon name="document-text-outline"></ion-icon></span>
+                <span class="sb-nav-label">My Contracts</span>
+              </button>
+            </ion-menu-toggle>
             <ion-menu-toggle auto-hide="false">
               <button class="sb-nav-item" (click)="goToReports()">
                 <span class="sb-nav-icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>

@@ -62,10 +62,14 @@ const routes: Routes = [
     path: 'client',
     loadChildren: () => import('./client/client.module').then( m => m.ClientPageModule)
   },
- 
-
-
-
+  {
+    path: 'my-contracts',
+    loadChildren: () => import('./my-contracts/my-contracts.module').then( m => m.MyContractsPageModule)
+  },
+  {
+    path: 'contract-workspace/:id',
+    loadChildren: () => import('./contract-workspace/contract-workspace.module').then( m => m.ContractWorkspacePageModule)
+  }
 ];
 
 

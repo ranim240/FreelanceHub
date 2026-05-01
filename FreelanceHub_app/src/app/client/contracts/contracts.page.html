@@ -1,0 +1,128 @@
+<ion-header class="cd-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-toggle menu="client-menu">
+        <button class="menu-btn"><ion-icon name="menu-outline"></ion-icon></button>
+      </ion-menu-toggle>
+      <span class="page-title">My Contracts</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="cd-content">
+
+  <!-- ── Stats ── -->
+  <div class="ct-stats">
+    <div class="ct-stat">
+      <span class="ct-stat-val">{{ activeCount }}</span>
+      <span class="ct-stat-lbl">Active</span>
+    </div>
+    <div class="ct-stat">
+      <span class="ct-stat-val">{{ completedCount }}</span>
+      <span class="ct-stat-lbl">Completed</span>
+    </div>
+    <div class="ct-stat">
+      <span class="ct-stat-val">{{ totalSpent }} DT</span>
+      <span class="ct-stat-lbl">Total Spent</span>
+    </div>
+  </div>
+
+  <!-- ── New Contract Button ── -->
+  <button class="ct-new-btn" (click)="openNewForm()">
+    <ion-icon name="add-circle-outline"></ion-icon>
+    <span>New Contract</span>
+  </button>
+
+  <!-- ── Loading ── -->
+  <div class="ct-loading" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Loading contracts...</p>
+  </div>
+
+  <!-- ── Empty State ── -->
+  <div class="ct-empty" *ngIf="!loading && contracts.length === 0">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <p>No contracts yet</p>
+    <span>Create your first contract to hire a freelancer</span>
+  </div>
+
+  <!-- ── Contract Cards ── -->
+  <div class="ct-list" *ngIf="!loading && contracts.length > 0">
+    <div class="ct-card" *ngFor="let c of contracts" (click)="viewContract(c._id)">
+      <div class="ct-card-top">
+        <h3 class="ct-card-title">{{ c.title }}</h3>
+        <span class="ct-badge" [style.background]="getStatusColor(c.status) + '15'" [style.color]="getStatusColor(c.status)">
+          {{ getStatusLabel(c.status) }}
+        </span>
+      </div>
+      <p class="ct-card-freelancer">
+        <ion-icon name="person-outline"></ion-icon>
+        {{ c.freelancerName || 'Freelancer' }}
+      </p>
+      <div class="ct-card-bottom">
+        <div class="ct-amount">
+          <ion-icon name="wallet-outline"></ion-icon>
+          <span>{{ c.amount }} {{ c.currency }}</span>
+        </div>
+        <div class="ct-milestones">
+          <ion-icon name="flag-outline"></ion-icon>
+          <span>{{ c.milestones?.length || 0 }} milestones</span>
+        </div>
+      </div>
+      <!-- Progress bar -->
+      <div class="ct-progress-wrap" *ngIf="c.status !== 'pending'">
+        <div class="ct-progress-bar" [style.width]="getMilestoneProgress(c) + '%'" [style.background]="getStatusColor(c.status)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 40px;"></div>
+</ion-content>
+
+
+<!-- ════════════════════════════════════════════════ -->
+<!-- NEW CONTRACT FORM (Bottom Sheet)                -->
+<!-- ════════════════════════════════════════════════ -->
+<div class="form-overlay" *ngIf="showNewForm" (click)="closeNewForm()"></div>
+<div class="form-sheet" [class.form-sheet--open]="showNewForm">
+
+  <div class="sheet-header">
+    <h3 class="sheet-title">New Contract</h3>
+    <button class="sheet-close" (click)="closeNewForm()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+
+  <div class="sheet-body">
+    <!-- Title -->
+    <label class="field-label">Project Title *</label>
+    <input class="field-input" [(ngModel)]="newContract.title" placeholder="e.g. E-commerce Mobile App" />
+
+    <!-- Description -->
+    <label class="field-label">Description</label>
+    <textarea class="field-input field-textarea" [(ngModel)]="newContract.description" placeholder="Describe the project..." rows="3"></textarea>
+
+    <!-- Freelancer -->
+    <label class="field-label">Select Freelancer *</label>
+    <select class="field-input" [(ngModel)]="newContract.freelancerId">
+      <option value="" disabled>Choose a freelancer</option>
+      <option *ngFor="let f of freelancers" [value]="f._id">
+        {{ f.firstName }} {{ f.lastName }} — {{ f.domain || f.role }}
+      </option>
+    </select>
+
+    <!-- Amount -->
+    <label class="field-label">Budget (DT) *</label>
+    <input class="field-input" type="number" [(ngModel)]="newContract.amount" placeholder="500" min="1" />
+    <p class="field-hint" *ngIf="newContract.amount">
+      Commission 10% = {{ (newContract.amount! * 0.1) | number:'1.0-0' }} DT
+      · Freelancer receives {{ (newContract.amount! * 0.9) | number:'1.0-0' }} DT
+    </p>
+  </div>
+
+  <div class="sheet-footer">
+    <button class="save-btn" (click)="submitContract()">
+      <ion-icon name="checkmark-circle-outline"></ion-icon> Create Contract
+    </button>
+  </div>
+</div>

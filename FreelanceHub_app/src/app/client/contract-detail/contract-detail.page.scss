@@ -1,0 +1,135 @@
+// ══════════════════════════════════════════════════════════
+//  CLIENT — Contract Detail (Escrow View)
+// ══════════════════════════════════════════════════════════
+:host {
+  --clt-ink: #1A1A2E;
+  --clt-ink-soft: #475569;
+  --clt-muted: #94A3B8;
+  --clt-accent: #4F46E5;
+  --clt-accent-soft: #EEF2FF;
+  --clt-surface: #F8FAFC;
+  --clt-card: #FFFFFF;
+  --clt-border: #E2E8F0;
+  --clt-success: #10B981;
+  --radius: 14px;
+}
+
+.cd-header ion-toolbar {
+  --background: #FFFFFF; --border-color: var(--clt-border); --min-height: 56px;
+}
+.back-btn {
+  background: none; border: none; font-size: 22px;
+  color: var(--clt-ink); cursor: pointer; padding: 8px;
+}
+.page-title { font-size: 18px; font-weight: 700; color: var(--clt-ink); margin-left: 4px; }
+.cd-content { --background: var(--clt-surface); --padding-start: 16px; --padding-end: 16px; --padding-top: 16px; }
+
+// ── Status Banner ──
+.cd-status-banner {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-radius: var(--radius);
+  border: 1px solid; margin-bottom: 16px;
+}
+.cd-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.cd-status-text { font-size: 14px; font-weight: 700; }
+
+// ── Info Card ──
+.cd-info-card {
+  background: var(--clt-card); border: 1px solid var(--clt-border);
+  border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+}
+.cd-title { font-size: 18px; font-weight: 800; color: var(--clt-ink); margin: 0 0 6px; }
+.cd-desc { font-size: 13px; color: var(--clt-ink-soft); margin: 0 0 14px; line-height: 1.5; }
+.cd-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.cd-meta-item {
+  display: flex; align-items: center; gap: 10px;
+  ion-icon { font-size: 20px; color: var(--clt-accent); }
+}
+.cd-meta-label { display: block; font-size: 11px; color: var(--clt-muted); font-weight: 600; text-transform: uppercase; }
+.cd-meta-value { display: block; font-size: 14px; font-weight: 700; color: var(--clt-ink); }
+
+// ── Escrow Card ──
+.cd-escrow-card {
+  background: var(--clt-card); border: 1px solid var(--clt-border);
+  border-radius: var(--radius); padding: 18px; margin-bottom: 14px;
+}
+.cd-section-title {
+  font-size: 14px; font-weight: 700; color: var(--clt-ink); margin: 0 0 16px;
+  display: flex; align-items: center; gap: 8px;
+  ion-icon { font-size: 18px; color: var(--clt-accent); }
+}
+
+.escrow-flow {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  margin-bottom: 14px; flex-wrap: wrap;
+}
+.escrow-step {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  opacity: 0.35; transition: all 0.3s;
+  span { font-size: 11px; font-weight: 600; color: var(--clt-ink-soft); }
+}
+.escrow-step--done { opacity: 1; }
+.escrow-step--active { opacity: 1; }
+.escrow-step--active .escrow-circle { background: var(--clt-accent); color: #fff; border-color: var(--clt-accent); }
+.escrow-step--done .escrow-circle { background: var(--clt-success); color: #fff; border-color: var(--clt-success); }
+.escrow-circle {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 2px solid var(--clt-border); background: var(--clt-surface);
+  display: flex; align-items: center; justify-content: center;
+  ion-icon { font-size: 20px; }
+}
+.escrow-arrow {
+  font-size: 16px; color: var(--clt-muted); padding: 0 2px;
+}
+.escrow-amount { font-size: 12px; font-weight: 800; color: var(--clt-accent); }
+
+.escrow-commission {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--clt-surface); border-radius: 10px; padding: 10px 14px;
+  font-size: 12px; color: var(--clt-ink-soft);
+  strong { color: var(--clt-accent); }
+}
+
+// ── Actions ──
+.cd-actions { margin-bottom: 14px; }
+.cd-action-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 14px; border: none; border-radius: var(--radius);
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  ion-icon { font-size: 20px; }
+  &:active { transform: scale(0.98); }
+}
+.cd-action-btn--pay { background: #3B82F6; color: #fff; }
+.cd-action-btn--validate { background: var(--clt-success); color: #fff; }
+
+.cd-completed-msg {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
+  border-radius: var(--radius); color: var(--clt-success); font-size: 13px; font-weight: 600;
+  ion-icon { font-size: 22px; }
+}
+
+// ── Milestones ──
+.cd-milestones-card {
+  background: var(--clt-card); border: 1px solid var(--clt-border);
+  border-radius: var(--radius); padding: 18px;
+}
+.ms-timeline { padding: 0; }
+.ms-item { display: flex; gap: 14px; }
+.ms-icon-col {
+  display: flex; flex-direction: column; align-items: center; flex-shrink: 0;
+}
+.ms-icon { font-size: 22px; flex-shrink: 0; }
+.ms-line { width: 2px; flex: 1; min-height: 30px; margin: 4px 0; border-radius: 2px; }
+.ms-content { flex: 1; padding-bottom: 18px; }
+.ms-title { font-size: 14px; font-weight: 700; color: var(--clt-ink); margin: 0 0 4px; }
+.ms-desc { font-size: 12px; color: var(--clt-ink-soft); margin: 0 0 6px; }
+.ms-meta {
+  display: flex; gap: 12px; font-size: 11px; color: var(--clt-muted);
+}
+.ms-deadline {
+  display: flex; align-items: center; gap: 3px;
+  ion-icon { font-size: 13px; }
+}
+.ms-status { font-weight: 700; text-transform: capitalize; }
+.ms-empty { text-align: center; color: var(--clt-muted); padding: 20px; font-size: 13px; }

@@ -1,0 +1,181 @@
+<ion-header class="ws-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <span class="page-title">Workspace</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ws-content" *ngIf="!loading && contract">
+
+  <!-- ── Contract Header ── -->
+  <div class="ws-contract-header">
+    <h2 class="ws-title">{{ contract.title }}</h2>
+    <div class="ws-header-meta">
+      <span class="ws-client"><ion-icon name="business-outline"></ion-icon> {{ contract.clientName }}</span>
+      <span class="ws-amount"><ion-icon name="wallet-outline"></ion-icon> {{ contract.freelancerAmount }} {{ contract.currency }}</span>
+      <span class="ws-status-badge" [style.background]="getStatusColor(contract.status) + '15'" [style.color]="getStatusColor(contract.status)">
+        {{ contract.status | uppercase }}
+      </span>
+    </div>
+  </div>
+
+  <!-- ── Tab Switcher ── -->
+  <div class="ws-tabs">
+    <button class="ws-tab" [class.ws-tab--active]="activeTab === 'gantt'" (click)="activeTab = 'gantt'">
+      <ion-icon name="bar-chart-outline"></ion-icon> Gantt Chart
+    </button>
+    <button class="ws-tab" [class.ws-tab--active]="activeTab === 'milestones'" (click)="activeTab = 'milestones'">
+      <ion-icon name="flag-outline"></ion-icon> Milestones
+    </button>
+  </div>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!--  GANTT CHART TAB                                -->
+  <!-- ════════════════════════════════════════════════ -->
+  <div class="ws-section" *ngIf="activeTab === 'gantt'">
+
+    <!-- Add Task Button -->
+    <button class="ws-add-task-btn" (click)="showAddTask = !showAddTask" *ngIf="contract.status !== 'completed'">
+      <ion-icon [name]="showAddTask ? 'close-outline' : 'add-outline'"></ion-icon>
+      {{ showAddTask ? 'Cancel' : 'Add Task' }}
+    </button>
+
+    <!-- Add Task Form -->
+    <div class="ws-add-form" *ngIf="showAddTask">
+      <input class="ws-input" [(ngModel)]="newTask.title" placeholder="Task name" />
+      <select class="ws-input" [(ngModel)]="newTask.milestoneId">
+        <option value="">No milestone</option>
+        <option *ngFor="let m of contract.milestones" [value]="m.id">{{ m.title }}</option>
+      </select>
+      <div class="ws-date-row">
+        <input class="ws-input" type="date" [(ngModel)]="newTask.startDate" />
+        <input class="ws-input" type="date" [(ngModel)]="newTask.endDate" />
+      </div>
+      <button class="ws-save-btn" (click)="addTask()">
+        <ion-icon name="checkmark-outline"></ion-icon> Add
+      </button>
+    </div>
+
+    <!-- Gantt Chart -->
+    <div class="gantt-container" *ngIf="contract.tasks?.length > 0">
+      <!-- Week Headers -->
+      <div class="gantt-weeks">
+        <div class="gantt-label-col">Task</div>
+        <div class="gantt-timeline-header">
+          <span class="gantt-week" *ngFor="let w of ganttWeeks">{{ w }}</span>
+        </div>
+      </div>
+
+      <!-- Task Rows -->
+      <div class="gantt-row" *ngFor="let task of contract.tasks">
+        <div class="gantt-task-info">
+          <button class="gantt-status-dot" [style.background]="getStatusColor(task.status)" (click)="cycleTaskStatus(task)" title="Click to change status"></button>
+          <div class="gantt-task-text">
+            <span class="gantt-task-name">{{ task.title }}</span>
+            <span class="gantt-task-ms" *ngIf="task.milestoneId">{{ getMilestoneName(task.milestoneId) }}</span>
+          </div>
+          <button class="gantt-remove" (click)="removeTask(task.id)" *ngIf="contract.status !== 'completed'">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+        <div class="gantt-bar-area">
+          <div class="gantt-bar"
+               [style.left.%]="getBarLeft(task)"
+               [style.width.%]="getBarWidth(task)"
+               [class.gantt-bar--todo]="task.status === 'todo'"
+               [class.gantt-bar--progress]="task.status === 'in_progress'"
+               [class.gantt-bar--done]="task.status === 'done'"
+               (click)="cycleTaskStatus(task)">
+            <span class="gantt-bar-label" *ngIf="getBarWidth(task) > 8">{{ task.progress }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ws-empty" *ngIf="!contract.tasks?.length">
+      <ion-icon name="bar-chart-outline"></ion-icon>
+      <p>No tasks yet — add your first task to start planning</p>
+    </div>
+
+    <!-- Legend -->
+    <div class="gantt-legend" *ngIf="contract.tasks?.length > 0">
+      <span class="gantt-legend-item"><span class="gantt-legend-dot" style="background:#CBD5E1;"></span> Todo</span>
+      <span class="gantt-legend-item"><span class="gantt-legend-dot" style="background:linear-gradient(135deg,#7C3AED,#4F46E5);"></span> In Progress</span>
+      <span class="gantt-legend-item"><span class="gantt-legend-dot" style="background:linear-gradient(135deg,#10B981,#059669);"></span> Done</span>
+      <span class="gantt-legend-hint">Tap bar or dot to cycle status</span>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════ -->
+  <!--  MILESTONES TAB                                 -->
+  <!-- ════════════════════════════════════════════════ -->
+  <div class="ws-section" *ngIf="activeTab === 'milestones'">
+    
+    <!-- Add Milestone Button -->
+    <button class="ws-add-task-btn" (click)="showAddMilestone = !showAddMilestone" *ngIf="contract.status !== 'completed'">
+      <ion-icon [name]="showAddMilestone ? 'close-outline' : 'add-outline'"></ion-icon>
+      {{ showAddMilestone ? 'Cancel' : 'Add Milestone' }}
+    </button>
+
+    <!-- Add Milestone Form -->
+    <div class="ws-add-form" *ngIf="showAddMilestone">
+      <input class="ws-input" [(ngModel)]="newMilestone.title" placeholder="Milestone title" />
+      <textarea class="ws-input" [(ngModel)]="newMilestone.description" placeholder="Description (optional)" rows="2"></textarea>
+      <div class="ws-date-row">
+        <input class="ws-input" type="date" [(ngModel)]="newMilestone.deadline" />
+      </div>
+      <button class="ws-save-btn" (click)="addMilestone()">
+        <ion-icon name="checkmark-outline"></ion-icon> Save Milestone
+      </button>
+    </div>
+
+    <div class="ws-ms-list" *ngIf="contract.milestones?.length > 0">
+      <div class="ws-ms-item" *ngFor="let m of contract.milestones" (click)="cycleMilestoneStatus(m)">
+        <div class="ws-ms-icon" [style.background]="getStatusColor(m.status) + '15'">
+          <ion-icon [name]="m.status === 'completed' ? 'checkmark-circle' : m.status === 'in_progress' ? 'ellipse' : 'ellipse-outline'" [style.color]="getStatusColor(m.status)"></ion-icon>
+        </div>
+        <div class="ws-ms-info">
+          <h4 class="ws-ms-title">{{ m.title }}</h4>
+          <p class="ws-ms-desc" *ngIf="m.description">{{ m.description }}</p>
+          <span class="ws-ms-deadline" *ngIf="m.deadline"><ion-icon name="calendar-outline"></ion-icon> {{ m.deadline }}</span>
+        </div>
+        <span class="ws-ms-status" [style.color]="getStatusColor(m.status)">{{ m.status }}</span>
+      </div>
+    </div>
+    <div class="ws-empty" *ngIf="!contract.milestones?.length">
+      <ion-icon name="flag-outline"></ion-icon>
+      <p>No milestones defined yet.</p>
+    </div>
+    <p class="ws-ms-hint" *ngIf="contract.status !== 'completed' && contract.milestones?.length > 0">Tap a milestone to cycle its status</p>
+  </div>
+
+  <!-- ── Deliver Button ── -->
+  <div class="ws-deliver-section" *ngIf="['funded','in_progress'].includes(contract.status)">
+    <button class="ws-deliver-btn" (click)="deliverProject()">
+      <ion-icon name="paper-plane-outline"></ion-icon> Mark as Delivered
+    </button>
+  </div>
+
+  <div class="ws-completed-msg" *ngIf="contract.status === 'completed'">
+    <ion-icon name="checkmark-done-circle-outline"></ion-icon>
+    <span>Project completed — Payment of {{ contract.freelancerAmount }} {{ contract.currency }} received</span>
+  </div>
+
+  <div class="ws-delivered-msg" *ngIf="contract.status === 'delivered'">
+    <ion-icon name="hourglass-outline"></ion-icon>
+    <span>Delivered — Waiting for client validation</span>
+  </div>
+
+  <div style="height: 40px;"></div>
+</ion-content>
+
+<ion-content *ngIf="loading" class="ws-content">
+  <div style="text-align:center; padding:60px;">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p style="color:#94A3B8; margin-top:12px;">Loading workspace...</p>
+  </div>
+</ion-content>

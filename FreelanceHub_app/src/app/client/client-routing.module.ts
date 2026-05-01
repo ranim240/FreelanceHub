@@ -40,7 +40,14 @@ const routes: Routes = [
         path: 'reports',
         loadChildren: () => import('./reports/reports.module').then( m => m.ReportsPageModule)
       },
-
+      {
+        path: 'contracts',
+        loadChildren: () => import('./contracts/contracts.module').then( m => m.ContractsPageModule)
+      },
+      {
+        path: 'contract-detail/:id',
+        loadChildren: () => import('./contract-detail/contract-detail.module').then( m => m.ContractDetailPageModule)
+      },
     ]
   }
 ];

@@ -17,6 +17,7 @@ export class AdminPage implements OnInit, OnDestroy {
     { label: 'Announcements', icon: 'megaphone-outline', path: '/admin/announcements' },
     { label: 'Categories', icon: 'pricetags-outline', path: '/admin/categories' },
     { label: 'Reports', icon: 'flag-outline', path: '/admin/reports' },
+    { label: 'Escrow', icon: 'lock-closed-outline', path: '/admin/contracts' },
   ];
 
   constructor(

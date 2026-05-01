@@ -1,0 +1,65 @@
+<ion-header class="fl-header">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="back-btn" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <span class="page-title">My Contracts</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="fl-content">
+
+  <!-- ── Stats ── -->
+  <div class="fl-stats">
+    <div class="fl-stat">
+      <span class="fl-stat-val">{{ activeCount }}</span>
+      <span class="fl-stat-lbl">Active</span>
+    </div>
+    <div class="fl-stat">
+      <span class="fl-stat-val">{{ totalEarned }} DT</span>
+      <span class="fl-stat-lbl">Earned</span>
+    </div>
+    <div class="fl-stat">
+      <span class="fl-stat-val">{{ pendingPayout }} DT</span>
+      <span class="fl-stat-lbl">Pending</span>
+    </div>
+  </div>
+
+  <!-- ── Loading ── -->
+  <div class="fl-loading" *ngIf="loading">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
+
+  <!-- ── Empty ── -->
+  <div class="fl-empty" *ngIf="!loading && contracts.length === 0">
+    <ion-icon name="briefcase-outline"></ion-icon>
+    <p>No contracts yet</p>
+    <span>Contracts will appear here when a client hires you</span>
+  </div>
+
+  <!-- ── Contracts ── -->
+  <div class="fl-list" *ngIf="!loading && contracts.length > 0">
+    <div class="fl-card" *ngFor="let c of contracts" (click)="openWorkspace(c._id)">
+      <div class="fl-card-top">
+        <h3 class="fl-card-title">{{ c.title }}</h3>
+        <span class="fl-badge" [style.background]="getStatusColor(c.status) + '15'" [style.color]="getStatusColor(c.status)">
+          {{ getStatusLabel(c.status) }}
+        </span>
+      </div>
+      <p class="fl-card-client">
+        <ion-icon name="business-outline"></ion-icon> {{ c.clientName || 'Client' }}
+      </p>
+      <div class="fl-card-bottom">
+        <span class="fl-earn"><ion-icon name="wallet-outline"></ion-icon> {{ c.freelancerAmount }} {{ c.currency }}</span>
+        <span class="fl-ms"><ion-icon name="flag-outline"></ion-icon> {{ c.milestones?.length || 0 }} milestones</span>
+      </div>
+      <div class="fl-card-action">
+        <ion-icon name="construct-outline"></ion-icon> Open Workspace
+      </div>
+    </div>
+  </div>
+
+  <div style="height: 40px;"></div>
+</ion-content>

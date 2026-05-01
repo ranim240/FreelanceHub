@@ -1,4 +1,5 @@
 """Script de seeding — injecte les produits de démo dans MongoDB."""
+from datetime import datetime
 from app import create_app
 
 app = create_app()
@@ -305,6 +306,149 @@ FAQS = [
     }
 ]
 
+# ── Test users for contracts ──────────────────────────────
+# Password is "test"
+TEST_HASH = "scrypt:32768:8:1$W4hwDoyRX2029Gbv$9d960a66416649098d54b25f1fd86f8523197c64fe18711f29f0a1b94219e7f3f9383483f8c89afddad5c9a04ec2321ee463c203f5c40ab4837b915df73b4c8b"
+
+TEST_CLIENT = {
+    "email": "client@test.com",
+    "password": TEST_HASH,
+    "firstName": "Ahmed",
+    "lastName": "Ben Ali",
+    "username": "ahmed_client",
+    "role": "client",
+    "status": "active",
+    "createdAt": datetime.utcnow(),
+    "updatedAt": datetime.utcnow()
+}
+
+TEST_FREELANCER_1 = {
+    "email": "freelancer1@test.com",
+    "password": TEST_HASH,
+    "firstName": "Sara",
+    "lastName": "Mansour",
+    "username": "sara_dev",
+    "role": "freelancer",
+    "domain": "Web Development",
+    "status": "active",
+    "createdAt": datetime.utcnow(),
+    "updatedAt": datetime.utcnow()
+}
+
+TEST_FREELANCER_2 = {
+    "email": "freelancer2@test.com",
+    "password": TEST_HASH,
+    "firstName": "Karim",
+    "lastName": "Trabelsi",
+    "username": "karim_design",
+    "role": "freelancer",
+    "domain": "UI/UX Design",
+    "status": "active",
+    "createdAt": datetime.utcnow(),
+    "updatedAt": datetime.utcnow()
+}
+
+
+def seed_contracts(client_id, freelancer1_id, freelancer2_id):
+    """Create demo contracts between test users."""
+    return [
+        {
+            "clientId": str(client_id),
+            "freelancerId": str(freelancer1_id),
+            "title": "E-commerce Mobile App Development",
+            "description": "Build a complete mobile shopping app with cart, payment and push notifications using Ionic/Angular.",
+            "amount": 1200,
+            "commissionRate": 10,
+            "commission": 120,
+            "freelancerAmount": 1080,
+            "currency": "DT",
+            "status": "in_progress",
+            "milestones": [
+                {"id": "m1", "title": "UI/UX Design", "description": "Wireframes and mockups for all screens", "deadline": "2026-05-10", "status": "completed"},
+                {"id": "m2", "title": "Frontend Development", "description": "Build all app screens and components", "deadline": "2026-05-25", "status": "in_progress"},
+                {"id": "m3", "title": "Backend Integration", "description": "Connect API endpoints and test", "deadline": "2026-06-05", "status": "pending"},
+                {"id": "m4", "title": "Final Delivery", "description": "Testing, bug fixes and deployment", "deadline": "2026-06-15", "status": "pending"}
+            ],
+            "tasks": [
+                {"id": "t1", "milestoneId": "m1", "title": "Create wireframes", "startDate": "2026-05-01", "endDate": "2026-05-04", "progress": 100, "status": "done"},
+                {"id": "t2", "milestoneId": "m1", "title": "Design mockups in Figma", "startDate": "2026-05-04", "endDate": "2026-05-08", "progress": 100, "status": "done"},
+                {"id": "t3", "milestoneId": "m1", "title": "Client review & approval", "startDate": "2026-05-08", "endDate": "2026-05-10", "progress": 100, "status": "done"},
+                {"id": "t4", "milestoneId": "m2", "title": "Setup Ionic project", "startDate": "2026-05-10", "endDate": "2026-05-12", "progress": 100, "status": "done"},
+                {"id": "t5", "milestoneId": "m2", "title": "Build product listing page", "startDate": "2026-05-12", "endDate": "2026-05-16", "progress": 60, "status": "in_progress"},
+                {"id": "t6", "milestoneId": "m2", "title": "Build cart & checkout", "startDate": "2026-05-16", "endDate": "2026-05-20", "progress": 0, "status": "todo"},
+                {"id": "t7", "milestoneId": "m2", "title": "Build user profile", "startDate": "2026-05-20", "endDate": "2026-05-25", "progress": 0, "status": "todo"},
+                {"id": "t8", "milestoneId": "m3", "title": "API integration", "startDate": "2026-05-25", "endDate": "2026-05-30", "progress": 0, "status": "todo"},
+                {"id": "t9", "milestoneId": "m3", "title": "Payment gateway setup", "startDate": "2026-05-30", "endDate": "2026-06-05", "progress": 0, "status": "todo"},
+                {"id": "t10", "milestoneId": "m4", "title": "Testing & bug fixes", "startDate": "2026-06-05", "endDate": "2026-06-12", "progress": 0, "status": "todo"},
+                {"id": "t11", "milestoneId": "m4", "title": "Deployment", "startDate": "2026-06-12", "endDate": "2026-06-15", "progress": 0, "status": "todo"}
+            ],
+            "createdAt": datetime.utcnow(),
+            "updatedAt": datetime.utcnow(),
+            "paidAt": datetime.utcnow(),
+            "deliveredAt": None,
+            "validatedAt": None
+        },
+        {
+            "clientId": str(client_id),
+            "freelancerId": str(freelancer2_id),
+            "title": "Logo Design & Brand Identity",
+            "description": "Professional logo and complete brand guidelines for a FinTech startup.",
+            "amount": 500,
+            "commissionRate": 10,
+            "commission": 50,
+            "freelancerAmount": 450,
+            "currency": "DT",
+            "status": "delivered",
+            "milestones": [
+                {"id": "m1", "title": "Research & Concepts", "description": "Market research and 3 logo concepts", "deadline": "2026-05-05", "status": "completed"},
+                {"id": "m2", "title": "Final Logo", "description": "Refined logo with variations", "deadline": "2026-05-10", "status": "completed"},
+                {"id": "m3", "title": "Brand Guidelines", "description": "Complete brand identity document", "deadline": "2026-05-15", "status": "completed"}
+            ],
+            "tasks": [
+                {"id": "t1", "milestoneId": "m1", "title": "Market research", "startDate": "2026-05-01", "endDate": "2026-05-03", "progress": 100, "status": "done"},
+                {"id": "t2", "milestoneId": "m1", "title": "Sketch 3 concepts", "startDate": "2026-05-03", "endDate": "2026-05-05", "progress": 100, "status": "done"},
+                {"id": "t3", "milestoneId": "m2", "title": "Refine chosen concept", "startDate": "2026-05-05", "endDate": "2026-05-08", "progress": 100, "status": "done"},
+                {"id": "t4", "milestoneId": "m2", "title": "Create logo variations", "startDate": "2026-05-08", "endDate": "2026-05-10", "progress": 100, "status": "done"},
+                {"id": "t5", "milestoneId": "m3", "title": "Brand guidelines PDF", "startDate": "2026-05-10", "endDate": "2026-05-14", "progress": 100, "status": "done"},
+                {"id": "t6", "milestoneId": "m3", "title": "Social media templates", "startDate": "2026-05-14", "endDate": "2026-05-15", "progress": 100, "status": "done"}
+            ],
+            "createdAt": datetime.utcnow(),
+            "updatedAt": datetime.utcnow(),
+            "paidAt": datetime.utcnow(),
+            "deliveredAt": datetime.utcnow(),
+            "validatedAt": None
+        },
+        {
+            "clientId": str(client_id),
+            "freelancerId": str(freelancer1_id),
+            "title": "SEO Content Writing",
+            "description": "10 SEO-optimized articles on AI and cybersecurity topics.",
+            "amount": 300,
+            "commissionRate": 10,
+            "commission": 30,
+            "freelancerAmount": 270,
+            "currency": "DT",
+            "status": "completed",
+            "milestones": [
+                {"id": "m1", "title": "Research & Outlines", "description": "Keyword research and article outlines", "deadline": "2026-04-15", "status": "completed"},
+                {"id": "m2", "title": "Article Writing", "description": "Write all 10 articles", "deadline": "2026-04-25", "status": "completed"},
+                {"id": "m3", "title": "Review & Publish", "description": "Final review and formatting", "deadline": "2026-04-30", "status": "completed"}
+            ],
+            "tasks": [
+                {"id": "t1", "milestoneId": "m1", "title": "Keyword research", "startDate": "2026-04-10", "endDate": "2026-04-12", "progress": 100, "status": "done"},
+                {"id": "t2", "milestoneId": "m1", "title": "Create outlines", "startDate": "2026-04-12", "endDate": "2026-04-15", "progress": 100, "status": "done"},
+                {"id": "t3", "milestoneId": "m2", "title": "Write 10 articles", "startDate": "2026-04-15", "endDate": "2026-04-25", "progress": 100, "status": "done"},
+                {"id": "t4", "milestoneId": "m3", "title": "Review & format", "startDate": "2026-04-25", "endDate": "2026-04-30", "progress": 100, "status": "done"}
+            ],
+            "createdAt": datetime.utcnow(),
+            "updatedAt": datetime.utcnow(),
+            "paidAt": datetime.utcnow(),
+            "deliveredAt": datetime.utcnow(),
+            "validatedAt": datetime.utcnow()
+        }
+    ]
+
+
 # Exécution du seeding
 with app.app_context():
     # Produits
@@ -326,3 +470,25 @@ with app.app_context():
     db.faqs.delete_many({})
     res_faq = db.faqs.insert_many(FAQS)
     print(f"✅ {len(res_faq.inserted_ids)} FAQs insérées !")
+
+    # Test users (upsert — update if already exist)
+    for user_data in [TEST_CLIENT, TEST_FREELANCER_1, TEST_FREELANCER_2]:
+        db.users.update_one(
+            {"email": user_data["email"]},
+            {"$set": user_data},
+            upsert=True
+        )
+        print(f"✅ Test user seeded/updated: {user_data['email']}")
+
+    # Get user IDs for contracts
+    client = db.users.find_one({"email": "client@test.com"})
+    freelancer1 = db.users.find_one({"email": "freelancer1@test.com"})
+    freelancer2 = db.users.find_one({"email": "freelancer2@test.com"})
+
+    if client and freelancer1 and freelancer2:
+        db.contracts.delete_many({})
+        contracts = seed_contracts(client["_id"], freelancer1["_id"], freelancer2["_id"])
+        res_contracts = db.contracts.insert_many(contracts)
+        print(f"✅ {len(res_contracts.inserted_ids)} contrats insérés !")
+    else:
+        print("⚠️ Could not create contracts — test users missing")
