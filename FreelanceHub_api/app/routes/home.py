@@ -16,6 +16,17 @@ def get_announcements():
     announcements = list(db.announcements.find())
     return jsonify([serialize_doc(a) for a in announcements]), 200
 
+@home_bp.route('/announcements/<id>', methods=['GET'])
+def get_announcement(id):
+    """Récupère une annonce par son ID."""
+    try:
+        announcement = db.announcements.find_one({"_id": ObjectId(id)})
+        if not announcement:
+            return jsonify({"message": "Annonce introuvable"}), 404
+        return jsonify(serialize_doc(announcement)), 200
+    except Exception as e:
+        return jsonify({"message": "ID invalide"}), 400
+
 @home_bp.route('/categories', methods=['GET'])
 def get_categories():
     """Récupère toutes les catégories."""

@@ -106,7 +106,9 @@ export class HomePage implements OnInit {
     }
   } 
   goToStore():         void { this.router.navigate(['/store']); }
-  goToAnnouncements(): void { console.log('Navigate to Announcements'); /* this.router.navigate(['/announcements']); */ }
+  goToAnnouncements(): void {
+    this.router.navigate(['/announcements']);
+  }
   goToMessages(): void {
     this.router.navigate(['/client/messages']);
   }
@@ -118,7 +120,9 @@ export class HomePage implements OnInit {
   goToSearch(): void { this.router.navigate(['/store']); }
 
   // ── Announcements ─────────────────────────────────────────────
-  openAnnouncement(ann: Announcement): void { console.log('Open:', ann.title); }
+  openAnnouncement(ann: Announcement): void {
+    this.router.navigate(['/announcement-detail', ann._id]);
+  }
 
   messageClient(event: Event, ann: Announcement): void {
     event.stopPropagation();

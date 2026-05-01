@@ -69,7 +69,15 @@ const routes: Routes = [
   {
     path: 'contract-workspace/:id',
     loadChildren: () => import('./contract-workspace/contract-workspace.module').then( m => m.ContractWorkspacePageModule)
+  },  {
+    path: 'announcements',
+    loadChildren: () => import('./announcements/announcements.module').then( m => m.AnnouncementsPageModule)
+  },
+  {
+    path: 'announcement-detail/:id',
+    loadChildren: () => import('./announcement-detail/announcement-detail.module').then( m => m.AnnouncementDetailPageModule)
   }
+
 ];
 
 

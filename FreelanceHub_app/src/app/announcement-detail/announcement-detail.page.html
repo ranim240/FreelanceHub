@@ -1,0 +1,68 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="hdr-btn-ghost" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <span class="hdr-brand">Announcement Details</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="det-content">
+  <div class="det-container" *ngIf="!loading && announcement">
+    
+    <div class="det-card">
+      <div class="det-header">
+        <div class="det-avatar">{{ announcement.clientInitials }}</div>
+        <div class="det-meta">
+          <h2 class="det-client">{{ announcement.clientName }}</h2>
+          <p class="det-date">Posted {{ announcement.postedAt }}</p>
+        </div>
+        <span class="det-badge" [class.det-badge--urgent]="announcement.status === 'Urgent'">
+          {{ announcement.status }}
+        </span>
+      </div>
+
+      <h1 class="det-title">{{ announcement.title }}</h1>
+      
+      <div class="det-tags">
+        <span class="det-tag" *ngFor="let tag of announcement.tags">{{ tag }}</span>
+      </div>
+
+      <div class="det-section">
+        <h3 class="det-section-title">Description</h3>
+        <p class="det-desc">{{ announcement.description }}</p>
+      </div>
+
+      <div class="det-info-grid">
+        <div class="det-info-box">
+          <div class="det-info-icon"><ion-icon name="cash-outline"></ion-icon></div>
+          <div class="det-info-text">
+            <span class="det-info-label">Budget</span>
+            <span class="det-info-value">{{ announcement.budget }}</span>
+          </div>
+        </div>
+        <div class="det-info-box">
+          <div class="det-info-icon"><ion-icon name="time-outline"></ion-icon></div>
+          <div class="det-info-text">
+            <span class="det-info-label">Deadline</span>
+            <span class="det-info-value">{{ announcement.deadline }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="det-action">
+        <button class="det-msg-btn" (click)="messageClient()">
+          <ion-icon name="chatbubble-outline"></ion-icon> Message {{ announcement.clientName }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div *ngIf="loading" style="text-align: center; padding: 60px;">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p style="color: var(--c-muted); margin-top: 12px; font-size: 14px;">Loading details...</p>
+  </div>
+</ion-content>

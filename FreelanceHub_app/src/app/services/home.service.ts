@@ -18,6 +18,10 @@ export class HomeService {
         return this.http.get<Announcement[]>(`${this.apiUrl}/announcements`);
     }
 
+    getAnnouncement(id: string): Observable<Announcement> {
+        return this.http.get<Announcement>(`${this.apiUrl}/announcements/${id}`);
+    }
+
     getCategories(): Observable<Category[]> {
         return this.http.get<Category[]>(`${this.apiUrl}/categories`);
     }
