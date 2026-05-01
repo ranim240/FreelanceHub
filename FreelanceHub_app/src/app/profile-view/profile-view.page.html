@@ -1,15 +1,14 @@
 <ion-content class="pv-content">
 
   <div class="pv-wrapper">
-     <!-- Header with back -->
-    <div class="page-header">
-      <button class="back-btn" (click)="goBack()" type="button">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-      </button>
-    </div>
-    <!-- Header -->
-    <div class="pv-header">
-      <h1 class="header-title">Profile</h1>
+    <!-- Premium Header -->
+    <header class="adm-header">
+      <div class="adm-header-left">
+        <button class="hdr-btn-ghost" (click)="goBack()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <h1 class="header-title">Profile</h1>
+      </div>
       <div class="header-actions">
         <button class="header-btn">
           <ion-icon name="share-social-outline"></ion-icon>
@@ -17,11 +16,8 @@
         <button class="header-btn" (click)="logout()">
           <ion-icon name="log-out-outline"></ion-icon>
         </button>
-        <button class="header-btn">
-          <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-        </button>
       </div>
-    </div>
+    </header>
 
     <!-- Hero Section -->
     <div class="hero-section">

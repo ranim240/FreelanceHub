@@ -1,16 +1,14 @@
 <ion-content class="profile-content">
 
   <div class="profile-wrapper">
-        <!-- Header with back -->
-    <div class="page-header">
-      <button class="back-btn" (click)="goBack()" type="button">
-        <ion-icon name="arrow-back-outline"></ion-icon>
-      </button>
-    </div>
-
-    <!-- Header -->
-    <div class="profile-header">
-      <h1 class="header-title">My Profile</h1>
+    <!-- Premium Header -->
+    <header class="adm-header">
+      <div class="adm-header-left">
+        <button class="hdr-btn-ghost" (click)="goBack()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </button>
+        <h1 class="header-title">Edit Profile</h1>
+      </div>
       <div class="header-actions">
         <button class="header-btn" (click)="openSection('personal')">
           <ion-icon name="create-outline"></ion-icon>
@@ -19,7 +17,7 @@
           <ion-icon name="settings-outline"></ion-icon>
         </button>
       </div>
-    </div>
+    </header>
 
     <!-- Profile Card -->
     <div class="profile-card">
@@ -320,18 +318,18 @@
       </div>
       <div class="sf-group">
         <label class="sf-label">From Date <span class="req">*</span></label>
-        <div class="date-input-wrap">
-          <ion-input [(ngModel)]="work.fromDate" name="fromDate" type="date"
-            class="sf-input" fill="outline"></ion-input>
-          <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
+        <div class="sf-input-wrapper">
+          <input [(ngModel)]="work.fromDate" name="fromDate" type="date"
+            class="sf-native-input" />
+          <ion-icon name="calendar-outline" class="sf-input-icon"></ion-icon>
         </div>
       </div>
       <div class="sf-group">
         <label class="sf-label">To Date <span class="req">*</span></label>
-        <div class="date-input-wrap">
-          <ion-input [(ngModel)]="work.toDate" name="toDate" type="date"
-            class="sf-input" fill="outline"></ion-input>
-          <ion-icon name="calendar-outline" class="date-icon"></ion-icon>
+        <div class="sf-input-wrapper">
+          <input [(ngModel)]="work.toDate" name="toDate" type="date"
+            class="sf-native-input" />
+          <ion-icon name="calendar-outline" class="sf-input-icon"></ion-icon>
         </div>
       </div>
       <div class="sf-group">

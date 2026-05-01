@@ -38,12 +38,8 @@
     </div>
     <div class="hero-search">
       <ion-icon name="search-outline" class="hero-search-icon"></ion-icon>
-      <input
-        class="hero-search-input"
-        placeholder="Search store products…"
-        [(ngModel)]="searchQuery"
-        (keyup.enter)="onSearchSubmit()"
-      />
+      <input class="hero-search-input" placeholder="Search store products…" [(ngModel)]="searchQuery"
+        (keyup.enter)="onSearchSubmit()" />
       <button class="hero-search-btn" (click)="onSearchSubmit()">
         Search
       </button>
@@ -61,10 +57,7 @@
 
     <div class="h-scroll">
       <div class="h-scroll-track">
-        <div
-          class="ann-card"
-          *ngFor="let ann of announcements"
-          (click)="openAnnouncement(ann)">
+        <div class="ann-card" *ngFor="let ann of announcements" (click)="openAnnouncement(ann)">
 
           <div class="ann-top">
             <div class="ann-avatar">{{ ann.clientInitials }}</div>
@@ -109,10 +102,7 @@
     </div>
     <div class="h-scroll">
       <div class="h-scroll-track cats-track">
-        <button
-          class="cat-chip"
-          *ngFor="let cat of categories"
-          [class.cat-chip--active]="cat.active"
+        <button class="cat-chip" *ngFor="let cat of categories" [class.cat-chip--active]="cat.active"
           (click)="selectCategory(cat)">
           <ion-icon [name]="cat.icon"></ion-icon>
           <span>{{ cat.name }}</span>
@@ -128,17 +118,12 @@
     </div>
     <div class="h-scroll">
       <div class="h-scroll-track">
-        <div
-          class="gig-card"
-          *ngFor="let gig of trendingGigs"
-          (click)="openGig(gig)">
+        <div class="gig-card" *ngFor="let gig of trendingGigs" (click)="openGig(gig)">
 
           <div class="gig-img-wrap">
             <img [src]="gig.image" [alt]="gig.title" class="gig-img" />
             <button class="gig-heart" (click)="toggleFavorite($event, gig)">
-              <ion-icon
-                [name]="gig.isFavorite ? 'heart' : 'heart-outline'"
-                [class.favorited]="gig.isFavorite">
+              <ion-icon [name]="gig.isFavorite ? 'heart' : 'heart-outline'" [class.favorited]="gig.isFavorite">
               </ion-icon>
             </button>
           </div>
@@ -161,10 +146,7 @@
       <h2 class="section-title">FAQ</h2>
     </div>
     <div class="faq-list">
-      <div
-        class="faq-item"
-        *ngFor="let faq of faqs; let i = index"
-        [class.faq-item--open]="faq.open"
+      <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.faq-item--open]="faq.open"
         (click)="toggleFaq(i)">
         <div class="faq-q">
           <span>{{ faq.question }}</span>

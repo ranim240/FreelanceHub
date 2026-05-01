@@ -32,6 +32,44 @@
 }
 
 // ── Header ───────────────────────────────────────────────────
+.adm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  background: transparent;
+}
+
+.adm-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hdr-btn-ghost {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: var(--fh-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s;
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--fh-primary);
+  }
+
+  &:active {
+    transform: scale(0.95);
+    background: var(--fh-surface);
+  }
+}
+
 .pv-header {
   display: flex;
   align-items: center;

@@ -35,23 +35,27 @@ export class ProfilePage implements OnInit {
     , private auth: AuthService
   ) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ionViewWillEnter() {
+    this.loadData();
+  }
+
+  loadData() {
     // Load data from service
-    this.personal = this.profileService.getPersonal();
-    this.education = this.profileService.getEducation();
-    this.work = this.profileService.getWork();
+    this.personal = { ...this.profileService.getPersonal() };
+    this.education = { ...this.profileService.getEducation() };
+    this.work = { ...this.profileService.getWork() };
 
     // Merge authenticated user data when available
-    this.auth.user$.subscribe(user => {
-      if (user) {
-        // Prefer existing personal fields but fill from auth user where missing
-        this.personal = { ...user, ...this.personal };
-        this.personal.firstName = this.personal.firstName || user.firstName || '';
-        this.personal.lastName = this.personal.lastName || user.lastName || '';
-        this.personal.email = this.personal.email || user.email || '';
-        this.personal.avatar = this.personal.avatar || user.avatarUrl || '';
-      }
-    });
+    const user = this.auth.currentUser;
+    if (user) {
+      this.personal = { ...user, ...this.personal };
+      this.personal.firstName = this.personal.firstName || user.firstName || '';
+      this.personal.lastName = this.personal.lastName || user.lastName || '';
+      this.personal.email = this.personal.email || user.email || '';
+      this.personal.avatar = this.personal.avatar || user.avatarUrl || '';
+    }
 
     // Check completion status
     this.personalDone = this.profileService.isPersonalComplete();

@@ -53,6 +53,12 @@
                 <span class="sb-nav-label">My Contracts</span>
               </button>
             </ion-menu-toggle>
+            <ion-menu-toggle auto-hide="false" *ngIf="auth.currentUser?.role === 'freelancer'">
+              <button class="sb-nav-item" (click)="goTo('/add-product')">
+                <span class="sb-nav-icon"><ion-icon name="cube-outline"></ion-icon></span>
+                <span class="sb-nav-label">Publish Product</span>
+              </button>
+            </ion-menu-toggle>
             <ion-menu-toggle auto-hide="false">
               <button class="sb-nav-item" (click)="goToReports()">
                 <span class="sb-nav-icon"><ion-icon name="shield-checkmark-outline"></ion-icon></span>

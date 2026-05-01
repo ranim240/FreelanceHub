@@ -32,6 +32,44 @@
 }
 
 // ── Header ───────────────────────────────────────────────────
+.adm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  background: transparent;
+}
+
+.adm-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hdr-btn-ghost {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: none;
+  background: var(--fh-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s;
+
+  ion-icon {
+    font-size: 20px;
+    color: var(--fh-primary);
+  }
+
+  &:active {
+    transform: scale(0.95);
+    background: var(--fh-surface);
+  }
+}
+
 .profile-header {
   display: flex;
   align-items: center;
@@ -528,6 +566,53 @@
   }
 }
 
+.sf-input-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.sf-native-input {
+  width: 100%;
+  height: 52px;
+  background: #F3F4F6;
+  border: 1.5px solid transparent;
+  border-radius: 12px;
+  padding: 0 40px 0 16px;
+  font-size: 15px;
+  color: var(--fh-primary);
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+
+  &:focus {
+    border-color: var(--fh-accent);
+    box-shadow: 0 0 0 3px var(--fh-accent-soft);
+    background: #fff;
+  }
+
+  &::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    opacity: 0; // Keep clickable but invisible to use our icon
+  }
+}
+
+.sf-input-icon {
+  position: absolute;
+  right: 14px;
+  font-size: 20px;
+  color: var(--fh-accent);
+  pointer-events: none;
+}
+
 .sf-textarea {
   --background: #F3F4F6;
   --color: var(--fh-primary);
@@ -548,6 +633,22 @@
     --border-color: var(--fh-accent);
     box-shadow: 0 0 0 3px var(--fh-accent-soft);
   }
+}
+
+.sf-select-wrap {
+  width: 100%;
+}
+
+.sf-select {
+  --background: #F3F4F6;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --border-width: 1.5px;
+  --border-color: transparent;
+  font-size: 15px;
+  width: 100%;
+  min-height: 52px;
 }
 
 // ── Save Button ──────────────────────────────────────────────

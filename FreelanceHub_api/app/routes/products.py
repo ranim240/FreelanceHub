@@ -16,8 +16,9 @@ def serialize_product(product):
 # GET /api/products 
 @products_bp.route("/products", methods=["GET"])
 def get_products():
-    """Retourne tous les produits. Supporte ?category= et ?search="""
-    query = {}
+    """Retourne tous les produits approuvés. Supporte ?category= et ?search="""
+    # Seulement les produits approuvés ou ceux qui n'ont pas encore de statut (pour les seeds)
+    query = {"$or": [{"moderationStatus": "approved"}, {"moderationStatus": {"$exists": False}}]}
     # Filtre par catégorie
     category = request.args.get("category")
     if category and category != "All":
@@ -35,11 +36,14 @@ def get_products():
 
 
 
-# GET /api/products/featured
 @products_bp.route("/products/featured", methods=["GET"])
 def get_featured_products():
-    """Retourne les produits mis en avant (featured: true)."""
-    products = list(db.products.find({"featured": True}))
+    """Retourne les produits mis en avant (featured: true) et approuvés."""
+    query = {
+        "featured": True,
+        "$or": [{"moderationStatus": "approved"}, {"moderationStatus": {"$exists": False}}]
+    }
+    products = list(db.products.find(query))
     return jsonify([serialize_product(p) for p in products]), 200
 
 
@@ -77,6 +81,7 @@ def create_product():
     data.setdefault("customerReviews", [])
     data.setdefault("techStack", [])
     data.setdefault("features", [])
+    data.setdefault("moderationStatus", "pending")
     result = db.products.insert_one(data)
     data["_id"] = str(result.inserted_id)
     return jsonify(data), 201 #created

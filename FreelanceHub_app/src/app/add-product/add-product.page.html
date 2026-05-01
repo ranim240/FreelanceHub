@@ -1,0 +1,63 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <button class="hdr-btn-ghost" (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </button>
+      <span class="hdr-brand">Publish a Product</span>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="form-content">
+  <div class="form-wrapper">
+    <div class="form-card">
+      <div class="form-header">
+        <div class="form-icon">
+          <ion-icon name="cube-outline"></ion-icon>
+        </div>
+        <h2>Product Details</h2>
+        <p>Fill in the information below. Once submitted, an administrator will review and approve your product before it appears in the store.</p>
+      </div>
+
+      <div class="form-group">
+        <label>Product Title <span class="req">*</span></label>
+        <input type="text" [(ngModel)]="newProduct.title" placeholder="e.g. Modern Landing Page Template">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category <span class="req">*</span></label>
+          <select [(ngModel)]="newProduct.category">
+            <option value="" disabled selected>Select Category</option>
+            <option value="Dev">Dev</option>
+            <option value="AI">AI</option>
+            <option value="Design">Design</option>
+            <option value="Writing">Writing</option>
+            <option value="Marketing">Marketing</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Price (DT) <span class="req">*</span></label>
+          <input type="number" [(ngModel)]="newProduct.price" placeholder="e.g. 150">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Tech Stack / Tools</label>
+        <input type="text" [(ngModel)]="newProduct.techStackInput" placeholder="e.g. React, Tailwind, Figma (comma separated)">
+      </div>
+
+      <div class="form-group">
+        <label>Description <span class="req">*</span></label>
+        <textarea [(ngModel)]="newProduct.description" rows="4" placeholder="Describe your product in detail..."></textarea>
+      </div>
+
+      <button class="submit-btn" (click)="submitProduct()" [disabled]="loading">
+        <ion-spinner name="crescent" *ngIf="loading"></ion-spinner>
+        <span *ngIf="!loading">Submit for Approval</span>
+      </button>
+    </div>
+  </div>
+</ion-content>

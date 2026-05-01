@@ -102,7 +102,7 @@ export class HomePage implements OnInit {
     if (this.auth.currentUser?.role === 'client') {
       this.router.navigate(['/client/dashboard']);
     } else {
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/profile-view']);
     }
   } 
   goToStore():         void { this.router.navigate(['/store']); }

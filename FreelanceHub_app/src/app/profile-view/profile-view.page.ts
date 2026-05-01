@@ -23,33 +23,37 @@ export class ProfileViewPage implements OnInit {
     private auth: AuthService
   ) {}
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  ionViewWillEnter() {
+    this.loadData();
+  }
+
+  loadData() {
     // Récupère les données sauvegardées depuis freelancer-profile
     this.profile   = this.profileService.getPersonal();
     this.education = this.profileService.getEducation();
     this.work      = this.profileService.getWork();
+    
     // keep display name in sync with authenticated user when available
-    this.auth.user$.subscribe(user => {
-      if (user) {
-        const first = user.firstName || '';
-        const last = user.lastName || '';
-        if (first || last) {
-          this.profileName = `${first} ${last}`.trim();
-        } else if (user.email) {
-          this.profileName = user.email.split('@')[0];
-        }
-        // also merge basic fields so template can show avatar/email/location
-        this.profile = { ...this.profile, ...user };
-      } else {
-        // fallback to saved profile or placeholder
-        this.profileName = (this.profile.firstName || this.profile.email || 'Your Name');
+    const user = this.auth.currentUser;
+    if (user) {
+      const first = user.firstName || '';
+      const last = user.lastName || '';
+      if (first || last) {
+        this.profileName = `${first} ${last}`.trim();
+      } else if (user.email) {
+        this.profileName = user.email.split('@')[0];
       }
-    });
+      this.profile = { ...this.profile, ...user };
+    } else {
+      this.profileName = (this.profile.firstName || this.profile.email || 'Your Name');
+    }
   }
 
   // ── Retour vers la page d'édition ─────────
   goToEdit() {
-    this.router.navigate(['/profil']);
+    this.router.navigate(['/profile']);
   }
 
   // ── Helpers d'affichage ───────────────────
@@ -106,7 +110,7 @@ export class ProfileViewPage implements OnInit {
     if (user.role === 'client') {
       this.router.navigate(['/client/dashboard']);
     } else {
-      this.router.navigate(['/profile']);
+      this.router.navigate(['/profile-view']);
     }
   }
 }
