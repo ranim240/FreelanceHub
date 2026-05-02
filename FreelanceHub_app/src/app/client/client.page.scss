@@ -201,19 +201,18 @@ ion-back-button {
   width: calc(100% - 32px);
   margin: 0 16px;
   padding: 12px 16px;
-  background: #FEF2F2; // Light but solid red background
+
+  background: #FEF2F2; 
   border: 1px solid rgba(239, 68, 68, 0.2);
   border-radius: 12px;
-  color: var(--clt-danger); // Fix variable name
+  color: var(--clt-danger);
   font-size: 14px; font-weight: 600; cursor: pointer;
   transition: all 0.2s;
 
   ion-icon { font-size: 18px; }
   
-  &:hover {
-    background: #FEE2E2;
-  }
 
+  &:hover { background: #FEE2E2; }
   &:active {
     background: #FECACA;
     transform: scale(0.98);

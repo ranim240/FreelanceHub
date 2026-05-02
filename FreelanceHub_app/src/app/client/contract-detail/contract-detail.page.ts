@@ -64,7 +64,8 @@ export class ContractDetailPage implements OnInit {
   async validateContract() {
     const alert = await this.alertCtrl.create({
       header: 'Validate Project',
-      message: `Are you sure? This will release <strong>${this.contract.freelancerAmount} ${this.contract.currency}</strong> to the freelancer.`,
+      subHeader: 'Release Payment Confirmation',
+      message: `Are you sure? This will release ${this.contract.freelancerAmount} ${this.contract.currency} to the freelancer.`,
       buttons: [
         { text: 'Cancel', role: 'cancel' },
         {
