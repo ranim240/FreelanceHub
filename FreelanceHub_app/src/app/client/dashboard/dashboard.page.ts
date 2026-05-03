@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+;;;;import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
+import { ClientService } from '../../services/client.service';
+import { ProductService } from '../../services/product.service';
 import { ToastController } from '@ionic/angular';
 
 @Component({
@@ -9,127 +11,185 @@ import { ToastController } from '@ionic/angular';
   templateUrl: './dashboard.page.html',
   styleUrls: ['./dashboard.page.scss'],
   standalone: false,
-
 })
-
 export class DashboardPage implements OnInit {
 
-  // ── State ──────────────────────────────────
-  menuOpen     = false;
-  clientName   = 'john';
-  todayDate    = '';
+  menuOpen   = false;
+  clientName = 'Client';
+  todayDate  = '';
+  isLoading  = true;
 
-  // ── Stats ──────────────────────────────────
-  stats = {
-    announcements: 3,
-    freelancers:   12,
-    products:      8,
-    messages:      2,
-  };
+  stats = { announcements: 0, freelancers: 0, products: 0, messages: 0 };
 
-  // ── Mes annonces (données exemple) ─────────
-  myAnnouncements = [
-    {
-      initials:    'KT',
-      title:       'SEO Articles for Tech Blog',
-      timeAgo:     '1 day ago',
-      status:      'Urgent',
-      description: 'Looking for an experienced writer to produce 10 SEO-optimized articles on AI, cybersecurity and cloud...',
-      tags:        ['SEO', 'Writing', 'AI'],
-      budget:      '150 – 250 DT',
-      deadline:    '7 days',
-    },
-    {
-      initials:    'SM',
-      title:       'Logo Design & Brand Identity',
-      timeAgo:     '5 hours ago',
-      status:      'Open',
-      description: 'Need a designer to create a professional logo and complete brand guidelines for a FinTech startup.',
-      tags:        ['Logo', 'Figma', 'Branding'],
-      budget:      '300 – 500 DT',
-      deadline:    '10 days',
-    },
+  myAnnouncements: any[] = [];
+  topFreelancers:  any[] = [];
+  recentProducts:  any[] = [];
+  cartItems:       any[] = [];
+  showCartModal        = false;
+
+  private avatarColors = [
+    '#6366F1','#8B5CF6','#EC4899','#14B8A6','#F59E0B','#3B82F6','#10B981',
   ];
-
-  // ── Top Freelancers (données exemple) ──────
-  topFreelancers = [
-    { initials: 'AB', name: 'Anis Ben Ali',     domain: 'UI/UX Design',      rating: '4.9' },
-    { initials: 'SR', name: 'Sarra Rhouma',     domain: 'Web Development',   rating: '4.8' },
-    { initials: 'MK', name: 'Mohamed Khelifi',  domain: 'Content Writing',   rating: '4.7' },
-  ];
-
-  // ── Produits récents (données exemple) ─────
-  recentProducts = [
-    { _id: '1', name: 'SEO Content Template Pack', seller: 'ContentPro', price: 80,  rating: '4.3' },
-    { _id: '2', name: 'Brand Identity Mega Pack',  seller: 'CreativeHub', price: 120, rating: '4.4' },
-    { _id: '3', name: 'React Dashboard UI Kit',    seller: 'DevStudio',   price: 60,  rating: '4.6' },
-  ];
-
-  cartItems: any[] = [];
-  showCartModal = false;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private auth: AuthService,
     private cartService: CartService,
+    private clientService: ClientService,
+    private productService: ProductService,
     private toastController: ToastController
   ) {}
 
   ngOnInit() {
     this.todayDate = new Date().toLocaleDateString('fr-FR', {
-      weekday: 'long',
-      day:     'numeric',
-      month:   'long',
-      year:    'numeric',
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
     });
-
-    // Load user data
     const user = this.auth.currentUser;
     if (user) {
       this.clientName = user.firstName || 'Client';
+      this.loadDashboardData(user._id);
       this.loadCart();
     }
-
-    // Check payment status and cart modal request from URL
     this.route.queryParams.subscribe(params => {
-      if (params['payment'] === 'success') {
-        const user = this.auth.currentUser;
-        if (user) {
-          this.cartService.clearCart(user._id).subscribe({
-            next: () => {
-              this.cartItems = [];
-              this.presentToast('Paiement réussi ! Votre panier a été vidé.', 'success');
-            },
-            error: (err) => console.error('Erreur vidage panier:', err)
-          });
-        }
+      const u = this.auth.currentUser;
+      if (params['payment'] === 'success' && u) {
+        this.cartService.clearCart(u._id).subscribe({
+          next: () => { this.cartItems = []; this.presentToast('Paiement reussi!', 'success'); },
+          error: (err) => console.error(err)
+        });
       } else if (params['payment'] === 'cancelled') {
-        this.presentToast('Paiement annulé.', 'warning');
+        this.presentToast('Paiement annule.', 'warning');
       }
-
-      if (params['showCart'] === 'true') {
-        this.openCart();
-      }
+      if (params['showCart'] === 'true') this.openCart();
     });
   }
 
-  // ── Cart Methods ─────────────────────────────
-  openCart() {
-    this.showCartModal = true;
-    this.loadCart();
+  loadDashboardData(userId: string) {
+    this.isLoading = true;
+
+    this.clientService.getDashboardData(userId).subscribe({
+      next: (data) => {
+        this.stats           = { ...this.stats, ...data.stats };
+        this.myAnnouncements = (data.myAnnouncements || []).map((a: any) => this.normalizeAnnouncement(a));
+        this.topFreelancers  = (data.topFreelancers  || []).map((f: any, i: number) => this.normalizeFreelancer(f, i));
+        this.isLoading       = false;
+        this.loadFreelancersCount(); // Fix: get real freelancer count
+      },
+      error: (err) => {
+        console.error('Dashboard error:', err);
+        this.isLoading = false;
+        this.loadFallbackData(userId);
+      }
+    });
+
+    this.productService.getFeaturedProducts().subscribe({
+      next:  (p) => this.recentProducts = (p || []).slice(0, 3).map((x: any) => this.normalizeProduct(x)),
+      error: ()  => this.productService.getProducts().subscribe({
+        next: (p) => this.recentProducts = (p || []).slice(0, 3).map((x: any) => this.normalizeProduct(x)),
+        error: (err) => console.error('Products error:', err)
+      })
+    });
   }
 
-  closeCart() {
-    this.showCartModal = false;
+  // Fix: stats.freelancers = 0 car backend ne retourne pas ce count
+  loadFreelancersCount() {
+    this.clientService.getFreelancers().subscribe({
+      next: (fls) => this.stats = { ...this.stats, freelancers: (fls || []).length },
+      error: (err) => console.error('Freelancers count error:', err)
+    });
   }
+
+  loadFallbackData(userId: string) {
+    this.clientService.getAnnouncements(userId).subscribe({
+      next: (anns) => {
+        const list = anns || [];
+        this.myAnnouncements     = list.slice(0, 2).map((a: any) => this.normalizeAnnouncement(a));
+        this.stats.announcements = list.length;
+      },
+      error: (err) => console.error('Fallback announcements error:', err)
+    });
+    this.clientService.getFreelancers().subscribe({
+      next: (fls) => {
+        const list = fls || [];
+        this.topFreelancers    = list.slice(0, 5).map((f: any, i: number) => this.normalizeFreelancer(f, i));
+        this.stats.freelancers = list.length;
+      },
+      error: (err) => console.error('Fallback freelancers error:', err)
+    });
+  }
+
+  getStars(rating: number): number[] {
+    return Array(Math.floor(rating || 0));
+  }
+
+  private normalizeAnnouncement(a: any): any {
+    return {
+      ...a,
+      initials:    (a.title || '?').charAt(0).toUpperCase(),
+      title:       a.title       || 'Untitled',
+      description: a.description || '',
+      status:      a.status      || 'open',
+      tags:        a.tags        || [],
+      budget:      a.budget      ? `${a.budget} DT` : 'N/A',
+      deadline:    a.deadline    ? new Date(a.deadline).toLocaleDateString('fr-FR') : 'N/A',
+      timeAgo:     a.createdAt   ? this.timeAgo(a.createdAt) : '',
+    };
+  }
+
+  private normalizeFreelancer(f: any, i: number = 0): any {
+    const first = (f.firstName || '?').charAt(0).toUpperCase();
+    const last  = (f.lastName  || '').charAt(0).toUpperCase();
+    return {
+      ...f,
+      id:          f._id,
+      initials:    `${first}${last}`,
+      avatarUrl:   f.avatarUrl || '',
+      avatarColor: this.avatarColors[i % this.avatarColors.length],
+      name:        `${f.firstName || ''} ${f.lastName || ''}`.trim() || 'Unknown',
+      domain:      f.domain || 'Freelancer',
+      rating:      f.rating ?? 0,
+      projects:    f.totalProjects ?? 0,
+      bio:         f.bio ? f.bio.substring(0, 60) + '...' : '',
+      location:    f.location || ''
+    };
+  }
+
+  contactFreelancer(fl: any) {
+    this.router.navigate(['/client/messages'], { queryParams: { freelancerId: fl.id, name: fl.name } });
+  }
+
+  private normalizeProduct(p: any): any {
+    return {
+      ...p,
+      image: p.image,
+      name:   p.name       || p.title  || 'Product',
+      seller: p.sellerName || p.seller || '',
+      price:  p.price      ?? 0,
+      rating: p.rating     ?? '—',
+    };
+  }
+
+  private timeAgo(dateStr: string): string {
+    const diff  = Date.now() - new Date(dateStr).getTime();
+    const mins  = Math.floor(diff / 60000);
+    const hours = Math.floor(mins / 60);
+    const days  = Math.floor(hours / 24);
+    if (days  > 0) return `${days}d ago`;
+    if (hours > 0) return `${hours}h ago`;
+    if (mins  > 0) return `${mins}m ago`;
+    return 'just now';
+  }
+
+  openCart()  { this.showCartModal = true; this.loadCart(); }
+  closeCart() { this.showCartModal = false; }
 
   loadCart() {
     const user = this.auth.currentUser;
     if (user) {
       this.cartService.getCart(user._id).subscribe({
-        next: (items) => this.cartItems = items,
-        error: (err) => console.error('Erreur chargement panier:', err)
+        next:  (items) => this.cartItems = items || [],
+        error: (err)   => console.error('Panier error:', err)
       });
     }
   }
@@ -139,10 +199,10 @@ export class DashboardPage implements OnInit {
     if (user) {
       this.cartService.removeFromCart(user._id, productId).subscribe({
         next: () => {
-          this.cartItems = this.cartItems.filter(item => item._id !== productId);
-          this.presentToast('Produit retiré du panier.', 'success');
+          this.cartItems = this.cartItems.filter(i => i._id !== productId);
+          this.presentToast('Produit retire du panier.', 'success');
         },
-        error: (err) => console.error('Erreur suppression panier:', err)
+        error: (err) => console.error(err)
       });
     }
   }
@@ -151,54 +211,38 @@ export class DashboardPage implements OnInit {
     const user = this.auth.currentUser;
     if (user) {
       this.cartService.checkout(user._id).subscribe({
-        next: (res) => {
-          if (res.url) {
-            window.location.href = res.url; // Redirect to Stripe
-          }
-        },
+        next:  (res) => { if (res.url) window.location.href = res.url; },
         error: (err) => {
-          console.error('Erreur checkout:', err);
-          this.presentToast('Erreur lors de la redirection vers le paiement.', 'danger');
+          console.error(err);
+          this.presentToast('Erreur paiement.', 'danger');
         }
       });
     }
   }
 
   async presentToast(message: string, color: string) {
-    const toast = await this.toastController.create({
-      message: message,
-      duration: 3000,
-      color: color,
-      position: 'top'
-    });
+    const toast = await this.toastController.create({ message, duration: 3000, color, position: 'top' });
     toast.present();
   }
 
-  // ── Navigation ─────────────────────────────
   goTo(page: string) {
     const target = page.startsWith('client') ? `/${page}` : `/client/${page}`;
     this.router.navigate([target]);
   }
 
-  goToProductDetail(id: string) {
-    this.router.navigate(['/product-detail', id]);
-  }
+  goToProductDetail(id: string) { this.router.navigate(['/product-detail', id]); }
 
   navigate(page: string) {
     this.menuOpen = false;
-    const target = page.startsWith('client') ? `/${page}` : `/client/${page}`;
+    const target  = page.startsWith('client') ? `/${page}` : `/client/${page}`;
     setTimeout(() => this.router.navigate([target]), 300);
   }
 
-  // ── Menu ───────────────────────────────────
-  toggleMenu() {
-    this.menuOpen = !this.menuOpen;
-  }
+  toggleMenu() { this.menuOpen = !this.menuOpen; }
 
-  // ── Déconnexion ────────────────────────────
   logout() {
     this.menuOpen = false;
-    // TODO: appeler AuthService.logout()
+    this.auth.logout();
     this.router.navigate(['/login']);
   }
 }

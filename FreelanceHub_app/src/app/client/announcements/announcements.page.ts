@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { ClientService } from '../../services/client.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-announcements',
@@ -11,6 +14,8 @@ export class AnnouncementsPage implements OnInit {
 
   searchText   = '';
   activeFilter = 'all';
+  isLoading    = true;
+  error        = '';
 
   // ── Filtres ────────────────────────────────
   filters = [
@@ -21,73 +26,51 @@ export class AnnouncementsPage implements OnInit {
     { label: 'Closed',  value: 'closed',  count: 0 },
   ];
 
-  // ── Données exemple ────────────────────────
-  announcements = [
-    {
-      id: 1,
-      initials:    'KT',
-      title:       'SEO Articles for Tech Blog',
-      timeAgo:     '1 day ago',
-      status:      'Urgent',
-      description: 'Looking for an experienced writer to produce 10 SEO-optimized articles on AI, cybersecurity and cloud computing.',
-      tags:        ['SEO', 'Writing', 'AI'],
-      budget:      '150 – 250 DT',
-      deadline:    '7 days',
-      proposals:   4,
-    },
-    {
-      id: 2,
-      initials:    'SM',
-      title:       'Logo Design & Brand Identity',
-      timeAgo:     '5 hours ago',
-      status:      'Open',
-      description: 'Need a designer to create a professional logo and complete brand guidelines for a FinTech startup.',
-      tags:        ['Logo', 'Figma', 'Branding'],
-      budget:      '300 – 500 DT',
-      deadline:    '10 days',
-      proposals:   7,
-    },
-    {
-      id: 3,
-      initials:    'AB',
-      title:       'E-commerce Mobile App Development',
-      timeAgo:     '2 hours ago',
-      status:      'Pending',
-      description: 'Building a full e-commerce mobile app with Ionic and Node.js backend. Need an experienced developer.',
-      tags:        ['Ionic', 'Node.js', 'Mobile'],
-      budget:      '1500 – 3000 DT',
-      deadline:    '1 month',
-      proposals:   0,
-    },
-    {
-      id: 4,
-      initials:    'MR',
-      title:       'Social Media Content Strategy',
-      timeAgo:     '3 days ago',
-      status:      'Closed',
-      description: 'Looking for a social media expert to create a 3-month content strategy for our brand.',
-      tags:        ['Marketing', 'Social Media'],
-      budget:      '200 – 400 DT',
-      deadline:    '2 weeks',
-      proposals:   12,
-    },
-  ];
+  announcements: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private auth: AuthService,
+    private clientService: ClientService,
+    private toastController: ToastController
+  ) {}
 
-  ngOnInit() {
-    this.updateCounts();
-    // TODO: remplacer par un appel HTTP
-    // this.http.get('/api/client/announcements').subscribe(...)
+  async ngOnInit() {
+    const user = this.auth.currentUser;
+    if (user) {
+      await this.loadAnnouncements(user._id);
+    }
+  }
+
+  async loadAnnouncements(userId: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.isLoading = true;
+      this.error = '';
+      this.clientService.getAnnouncements(userId).subscribe({
+        next: (data: any[]) => {
+          this.announcements = data;
+          this.updateCounts();
+          this.isLoading = false;
+          resolve();
+        },
+        error: (err: any) => {
+          console.error('Error loading announcements:', err);
+          this.error = 'Failed to load announcements';
+          this.isLoading = false;
+          this.presentToast(`Failed to load announcements: ${err.message || err.status || 'Unknown error'}`, 'danger');
+          reject(err);
+        }
+      });
+    });
   }
 
   // ── Mise à jour des compteurs ──────────────
   updateCounts() {
     this.filters[0].count = this.announcements.length;
-    this.filters[1].count = this.announcements.filter(a => a.status.toLowerCase() === 'open').length;
-    this.filters[2].count = this.announcements.filter(a => a.status.toLowerCase() === 'urgent').length;
-    this.filters[3].count = this.announcements.filter(a => a.status.toLowerCase() === 'pending').length;
-    this.filters[4].count = this.announcements.filter(a => a.status.toLowerCase() === 'closed').length;
+    this.filters[1].count = this.announcements.filter(a => a.status?.toLowerCase() === 'open').length;
+    this.filters[2].count = this.announcements.filter(a => a.status?.toLowerCase() === 'urgent').length;
+    this.filters[3].count = this.announcements.filter(a => a.status?.toLowerCase() === 'pending').length;
+    this.filters[4].count = this.announcements.filter(a => a.status?.toLowerCase() === 'closed').length;
   }
 
   // ── Filtre actif ───────────────────────────
@@ -99,31 +82,40 @@ export class AnnouncementsPage implements OnInit {
   get filteredAnnouncements() {
     return this.announcements.filter(a => {
       const matchFilter = this.activeFilter === 'all'
-        || a.status.toLowerCase() === this.activeFilter;
+        || (a.status && a.status.toLowerCase() === this.activeFilter);
       const matchSearch = !this.searchText
-        || a.title.toLowerCase().includes(this.searchText.toLowerCase())
-        || a.tags.some(t => t.toLowerCase().includes(this.searchText.toLowerCase()));
+        || (a.title && a.title.toLowerCase().includes(this.searchText.toLowerCase()))
+        || (a.tags && a.tags.some((t: string) => t.toLowerCase().includes(this.searchText.toLowerCase())));
       return matchFilter && matchSearch;
     });
   }
 
   // ── Actions ────────────────────────────────
   viewDetail(ann: any) {
-    this.router.navigate(['/client/announcements', ann.id]);
+    this.router.navigate(['/client/announcements', ann._id]);
   }
 
   editAnn(ann: any) {
     this.router.navigate(['/client/post-announcement'], {
-      queryParams: { id: ann.id, edit: true }
+      queryParams: { id: ann._id, edit: true }
     });
   }
 
   deleteAnn(ann: any) {
-    // TODO: appeler l'API Flask DELETE /announcements/:id
     const confirmed = confirm(`Delete "${ann.title}"?`);
     if (confirmed) {
-      this.announcements = this.announcements.filter(a => a.id !== ann.id);
-      this.updateCounts();
+      const userId = this.auth.currentUser!._id!;
+      this.clientService.deleteAnnouncement(userId, ann._id).subscribe({
+        next: () => {
+          this.announcements = this.announcements.filter(a => a._id !== ann._id);
+          this.updateCounts();
+          this.presentToast('Announcement deleted successfully', 'success');
+        },
+        error: (err) => {
+          console.error('Delete failed:', err);
+          this.presentToast('Failed to delete announcement', 'danger');
+        }
+      });
     }
   }
 
@@ -132,7 +124,31 @@ export class AnnouncementsPage implements OnInit {
     this.router.navigate(['/client/post-announcement']);
   }
 
+  doRefresh(event: any) {
+    const user = this.auth.currentUser;
+    if (user) {
+      this.loadAnnouncements(user._id).then(() => {
+        event.target.complete();
+      }).catch(() => {
+        event.target.complete();
+      });
+    } else {
+      event.target.complete();
+    }
+  }
+
   navigate(page: string) {
     this.router.navigate(['/' + page]);
   }
+
+  async presentToast(message: string, color: 'success' | 'danger' | 'warning' = 'success') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'top'
+    });
+    toast.present();
+  }
 }
+

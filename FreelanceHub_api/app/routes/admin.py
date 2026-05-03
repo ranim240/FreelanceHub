@@ -1,21 +1,13 @@
 from flask import Blueprint, jsonify, request
 from bson import ObjectId
 from app.extensions import db
+from app.utils.helpers import serialize_doc
 from datetime import datetime
 
 # Blueprint admin
 admin_bp = Blueprint("admin", __name__)
 
 # ─── Helpers ───────────────────────────────────────────────
-def serialize_doc(doc):
-    """Convertit un document MongoDB en dict JSON-compatible."""
-    if doc is None:
-        return None
-    doc["_id"] = str(doc["_id"])
-    if "password" in doc:
-        del doc["password"]
-    return doc
-
 
 # ═══════════════════════════════════════════════════════════
 #  STATS

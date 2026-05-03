@@ -9,37 +9,7 @@ from app.extensions import db
 
 
 PRODUCTS = [
-    {
-        "badge": "STARTER KIT",
-        "category": "Dev",
-        "title": "Full E-commerce Starter Kit",
-        "author": "Ali souissi",
-        "authorInitials": "AS",
-        "rating": 4.9,
-        "reviews": 247,
-        "price": 400,
-        "image": "assets/images/products/e-commerceKit.png",
-        "version": "3.2.0",
-        "lastUpdate": "15 Jan 2026",
-        "license": "Commercial",
-        "description": "Complete starter kit to create a modern and high-performing e-commerce store. Built with React, TypeScript and the latest web technologies, this starter kit lets you launch your project in hours instead of weeks.\n\nAll essential components are included: secure authentication, shopping cart management, a complete checkout process, an admin dashboard, product management, and much more.",
-        "techStack": ["React 19", "TypeScript", "Stripe API", "Next.js 14", "FramerMotion", "TailwindCSS"],
-        "features": [
-            "Full Authentication, Login, registration, password recovery, OAuth",
-            "Shopping Cart Management — Persistent cart, automatic total calculation",
-            "Integrated Payment Stripe, PayPal, credit card",
-            "Admin Dashboard — Product management, orders, real-time statistics",
-            "Responsive Design — Mobile-first, adapts to all screen sizes",
-            "Optimised SEO — Meta tags, sitemap, schema markup"
-        ],
-        "customerReviews": [
-            {"author": "Client Client", "initials": "CC", "rating": 5, "comment": "Excellent kit! I was able to launch my online store in less than a week. The code is very well structured and the documentation is clear. I highly recommend it!", "date": "12 Jan 2026"},
-            {"author": "Mohammed Salhi", "initials": "MS", "rating": 5, "comment": "Perfect for rapid prototyping. Saved me weeks of work. The Stripe integration alone is worth the price.", "date": "08 Jan 2026"},
-            {"author": "Lina Boukhari", "initials": "LB", "rating": 4, "comment": "Very complete kit, great documentation. Would love to see more theme options in the next version.", "date": "02 Jan 2026"}
-        ],
-        "purchased": False,
-        "featured": True
-    },
+   
     {
         "badge": "AI MODEL",
         "category": "AI",

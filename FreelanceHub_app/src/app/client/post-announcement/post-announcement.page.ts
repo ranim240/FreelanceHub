@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ClientService } from '../../services/client.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-post-announcement',
@@ -39,7 +41,7 @@ export class PostAnnouncementPage implements OnInit {
     deadlineDate: '',
   };
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private clientService: ClientService, private authService: AuthService) {}
 
   ngOnInit() {}
 
@@ -86,10 +88,22 @@ export class PostAnnouncementPage implements OnInit {
 
   // ── Soumission ─────────────────────────────
   submit() {
-    console.log('Announcement submitted:', this.announcement);
-    // TODO: appeler AnnouncementService.create(this.announcement)
-    // Puis naviguer vers la liste des annonces
-    this.router.navigate(['/client/announcements']);
+    const user = this.authService.currentUser;
+    if (!user || !user._id) {
+      alert('Please login first.');
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.clientService.postAnnouncement(user._id, this.announcement).subscribe({
+      next: (res) => {
+        console.log('Announcement created:', res);
+        this.router.navigateByUrl('/client/announcements', { replaceUrl: true });
+      },
+      error: (err) => {
+        console.error('Error creating announcement:', err);
+        alert('Error creating announcement. Please try again.');
+      }
+    });
   }
 
   // ── Helper initiales ───────────────────────

@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from bson import ObjectId
 from app.extensions import db
+from app.utils.helpers import serialize_doc
 from datetime import datetime
 import os
 import stripe
@@ -11,18 +12,6 @@ contracts_bp = Blueprint("contracts", __name__)
 
 
 # ─── Helpers ───────────────────────────────────────────────
-def serialize_doc(doc):
-    """Convert MongoDB doc to JSON-compatible dict."""
-    if doc is None:
-        return None
-    doc["_id"] = str(doc["_id"])
-    # Convert datetime objects to ISO strings
-    for key in ("createdAt", "updatedAt", "paidAt", "deliveredAt", "validatedAt"):
-        if key in doc and isinstance(doc[key], datetime):
-            doc[key] = doc[key].isoformat()
-    return doc
-
-
 def enrich_contract(contract):
     """Add client/freelancer names to a contract."""
     try:

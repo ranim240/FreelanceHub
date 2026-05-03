@@ -53,12 +53,19 @@
     </button>
   </div>
 
+
   <!-- ── Announcements List ── -->
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="ann-list" *ngIf="filteredAnnouncements.length > 0">
-    <div
-      class="ann-card"
-      *ngFor="let ann of filteredAnnouncements"
-      (click)="viewDetail(ann)">
+
+      <div
+        class="ann-card"
+        *ngFor="let ann of filteredAnnouncements"
+        (click)="viewDetail(ann)">
+
 
       <!-- Top row -->
       <div class="ann-top">
@@ -113,8 +120,7 @@
 
     </div>
   </div>
-
-  <div style="height: 90px;"></div>
+<div style="height: 90px;"></div>
 
 </ion-content>
 

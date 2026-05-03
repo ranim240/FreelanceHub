@@ -41,23 +41,33 @@ export class ProfilePage implements OnInit {
     this.loadData();
   }
 
-  loadData() {
-    // Load data from service
-    this.personal = { ...this.profileService.getPersonal() };
-    this.education = { ...this.profileService.getEducation() };
-    this.work = { ...this.profileService.getWork() };
+  loading = false;
+  error = '';
 
-    // Merge authenticated user data when available
+  loadData() {
     const user = this.auth.currentUser;
-    if (user) {
-      this.personal = { ...user, ...this.personal };
-      this.personal.firstName = this.personal.firstName || user.firstName || '';
-      this.personal.lastName = this.personal.lastName || user.lastName || '';
-      this.personal.email = this.personal.email || user.email || '';
-      this.personal.avatar = this.personal.avatar || user.avatarUrl || '';
+    if (!user || !user._id) {
+      this.error = 'Utilisateur non connecté';
+      return;
     }
 
-    // Check completion status
+    this.loading = true;
+    this.profileService.getProfile(user._id).subscribe({
+      next: (profile) => {
+        this.personal = profile || {};
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Load profile error:', err);
+        this.error = 'Erreur chargement profil';
+        this.loading = false;
+      }
+    });
+
+    // Legacy local data for education/work (to be extended later)
+    this.education = this.profileService.getEducation();
+    this.work = this.profileService.getWork();
+
     this.personalDone = this.profileService.isPersonalComplete();
     this.educationDone = this.profileService.isEducationComplete();
     this.workDone = this.profileService.isWorkComplete();
@@ -77,14 +87,41 @@ export class ProfilePage implements OnInit {
 
   // ── Sauvegardes ────────────────────────────
   savePersonal() {
-    if (!this.personal.firstName || !this.personal.lastName || !this.personal.email) {
-      alert('Veuillez remplir les champs obligatoires.');
+    if (!this.personal.firstName || !this.personal.lastName) {
+      alert('Nom et prénom obligatoires.');
       return;
     }
-    // Save to service
-    this.profileService.setPersonal(this.personal);
-    this.personalDone = true;
-    this.closeSection();
+
+    const user = this.auth.currentUser;
+    if (!user || !user._id) {
+      alert('Utilisateur non connecté.');
+      return;
+    }
+
+    this.loading = true;
+    this.profileService.updateProfile(user._id, {
+      firstName: this.personal.firstName,
+      lastName: this.personal.lastName,
+      phone: this.personal.phone,
+      gender: this.personal.gender,
+      location: this.personal.location,
+      bio: this.personal.bio,
+      domain: this.personal.domain,
+      avatarUrl: this.personal.avatarUrl
+    }).subscribe({
+      next: () => {
+        this.profileService.setPersonal(this.personal);  // Update local
+        this.personalDone = true;
+        this.closeSection();
+        this.loading = false;
+        alert('Profil mis à jour !');
+      },
+      error: (err) => {
+        console.error('Update error:', err);
+        alert('Erreur sauvegarde.');
+        this.loading = false;
+      }
+    });
   }
 
   saveEducation() {

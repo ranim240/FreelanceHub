@@ -48,4 +48,10 @@ export class AuthService {
   get currentUser(): User | null {
     return this.userSubject.value;
   }
+
+  getToken(): string | null {
+    const user = this.currentUser;
+    // Assume token is _id for now (matches backend require_login)
+    return user?._id || null;
+  }
 }

@@ -10,43 +10,54 @@ const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       {
         path: 'dashboard',
-        loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule)
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardPageModule)
       },
       {
         path: 'announcements',
-        loadChildren: () => import('./announcements/announcements.module').then( m => m.AnnouncementsPageModule)
+        loadChildren: () => import('./announcements/announcements.module').then(m => m.AnnouncementsPageModule)
       },
       {
         path: 'post-announcement',
-        loadChildren: () => import('./post-announcement/post-announcement.module').then( m => m.PostAnnouncementPageModule)
+        loadChildren: () => import('./post-announcement/post-announcement.module').then(m => m.PostAnnouncementPageModule)
       },
       {
         path: 'freelancers',
-        loadChildren: () => import('./freelancers/freelancers.module').then( m => m.FreelancersPageModule)
+        loadChildren: () => import('./freelancers/freelancers.module').then(m => m.FreelancersPageModule)
+      },
+      // ✅ Fix: route freelancer-profile manquante → redirige vers freelancers
+      {
+        path: 'freelancer-profile',
+        redirectTo: 'freelancers',
+        pathMatch: 'full'
+      },
+      // ✅ Fix: route avec ID freelancer (pour viewProfile(fl))
+      {
+        path: 'freelancers/:id',
+        loadChildren: () => import('./freelancers/freelancers.module').then(m => m.FreelancersPageModule)
       },
       {
         path: 'products',
-        loadChildren: () => import('./products/products.module').then( m => m.ProductsPageModule)
+        loadChildren: () => import('./products/products.module').then(m => m.ProductsPageModule)
       },
       {
         path: 'messages',
-        loadChildren: () => import('./messages/messages.module').then( m => m.MessagesPageModule)
+        loadChildren: () => import('./messages/messages.module').then(m => m.MessagesPageModule)
       },
       {
         path: 'notifications',
-        loadChildren: () => import('./notifications/notifications.module').then( m => m.NotificationsPageModule)
+        loadChildren: () => import('./notifications/notifications.module').then(m => m.NotificationsPageModule)
       },
       {
         path: 'reports',
-        loadChildren: () => import('./reports/reports.module').then( m => m.ReportsPageModule)
+        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsPageModule)
       },
       {
         path: 'contracts',
-        loadChildren: () => import('./contracts/contracts.module').then( m => m.ContractsPageModule)
+        loadChildren: () => import('./contracts/contracts.module').then(m => m.ContractsPageModule)
       },
       {
         path: 'contract-detail/:id',
-        loadChildren: () => import('./contract-detail/contract-detail.module').then( m => m.ContractDetailPageModule)
+        loadChildren: () => import('./contract-detail/contract-detail.module').then(m => m.ContractDetailPageModule)
       },
     ]
   }

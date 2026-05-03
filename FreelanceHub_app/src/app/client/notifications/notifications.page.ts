@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { ClientService } from '../../services/client.service';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-notifications',
@@ -10,6 +13,8 @@ import { Router } from '@angular/router';
 export class NotificationsPage implements OnInit {
 
   activeFilter = 'all';
+  isLoading = true;
+  error = '';
 
   filters = [
     { label: 'All',       value: 'all',      count: 0 },
@@ -19,50 +24,43 @@ export class NotificationsPage implements OnInit {
     { label: 'System',    value: 'system',   count: 0 },
   ];
 
-  notifications = [
-    {
-      id: 1, type: 'proposal', read: false,
-      title: 'New proposal received',
-      description: 'Anis Ben Ali submitted a proposal for "Logo Design & Brand Identity".',
-      time: '5 minutes ago',
-    },
-    {
-      id: 2, type: 'message', read: false,
-      title: 'New message from Sarra Rhouma',
-      description: 'Please send me the full project requirements so I can start immediately.',
-      time: '1 hour ago',
-    },
-    {
-      id: 3, type: 'success', read: false,
-      title: 'Announcement approved',
-      description: 'Your announcement "SEO Articles for Tech Blog" is now live.',
-      time: '2 hours ago',
-    },
-    {
-      id: 4, type: 'system', read: true,
-      title: 'Profile incomplete',
-      description: 'Complete your company profile to get better visibility with freelancers.',
-      time: '1 day ago',
-    },
-    {
-      id: 5, type: 'proposal', read: true,
-      title: '3 new proposals',
-      description: 'Your announcement "E-commerce Mobile App" received 3 new proposals.',
-      time: '2 days ago',
-    },
-    {
-      id: 6, type: 'alert', read: true,
-      title: 'Announcement expiring soon',
-      description: 'Your announcement "Social Media Strategy" will expire in 2 days.',
-      time: '3 days ago',
-    },
-  ];
+  notifications: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private auth: AuthService,
+    private clientService: ClientService,
+    private toastController: ToastController
+  ) {}
 
   ngOnInit() {
+    const user = this.auth.currentUser;
+    if (user) {
+      this.loadNotifications(user._id);
+    }
     this.updateCounts();
-    // TODO: this.http.get('/api/client/notifications').subscribe(...)
+  }
+
+  loadNotifications(userId: string) {
+    this.isLoading = true;
+    this.error = '';
+    this.clientService.getNotifications(userId).subscribe({
+      next: (data: any[]) => {
+        this.notifications = data;
+        this.updateCounts();
+        this.isLoading = false;
+      },
+      error: (err: any) => {
+        console.error('Error loading notifications:', err);
+        this.error = 'Failed to load notifications';
+        this.isLoading = false;
+        this.toastController.create({
+          message: 'Erreur chargement notifications',
+          duration: 2000,
+          color: 'danger'
+        }).then(toast => toast.present());
+      }
+    });
   }
 
   updateCounts() {
@@ -93,13 +91,13 @@ export class NotificationsPage implements OnInit {
   markRead(n: any) {
     n.read = true;
     this.updateCounts();
-    // TODO: this.http.put(`/api/notifications/${n.id}/read`, {}).subscribe()
+    // TODO: clientService.markNotificationRead(n.id)
   }
 
   markAllRead() {
     this.notifications.forEach(n => n.read = true);
     this.updateCounts();
-    // TODO: this.http.put('/api/notifications/read-all', {}).subscribe()
+    // TODO: mark all read API
   }
 
   getIcon(type: string): string {
@@ -117,3 +115,4 @@ export class NotificationsPage implements OnInit {
     this.router.navigate(['/' + page]);
   }
 }
+

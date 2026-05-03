@@ -6,6 +6,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { PostAnnouncementPageRoutingModule } from './post-announcement-routing.module';
 
+import { ClientService } from '../../services/client.service';
+import { AuthService } from '../../services/auth.service';
 import { PostAnnouncementPage } from './post-announcement.page';
 
 @NgModule({
@@ -15,6 +17,7 @@ import { PostAnnouncementPage } from './post-announcement.page';
     IonicModule,
     PostAnnouncementPageRoutingModule
   ],
-  declarations: [PostAnnouncementPage]
+  declarations: [PostAnnouncementPage],
+  providers: [ClientService, AuthService]
 })
 export class PostAnnouncementPageModule {}

@@ -29,26 +29,34 @@ export class ProfileViewPage implements OnInit {
     this.loadData();
   }
 
+  loading = false;
+  error = '';
+
   loadData() {
-    // Récupère les données sauvegardées depuis freelancer-profile
-    this.profile   = this.profileService.getPersonal();
-    this.education = this.profileService.getEducation();
-    this.work      = this.profileService.getWork();
-    
-    // keep display name in sync with authenticated user when available
     const user = this.auth.currentUser;
-    if (user) {
-      const first = user.firstName || '';
-      const last = user.lastName || '';
-      if (first || last) {
-        this.profileName = `${first} ${last}`.trim();
-      } else if (user.email) {
-        this.profileName = user.email.split('@')[0];
-      }
-      this.profile = { ...this.profile, ...user };
-    } else {
-      this.profileName = (this.profile.firstName || this.profile.email || 'Your Name');
+    if (!user || !user._id) {
+      this.error = 'Utilisateur non connecté';
+      this.profileName = user?.email?.split('@')[0] || 'Your Name';
+      return;
     }
+
+    this.loading = true;
+    this.profileService.getProfile(user._id).subscribe({
+      next: (profile) => {
+        this.profile = profile || {};
+        this.profileName = `${profile.firstName || ''} ${profile.lastName || ''}`.trim() || profile.email?.split('@')[0] || 'Your Name';
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Load profile view error:', err);
+        this.error = 'Erreur chargement profil';
+        this.loading = false;
+      }
+    });
+
+    // Legacy
+    this.education = this.profileService.getEducation();
+    this.work = this.profileService.getWork();
   }
 
   // ── Retour vers la page d'édition ─────────

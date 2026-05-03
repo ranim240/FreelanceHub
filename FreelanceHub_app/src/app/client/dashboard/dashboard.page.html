@@ -136,18 +136,28 @@
   </div>
 
   <div class="freelancers-scroll">
-    <div class="freelancer-card" *ngFor="let fl of topFreelancers" (click)="goTo('freelancer-profile')">
-      <div class="fl-avatar">{{ fl.initials }}</div>
+    <div class="freelancer-card" *ngFor="let fl of topFreelancers">
+      <div class="fl-avatar" [style.background-image]="fl.avatarUrl ? 'url(' + fl.avatarUrl + ')' : ''" [style.background-color]="fl.avatarColor">
+        {{ fl.initials }}
+      </div>
+
       <div class="fl-info">
         <h4 class="fl-name">{{ fl.name }}</h4>
         <p class="fl-domain">{{ fl.domain }}</p>
+        <p class="fl-bio">{{ fl.bio }}</p>
         <div class="fl-rating">
-          <ion-icon name="star" class="star-icon"></ion-icon>
-          <span>{{ fl.rating }}</span>
+          <ion-icon name="star" class="star-icon" *ngFor="let star of getStars(fl.rating)"></ion-icon>
+          <span *ngIf="fl.rating !== 5">({{ fl.projects }} projects)</span>
         </div>
+        <p class="fl-location">{{ fl.location }}</p>
       </div>
+      <button class="contact-btn" (click)="contactFreelancer(fl); $event.stopPropagation()">
+        <ion-icon name="chatbubble-outline"></ion-icon>
+        Contact
+      </button>
     </div>
   </div>
+
 
   <!-- ── Produits récents ── -->
   <div class="section-row">
@@ -158,9 +168,7 @@
   <div class="products-scroll">
     <div class="product-card" *ngFor="let p of recentProducts" (click)="goToProductDetail(p._id)">
       <div class="product-img-wrap">
-        <div class="product-img-placeholder">
-          <ion-icon name="cube-outline"></ion-icon>
-        </div>
+        <img [src]="p.image || 'assets/images/products/placeholder.jpg'" class="product-img" alt="{{ p.name }}" />
         <span class="product-price">{{ p.price }} DT</span>
       </div>
       <h4 class="product-name">{{ p.name }}</h4>

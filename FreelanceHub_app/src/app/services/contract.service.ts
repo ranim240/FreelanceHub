@@ -1,14 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ContractService {
-  private apiUrl = 'http://localhost:5000/api/contracts';
+  private apiUrl = `${environment.apiUrl}/contracts`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
+
+  private getHeaders(): HttpHeaders {
+    const user = this.authService.currentUser as any;
+    const token = user?._id || '';
+    return new HttpHeaders({
+      'Content-Type': 'application/json',
+      ...(token && { 'Authorization': `Bearer ${token}` })
+    });
+  }
 
   // ── Create ─────────────────────────────────────────
   createContract(data: any): Observable<any> {
