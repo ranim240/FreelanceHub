@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { SocketService } from '../../services/socket.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-messages',
@@ -7,61 +10,104 @@ import { Router } from '@angular/router';
   styleUrls: ['./messages.page.scss'],
   standalone: false,
 })
-export class MessagesPage implements OnInit {
+export class MessagesPage implements OnInit, OnDestroy {
 
-  searchText   = '';
-  activeChatId: number | null = null;
-  activeConv:   any = null;
-  newMessage   = '';
+  @ViewChild('chatMessages') chatMessages!: ElementRef;
 
-  conversations = [
-    {
-      id: 1, initials: 'AB', name: 'Anis Ben Ali',
-      avatarColor: 'linear-gradient(135deg, #1e1b4b 0%, #3730a3 100%)',
-      lastMessage: 'Sure, I can start on Monday!',
-      time: '10:32', unread: 2, online: true,
+  searchText = '';
+  activeChatId: string | null = null;
+  activeConv: any = null;
+  newMessage = '';
+  isTyping = false;
+  loadingMessages = false;
+
+  conversations: any[] = [];
+  messages: any[] = [];
+
+  private typingTimer: any;
+  private subs: Subscription[] = [];
+
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private socketService: SocketService,
+    private messageService: MessageService,
+  ) {}
+
+ngOnInit() {
+  // 1. Charger les conversations UNE SEULE FOIS
+  this.messageService.getConversations().subscribe({
+    next: (data) => {
+      this.conversations = data;
     },
-    {
-      id: 2, initials: 'SR', name: 'Sarra Rhouma',
-      avatarColor: 'linear-gradient(135deg, #14532d 0%, #16a34a 100%)',
-      lastMessage: 'Please send me the project details.',
-      time: 'Yesterday', unread: 0, online: false,
-    },
-    {
-      id: 3, initials: 'MK', name: 'Mohamed Khelifi',
-      avatarColor: 'linear-gradient(135deg, #92400e 0%, #f97316 100%)',
-      lastMessage: 'The first draft is ready for review.',
-      time: 'Mon', unread: 1, online: true,
-    },
-  ];
+    error: err => console.error('Erreur chargement conversations', err),
+  });
 
-  // Messages par conversation
-  messagesMap: { [key: number]: any[] } = {
-    1: [
-      { text: 'Hello! I saw your announcement about UI design.', mine: false, time: '10:20' },
-      { text: 'Hi! Yes, I need a complete redesign for my app.', mine: true,  time: '10:22' },
-      { text: 'I have 6 years of experience with Figma and mobile design.', mine: false, time: '10:25' },
-      { text: 'Great! Can you start this week?', mine: true,  time: '10:28' },
-      { text: 'Sure, I can start on Monday!', mine: false, time: '10:32' },
-    ],
-    2: [
-      { text: 'Hi, I am interested in your development project.', mine: false, time: 'Yesterday' },
-      { text: 'Please send me the project details.', mine: false, time: 'Yesterday' },
-    ],
-    3: [
-      { text: 'I finished the first 3 articles.', mine: false, time: 'Mon' },
-      { text: 'The first draft is ready for review.', mine: false, time: 'Mon' },
-    ],
-  };
+  // 2. Écouter les queryParams INDÉPENDAMMENT
+  // Se déclenche à chaque changement, même si on est déjà sur la page
+  this.subs.push(
+    this.route.queryParams.subscribe(params => {
+      const convId = params['conversationId'];
+      if (!convId) return;
 
-  get activeMessages() {
-    return this.activeChatId ? (this.messagesMap[this.activeChatId] || []) : [];
+      // Chercher dans la liste déjà chargée
+      const conv = this.conversations.find(c => c._id === convId);
+      if (conv) {
+        this.openChat(conv);
+      } else {
+        // Pas encore chargée — recharger et réessayer
+        this.messageService.getConversations().subscribe(fresh => {
+          this.conversations = fresh;
+          const freshConv = fresh.find((c: any) => c._id === convId);
+          if (freshConv) this.openChat(freshConv);
+        });
+      }
+    })
+  );
+
+  // 3. Socket: nouveau message
+  this.subs.push(
+    this.socketService.newMessage$.subscribe(msg => {
+      const currentUserId = localStorage.getItem('token');
+      if (msg.senderId === currentUserId) return;
+
+      this.messages.push({ ...msg, mine: false });
+
+      const conv = this.conversations.find(c => c._id === this.activeChatId);
+      if (conv) {
+        conv.lastMessage = msg.text;
+        conv.time = msg.time;
+      }
+      this.scrollToBottom();
+    })
+  );
+
+  // 4. Socket: typing
+  this.subs.push(
+    this.socketService.userTyping$.subscribe(evt => {
+      if (evt.conversationId === this.activeChatId) {
+        this.isTyping = evt.isTyping;
+      }
+    })
+  );
+}
+
+  ngOnDestroy() {
+    if (this.activeChatId) {
+      this.socketService.leaveConversation(this.activeChatId);
+    }
+    this.subs.forEach(s => s.unsubscribe());
+    clearTimeout(this.typingTimer);
   }
 
-  constructor(private router: Router) {}
-
-  ngOnInit() {
-    // TODO: this.http.get('/api/client/messages').subscribe(...)
+  // ✅ FIX: méthode bien dans la classe
+  scrollToBottom() {
+    setTimeout(() => {
+      if (this.chatMessages) {
+        this.chatMessages.nativeElement.scrollTop =
+          this.chatMessages.nativeElement.scrollHeight;
+      }
+    }, 50);
   }
 
   get filteredConversations() {
@@ -72,36 +118,71 @@ export class MessagesPage implements OnInit {
   }
 
   openChat(conv: any) {
-    this.activeChatId = conv.id;
-    this.activeConv   = conv;
-    conv.unread       = 0;
+    if (this.activeChatId) {
+      this.socketService.leaveConversation(this.activeChatId);
+    }
+
+    this.activeChatId = conv._id;
+    this.activeConv = conv;
+    conv.unread = 0;
+    this.messages = [];
+    this.loadingMessages = true;
+
+    this.socketService.joinConversation(conv._id);
+
+    this.messageService.getMessages(conv._id).subscribe({
+      next: msgs => {
+        this.messages = msgs;
+        this.loadingMessages = false;
+        this.scrollToBottom();
+      },
+      error: err => {
+        console.error('Erreur chargement messages', err);
+        this.loadingMessages = false;
+      },
+    });
   }
 
   closeChat() {
+    if (this.activeChatId) {
+      this.socketService.leaveConversation(this.activeChatId);
+    }
     this.activeChatId = null;
-    this.activeConv   = null;
+    this.activeConv = null;
+    this.messages = [];
+    this.loadingMessages = false;
   }
 
   sendMessage() {
     const text = this.newMessage.trim();
     if (!text || !this.activeChatId) return;
 
-    if (!this.messagesMap[this.activeChatId]) {
-      this.messagesMap[this.activeChatId] = [];
-    }
-
-    this.messagesMap[this.activeChatId].push({
+    this.messages.push({
       text,
       mine: true,
-      time: new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+      time: new Date().toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit'
+      }),
     });
 
-    // Mise à jour dernière message
-    const conv = this.conversations.find(c => c.id === this.activeChatId);
-    if (conv) conv.lastMessage = text;
+    this.socketService.sendMessage(this.activeChatId, text);
+
+    if (this.activeConv) this.activeConv.lastMessage = text;
 
     this.newMessage = '';
-    // TODO: envoyer via Flask Socket.IO ou API REST
+    this.scrollToBottom(); // ✅ amélioration UX
+  }
+
+  onTyping() {
+    if (!this.activeChatId) return;
+
+    this.socketService.sendTyping(this.activeChatId, true);
+
+    clearTimeout(this.typingTimer);
+    this.typingTimer = setTimeout(() => {
+      this.socketService.sendTyping(this.activeChatId!, false);
+    }, 2000);
   }
 
   navigate(page: string) {

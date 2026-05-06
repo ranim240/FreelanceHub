@@ -79,7 +79,14 @@
       </div>
       <div class="chat-info">
         <h4 class="chat-name">{{ activeConv.name }}</h4>
-        <p class="chat-status">{{ activeConv.online ? 'Online' : 'Offline' }}</p>
+        <!-- ✅ Affiche "typing..." si l'autre est en train d'écrire, sinon Online/Offline -->
+        <p class="chat-status" *ngIf="!isTyping">{{ activeConv.online ? 'Online' : 'Offline' }}</p>
+        <p class="chat-status chat-status--typing" *ngIf="isTyping">
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          <span class="typing-dot"></span>
+          typing...
+        </p>
       </div>
     </div>
 
@@ -87,12 +94,17 @@
     <div class="chat-messages" #chatMessages>
       <div
         class="msg-bubble-wrap"
-        *ngFor="let msg of activeMessages"
+        *ngFor="let msg of messages"
         [class.msg-bubble-wrap--mine]="msg.mine">
         <div class="msg-bubble" [class.msg-bubble--mine]="msg.mine">
           <p>{{ msg.text }}</p>
           <span class="msg-time">{{ msg.time }}</span>
         </div>
+      </div>
+
+      <!-- ✅ Indicateur de chargement des messages -->
+      <div class="msg-loading" *ngIf="loadingMessages">
+        <ion-spinner name="dots"></ion-spinner>
       </div>
     </div>
 
@@ -104,7 +116,9 @@
           type="text"
           placeholder="Type a message..."
           class="chat-input"
-          (keyup.enter)="sendMessage()">
+          (keyup.enter)="sendMessage()"
+          (input)="onTyping()">
+          <!-- ✅ (input)="onTyping()" ajouté ici -->
         </ion-input>
       </div>
       <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">

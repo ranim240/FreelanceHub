@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { SocketService } from './socket.service';  // ← import manquant
 
 export interface User {
   _id: string;
@@ -8,7 +9,6 @@ export interface User {
   firstName?: string;
   lastName?: string;
   avatarUrl?: string;
-  // role?: 'client' | 'freelancer';
   role?: string;
   [key: string]: any;
 }
@@ -20,25 +20,31 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$: Observable<User | null> = this.userSubject.asObservable();
 
-  constructor() {
+  constructor(private socketService: SocketService) {
     const stored = localStorage.getItem('fh_user');
-    if (stored) {
+    const token  = localStorage.getItem('token');
+    if (stored && token) {
       try {
         this.userSubject.next(JSON.parse(stored));
+        this.socketService.connect();
       } catch (e) {
         console.warn('AuthService: failed to parse stored user', e);
       }
     }
   }
 
-  login(user: User) {
+  login(user: User, token: string) {
     this.userSubject.next(user);
     localStorage.setItem('fh_user', JSON.stringify(user));
+    localStorage.setItem('token', token);
+    this.socketService.connect();
   }
 
   logout() {
+    this.socketService.disconnect();
     this.userSubject.next(null);
     localStorage.removeItem('fh_user');
+    localStorage.removeItem('token');
   }
 
   get isLoggedIn$(): Observable<boolean> {
@@ -50,8 +56,6 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    const user = this.currentUser;
-    // Assume token is _id for now (matches backend require_login)
-    return user?._id || null;
+    return localStorage.getItem('token');
   }
 }

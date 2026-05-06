@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService, User } from '../services/auth.service';
 
@@ -11,34 +11,40 @@ import { AuthService, User } from '../services/auth.service';
 })
 export class LoginPage implements OnInit {
   selectedRole: 'freelancer' | 'client' = 'freelancer';
-  email = '';
+  email    = '';
   password = '';
 
-  constructor(private http: HttpClient,
-              private router: Router,
-              private auth: AuthService) { }
-    ngOnInit() {
+  constructor(
+    private http:   HttpClient,
+    private router: Router,
+    private auth:   AuthService,
+  ) {}
+
+  ngOnInit() {
     console.log('Page de login prête');
   }
+
   selectRole(role: 'freelancer' | 'client') {
     this.selectedRole = role;
   }
 
   onLogin() {
-    console.log("Role sélectionné :", this.selectedRole);
-    console.log("Email saisi :", this.email);
-    console.log("Password saisi :", this.password);
     const body = { email: this.email, password: this.password, role: this.selectedRole };
 
     this.http.post('http://localhost:5000/api/auth/login', body).subscribe({
       next: (res: any) => {
         console.log('Connexion réussie:', res);
-        alert('Succès : ' + res.message);
-        // store authenticated user and update state
+
+        // Récupérer le token — ton backend retourne token ou access_token
+        const token = res.token || res.access_token || res.user?._id || '';
+
         if (res.user) {
-          this.auth.login(res.user as User);
+          this.auth.login(res.user as User, token);  // ← 2 arguments
+
           if (res.user.role === 'admin') {
             this.router.navigate(['/admin']);
+          } else if (res.user.role === 'client') {
+            this.router.navigate(['/client/dashboard']);
           } else {
             this.router.navigate(['/home']);
           }
@@ -52,13 +58,8 @@ export class LoginPage implements OnInit {
       }
     });
   }
-    goToRegister() {
+
+  goToRegister() {
     this.router.navigate(['/register']);
   }
-
-  }
-
-
- 
-
-
+}

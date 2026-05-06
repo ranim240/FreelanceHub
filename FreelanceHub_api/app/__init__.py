@@ -2,7 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask_mail import Mail
 from config import Config
-from app.extensions import init_db, db
+from app.extensions import init_db, db,socketio
 
 # Initialize Flask-Mail
 mail = Mail()
@@ -28,6 +28,17 @@ def create_app():
 
     # Initialize Flask-Mail with debug logging
     mail.init_app(app)
+
+    # ← Initialiser SocketIO
+    socketio.init_app(app,
+        cors_allowed_origins=[
+            "http://localhost:8100",
+            "http://localhost:4200",
+        ],
+        async_mode="eventlet",
+        logger=True,
+        engineio_logger=False
+    )
     print('✅ Flask-Mail initialized')
     print(f'   MAIL_SERVER: {app.config.get("MAIL_SERVER")}')
     print(f'   MAIL_PORT: {app.config.get("MAIL_PORT")}')
@@ -47,7 +58,8 @@ def create_app():
     from app.routes.contracts import contracts_bp
     from app.routes.client import client_bp
     from app.routes.profile import profile_bp
-    
+    from app.routes.messages import messages_bp
+
     app.register_blueprint(products_bp, url_prefix='/api')
     app.register_blueprint(home_bp, url_prefix='/api')
     app.register_blueprint(auth_bp, url_prefix='/api')
@@ -57,6 +69,9 @@ def create_app():
     app.register_blueprint(contracts_bp, url_prefix='/api')
     app.register_blueprint(client_bp, url_prefix='/api/client')
     app.register_blueprint(profile_bp, url_prefix='/api')
+    app.register_blueprint(messages_bp, url_prefix='/api/client')
+
+    from app.routes import socket_events  
 
     return app
 

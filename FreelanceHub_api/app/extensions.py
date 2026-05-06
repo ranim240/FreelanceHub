@@ -1,10 +1,12 @@
 from pymongo import MongoClient
 from flask_mail import Mail
+from flask_socketio import SocketIO         
 
 #varaible globale - initialisées par init_db()
 
 mongo_client = None
 db = None
+socketio = SocketIO()   
 # Note: mail is now initialized in app/__init__.py
 
 def init_db(app):

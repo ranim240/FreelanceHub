@@ -9,7 +9,6 @@ import { AnnouncementsPageRoutingModule } from './announcements-routing.module';
 
 import { AnnouncementsPage } from './announcements.page';
 import { ClientService } from 'src/app/services/client.service';
-import { AuthService } from 'src/app/services/auth.service';
 
 @NgModule({
   imports: [
@@ -19,6 +18,6 @@ import { AuthService } from 'src/app/services/auth.service';
     AnnouncementsPageRoutingModule
   ],
   declarations: [AnnouncementsPage],
-  providers: [AuthService, ClientService, ToastController]
+  providers: [ ClientService, ToastController]
 })
 export class AnnouncementsPageModule {}

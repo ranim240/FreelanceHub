@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientService } from '../../services/client.service';
 import { ToastController } from '@ionic/angular';
+import { ClientService } from '../../services/client.service';
+import { MessageService } from 'src/app/services/message.service';
 
 @Component({
   selector: 'app-freelancers',
@@ -26,7 +27,6 @@ export class FreelancersPage implements OnInit {
     { label: 'Data',      value: 'data',      icon: 'stats-chart-outline'   },
   ];
 
-  // Avatar colors palette — assigned by index
   private avatarColors = [
     '#6366F1', '#8B5CF6', '#EC4899', '#14B8A6',
     '#F59E0B', '#3B82F6', '#10B981', '#EF4444',
@@ -35,9 +35,10 @@ export class FreelancersPage implements OnInit {
   freelancers: any[] = [];
 
   constructor(
-    private router: Router,
-    private clientService: ClientService,
-    private toastController: ToastController
+    private router:          Router,
+    private clientService:   ClientService,
+    private messageService:  MessageService,
+    private toastController: ToastController,
   ) {}
 
   ngOnInit() {
@@ -46,48 +47,41 @@ export class FreelancersPage implements OnInit {
 
   loadFreelancers(domain?: string) {
     this.isLoading = true;
-    this.error = '';
+    this.error     = '';
     this.clientService.getFreelancers(domain).subscribe({
       next: (data) => {
-        // ✅ Normalize every freelancer to match what the HTML template expects
         this.freelancers = (data || []).map((f: any, i: number) => this.normalizeFreelancer(f, i));
-        this.isLoading = false;
+        this.isLoading   = false;
       },
       error: (err) => {
         console.error('Error loading freelancers:', err);
-        this.error = 'Failed to load freelancers';
+        this.error     = 'Failed to load freelancers';
         this.isLoading = false;
         this.toastController.create({
-          message: 'Erreur chargement freelances',
+          message: 'Erreur chargement freelancers',
           duration: 2000,
-          color: 'danger'
-        }).then(toast => toast.present());
-      }
+          color: 'danger',
+        }).then(t => t.present());
+      },
     });
   }
 
-  // ── Normalize MongoDB doc → template-ready object ───────────────────
-  private normalizeFreelancer(f: any, index: number = 0): any {
+  private normalizeFreelancer(f: any, index = 0): any {
     const firstName = f.firstName || '';
     const lastName  = f.lastName  || '';
-    const initials  = `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || '?';
-    const name      = `${firstName} ${lastName}`.trim() || 'Unknown';
-    const domain    = f.domain || 'Freelancer';
-    const domainKey = domain.toLowerCase();
-
     return {
       ...f,
       id:          f._id,
-      name,
-      initials,
+      name:        `${firstName} ${lastName}`.trim() || 'Unknown',
+      initials:    `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase() || '?',
       avatarColor: this.avatarColors[index % this.avatarColors.length],
-      domain,
-      domainKey,
+      domain:      f.domain     || 'Freelancer',
+      domainKey:   (f.domain    || '').toLowerCase(),
       location:    f.location   || f.city || '—',
       rating:      f.rating     ?? '—',
       reviews:     f.reviews    ?? 0,
       bio:         f.bio        || '',
-      skills:      Array.isArray(f.skills) ? f.skills : [],   // ✅ never undefined
+      skills:      Array.isArray(f.skills) ? f.skills : [],
       tjm:         f.tjm        || f.dailyRate || '—',
       completed:   f.completedProjects?.length ?? f.completed ?? 0,
     };
@@ -99,31 +93,41 @@ export class FreelancersPage implements OnInit {
   }
 
   get filteredFreelancers() {
-    let filtered = this.freelancers;
-
+    let list = this.freelancers;
     if (this.activeDomain !== 'all') {
-      filtered = filtered.filter(fl => fl.domainKey === this.activeDomain);
+      list = list.filter(fl => fl.domainKey === this.activeDomain);
     }
-
     if (this.searchText.trim()) {
       const q = this.searchText.toLowerCase();
-      filtered = filtered.filter(fl =>
+      list = list.filter(fl =>
         fl.name.toLowerCase().includes(q) ||
         fl.domain.toLowerCase().includes(q) ||
         fl.skills.some((s: string) => s.toLowerCase().includes(q))
       );
     }
-
-    return filtered;
+    return list;
   }
 
   viewProfile(fl: any) {
     this.router.navigate(['/client/freelancers', fl.id]);
   }
 
+  // ── Bouton Contact ──────────────────────────────────────────────────────
   contactFreelancer(fl: any) {
-    this.router.navigate(['/client/messages'], {
-      queryParams: { freelancerId: fl.id, name: fl.name }
+    this.messageService.startConversation(fl.id).subscribe({
+      next: (res) => {
+        this.router.navigate(['/client/messages'], {
+          queryParams: { conversationId: res.conversationId },
+        });
+      },
+      error: (err) => {
+        console.error('Erreur création conversation:', err);
+        this.toastController.create({
+          message: 'Impossible de contacter ce freelancer',
+          duration: 2000,
+          color: 'danger',
+        }).then(t => t.present());
+      },
     });
   }
 
