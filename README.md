@@ -214,7 +214,7 @@ Ce projet est distribué sous la licence présente dans le dépôt : `LICENSE`.
 
 ## Contact
 
-Pour toute question sur le projet, tu peux te référer à la documentation du dépôt ou à l’auteur du projet.
+Pour toute question sur le projet, tu peux te référer à la documentation du dépôt.
 
 ---
 
